@@ -1,0 +1,11 @@
+<mjml>
+    <mj-body>
+        <mj-navbar hamburger="hamburger"></mj-navbar>
+        <mj-navbar></mj-navbar>
+        <mj-navbar base-url="https://mjml.io" hamburger="hamburger" ico-color="black">
+            <mj-navbar-link href="/link1" color="#ff00ff">Link1</mj-navbar-link>
+            <mj-navbar-link href="/link2" color="#ff0000">Link2</mj-navbar-link>
+            <mj-navbar-link href="/link3" color="#0000ff">Link3</mj-navbar-link>
+        </mj-navbar>
+    </mj-body>
+</mjml>

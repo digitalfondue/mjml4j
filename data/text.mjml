@@ -1,0 +1,18 @@
+<mjml>
+    <mj-body>
+        <mj-section>
+            <mj-column>
+                <mj-text>Hello MJML</mj-text>
+                <mj-text>Hello&nbsp;MJML</mj-text>
+                <mj-text><h1>Hello <span>MJML</span></h1></mj-text>
+                <mj-text>Hello <br><br> MJML</mj-text>
+                <mj-text>Hello ’MJML’</mj-text>
+                <mj-text>
+                    <p>Hello&nbsp;MJML</p>
+                </mj-text>
+                <mj-text>This <strong>should</strong> respect <strong>whitespaces.</strong> after the <strong>HTML Tags</strong></mj-text>
+                <mj-text>Hello &gt;&#62; World</mj-text>
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>

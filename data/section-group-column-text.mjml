@@ -1,0 +1,14 @@
+<mjml>
+  <mj-body background-color="#ffffff">
+    <mj-section padding-bottom="20px" padding-top="20px">
+      <mj-group>
+        <mj-column>
+          <mj-text align="left" mj-class="preheader">[[HEADLINE]]</mj-text>
+        </mj-column>
+        <mj-column>
+          <mj-text align="right" mj-class="preheader">[PERMALINK_LABEL]]</mj-text>
+        </mj-column>
+      </mj-group>
+    </mj-section>
+  </mj-body>
+</mjml>

@@ -1,0 +1,49 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-all icon-wrapped-url="all-0"/>
+        </mj-attributes>
+    </mj-head>
+
+    <mj-body>
+        <mj-section>
+            <mj-column>
+                <mj-accordion>
+                    <mj-accordion-element>
+                        <mj-accordion-title>Why use an accordion?</mj-accordion-title>
+                        <mj-accordion-text>
+                        </mj-accordion-text>
+                    </mj-accordion-element>
+                    <mj-accordion-element icon-wrapped-url="inline-1">
+                        <mj-accordion-title>Why use an accordion?</mj-accordion-title>
+                        <mj-accordion-text>
+                        </mj-accordion-text>
+                    </mj-accordion-element>
+                    <mj-accordion-element>
+                        <mj-accordion-title>Why use an accordion?</mj-accordion-title>
+                        <mj-accordion-text>
+                        </mj-accordion-text>
+                    </mj-accordion-element>
+                </mj-accordion>
+
+                <mj-accordion icon-wrapped-url="inline-0">
+                    <mj-accordion-element>
+                        <mj-accordion-title>Why use an accordion?</mj-accordion-title>
+                        <mj-accordion-text>
+                        </mj-accordion-text>
+                    </mj-accordion-element>
+                    <mj-accordion-element icon-wrapped-url="inline-1">
+                        <mj-accordion-title>Why use an accordion?</mj-accordion-title>
+                        <mj-accordion-text>
+                        </mj-accordion-text>
+                    </mj-accordion-element>
+                    <mj-accordion-element>
+                        <mj-accordion-title>Why use an accordion?</mj-accordion-title>
+                        <mj-accordion-text>
+                        </mj-accordion-text>
+                    </mj-accordion-element>
+                </mj-accordion>
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>

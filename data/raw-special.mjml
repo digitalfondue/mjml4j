@@ -1,0 +1,12 @@
+<mjml>
+    <mj-raw position="file-start">0</mj-raw>
+    <mj-head>
+        <mj-raw>1</mj-raw>
+        <mj-raw>2</mj-raw>
+        <mj-raw position="file-start">0-1</mj-raw>
+    </mj-head>
+    <mj-body>
+    </mj-body>
+    <mj-raw>3</mj-raw>
+    <mj-raw position="file-start">0-2</mj-raw>
+</mjml>

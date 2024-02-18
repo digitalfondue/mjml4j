@@ -1,0 +1,21 @@
+<mjml>
+    <mj-body>
+        <mj-section>
+            <mj-column>
+                <mj-button font-family="Helvetica" background-color="#f45e43" color="white">
+                    Button
+                </mj-button>
+                <mj-button href="https://mjml.io/" font-family="Helvetica" background-color="#f45e43" color="white">
+                    Button Link
+                </mj-button>
+                <mj-button href="https://mjml.io/" font-family="Helvetica" background-color="#f45e43" color="white"
+                           rel="relly good">
+                    Button Link
+                </mj-button>
+                <mj-button width="500">
+                    Button
+                </mj-button>
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>

@@ -1,0 +1,14 @@
+<mjml>
+    <mj-body>
+        <mj-section background-color="white">
+            <mj-column width="100%">
+                <mj-text align="center" font-size="15px" color="#aaa" padding="30px">
+                    {{ticketReservation.fullName}}<{{ticketReservation.email}}> has completed the reservation {{reservationShortID}} for {{purchaseContext.displayName}}
+                </mj-text>
+                <mj-text align="center" font-size="15px" color="#000" padding="30px">
+                    {{ticketReservation.fullName}}<{{ticketReservation.email}}> has completed the reservation {{reservationShortID}} for {{purchaseContext.displayName}}
+                </mj-text>
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>
