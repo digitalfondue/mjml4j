@@ -1,0 +1,12 @@
+<mjml>
+    <mj-body>
+        <mj-section>
+            <mj-column padding="5px" background-color="red">
+                <mj-text>aaa</mj-text>
+            </mj-column>
+            <mj-column padding-right="10px" background-color="green">
+                <mj-text>bbb</mj-text>
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>

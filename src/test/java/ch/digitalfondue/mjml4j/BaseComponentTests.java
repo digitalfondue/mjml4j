@@ -167,6 +167,11 @@ class BaseComponentTests {
     }
 
     @Test
+    void testColumnGutter() {
+        testTemplate("column-gutter");
+    }
+
+    @Test
     @Disabled
     void testSectionBackgroundImage() {
         // TODO: fix background positioning logic
