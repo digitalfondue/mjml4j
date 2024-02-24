@@ -23,7 +23,6 @@ Most of the mj-* tags are supported. It's currently missing:
 Additionally, no pretty print/minimization of the output is provided.
 
 # TODO:
- - fix background positioning logic in section, see disabled test
  - jpackage configuration + release to maven central
  - mj-include
  - check https://github.com/mjmlio/mjml/compare/v4.14.1...v4.15.3 , printing especially

@@ -19,6 +19,8 @@ class CssUnitParser {
             return "%".equals(unit);
         }
 
+        boolean isPx() { return "px".equals(unit); }
+
         @Override
         public String toString() {
             return Utils.floatToString(value) + unit;

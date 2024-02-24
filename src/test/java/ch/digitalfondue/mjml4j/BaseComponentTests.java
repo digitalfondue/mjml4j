@@ -177,9 +177,7 @@ class BaseComponentTests {
     }
 
     @Test
-    @Disabled
     void testSectionBackgroundImage() {
-        // TODO: fix background positioning logic
         testTemplate("section-background-image");
     }
 }

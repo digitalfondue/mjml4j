@@ -144,7 +144,7 @@ class MjmlComponentCarouselImage extends BaseComponent.BodyComponent {
         )), res);
 
         if (href != null) {
-            var rel = this.getAttribute("rel");
+            var rel = getAttribute("rel");
             renderer.openTag("a", htmlAttributes(mapOf("href", href, "rel", rel, "target", "_blank")), res, false);
             renderImage.run();
             renderer.closeTag("a", res);

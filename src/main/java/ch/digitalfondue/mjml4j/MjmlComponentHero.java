@@ -245,7 +245,7 @@ class MjmlComponentHero extends BaseComponent.BodyComponent {
             var paddingTop = getShorthandAttributeValue("padding", "top");
             var paddingBottom = getShorthandAttributeValue("padding", "bottom");
             var height = heightCss.value;
-            if (heightCss.unit.equals("%")) {
+            if (heightCss.isPercent()) {
                 height = getContainerInnerWidth() / 100 * height;
             }
             height -= paddingTop + paddingBottom;

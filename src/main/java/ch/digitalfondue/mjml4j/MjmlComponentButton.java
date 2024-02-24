@@ -107,7 +107,7 @@ class MjmlComponentButton extends BaseComponent.BodyComponent {
 
         var parsedWidth = CssUnitParser.parse(content);
 
-        if (!parsedWidth.unit.equals("px"))
+        if (!parsedWidth.isPx())
             return null;
 
         var borders = cssBoxModel.borderWidth;

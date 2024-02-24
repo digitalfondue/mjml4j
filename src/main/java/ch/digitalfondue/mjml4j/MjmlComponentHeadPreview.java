@@ -26,7 +26,7 @@ class MjmlComponentHeadPreview extends BaseComponent.HeadComponent {
 
     @Override
     StringBuilder renderMjml(HtmlRenderer renderer) {
-        this.handler();
+        handler();
         return new StringBuilder(0);
     }
 }

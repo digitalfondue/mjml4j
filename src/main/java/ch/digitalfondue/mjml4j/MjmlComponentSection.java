@@ -3,7 +3,10 @@ package ch.digitalfondue.mjml4j;
 import ch.digitalfondue.mjml4j.AttributeValueType.AttributeType;
 import org.w3c.dom.Element;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 import static ch.digitalfondue.mjml4j.AttributeValueType.of;
 import static ch.digitalfondue.mjml4j.Utils.*;
@@ -71,7 +74,7 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
     }
 
     private StringBuilder renderBefore(HtmlRenderer renderer) {
-        var bgcolorAttr = this.getAttribute("background-color");
+        var bgcolorAttr = getAttribute("background-color");
         var tableAttr = mapOf(
                 "align", "center",
                 "border", "0",
@@ -128,81 +131,100 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
         return res;
     }
 
+    private static CssCoordinate getBackgroundPositionAsPercentage(String backgroundPositionX, String backgroundPositionY) {
+        var xPercent = backgroundPositionX;
+        var yPercent = backgroundPositionY;
+
+        switch (backgroundPositionX.toLowerCase(Locale.ROOT)) {
+            case "left":
+                xPercent = "0%";
+                break;
+            case "center":
+                xPercent = "50%";
+                break;
+            case "right":
+                xPercent = "100%";
+                break;
+            default:
+                if (!backgroundPositionX.contains("%")) {
+                    xPercent = "50%";
+                }
+                break;
+        }
+        switch (backgroundPositionY.toLowerCase(Locale.ROOT)) {
+            case "top":
+                yPercent = "0%";
+                break;
+            case "center":
+                yPercent = "50%";
+                break;
+            case "bottom":
+                yPercent = "100%";
+                break;
+            default:
+                if (!backgroundPositionY.contains("%")) {
+                    xPercent = "0%";
+                }
+                break;
+        }
+
+        return new CssCoordinate(xPercent, yPercent);
+    }
+
     private StringBuilder renderWithBackground(StringBuilder content) {
 
+        var backgroundSize = getAttribute("background-size");
+        var backgroundRepeat = getAttribute("background-repeat");
         var isFullWidth = isFullWidth();
-        var backgroundPosition = getBackgroundPosition();
 
-        switch (backgroundPosition.x) {
-            case "left":
-                backgroundPosition.x = "0%";
-                break;
+        var xy = parseBackgroundPosition();
+        var xyPercent = getBackgroundPositionAsPercentage(xy.x, xy.y);
+        var xPercent = xyPercent.x;
+        var yPercent = xyPercent.y;
 
-            case "center":
-                backgroundPosition.x = "50%";
-                break;
+        var xOriginPosition = getOriginBasedForAxis(true, xPercent, yPercent);
+        var yOriginPosition = getOriginBasedForAxis(false, xPercent, yPercent);
 
-            case "right":
-                backgroundPosition.x = "100%";
-                break;
+        String xOrigin = xOriginPosition.x;
+        String xPosition = xOriginPosition.y;
+        String yOrigin = yOriginPosition.x;
+        String yPosition = yOriginPosition.y;
 
-            default:
-                if (!backgroundPosition.x.contains("%"))
-                    backgroundPosition.x = "50%";
-                break;
-        }
+        var isBackgroundSizeAuto = "auto".equalsIgnoreCase(backgroundSize);
+        var isBackgroundSizeCover = "cover".equals(backgroundSize);
+        var isBackgroundSizeContain = "contain".equalsIgnoreCase(backgroundSize);
+        var isBackgroundRepeatNoRepeat = "no-repeat".equalsIgnoreCase(backgroundRepeat);
 
-        switch (backgroundPosition.y) {
-            case "top":
-                backgroundPosition.y = "0%";
-                break;
+        String vmlSize = null;
+        String vmlAspect = null;
+        String vmlType = isBackgroundRepeatNoRepeat ? "frame" : "tile";
 
-            case "center":
-                backgroundPosition.y = "50%";
-                break;
+        if (isBackgroundSizeCover || isBackgroundSizeContain) {
+            vmlSize = "1,1";
+            vmlAspect = isBackgroundSizeCover ? "atleast" : "atmost";
+        } else if (!isBackgroundSizeAuto) {
+            var positions = backgroundSize.split(" ");
 
-            case "bottom":
-                backgroundPosition.y = "100%";
-                break;
-
-            default:
-                if (!backgroundPosition.y.contains("%"))
-                    backgroundPosition.y = "0%";
-                break;
-        }
-
-        var originX = calculateBackgroundAxisOrigin("x", backgroundPosition);
-        var originY = calculateBackgroundAxisOrigin("y", backgroundPosition);
-
-        var vSizeAttributes = new LinkedHashMap<String, String>();
-        if (getAttribute("background-size").equalsIgnoreCase("cover") ||
-                getAttribute("background-size").equalsIgnoreCase("contain")) {
-            vSizeAttributes = mapOf(
-                    "size", "1,1",
-                    "aspect", getAttribute("background-size").equalsIgnoreCase("cover") ? "atleast" : "atmost"
-            );
-        } else if (!getAttribute("background-size").equalsIgnoreCase("auto")) {
-            var backgroundSize = getAttribute("background-size");
-            var bgSplit = Utils.splitBySpace(backgroundSize);
-            if (bgSplit.length == 1) {
-                vSizeAttributes = mapOf(
-                        "size", getAttribute("background-size"),
-                        "aspect", "atmost"
-                );
+            if (positions.length == 1) {
+                vmlSize = positions[0];
+                vmlAspect = "atmost";
             } else {
-                vSizeAttributes = mapOf(
-                        "size", backgroundSize.replace(' ', ',')
-                );
+                vmlSize = Arrays.stream(positions).collect(Collectors.joining(","));
             }
         }
 
-        var vmlType = getAttribute("background-repeat").equalsIgnoreCase("no-repeat") ? "frame" : "tile";
-        if (getAttribute("background-size").equalsIgnoreCase("auto")) {
-            vmlType = "tile"; // If no size provided, keep old behavior because outlook can't use original image size with "frame"
+        if (isBackgroundSizeAuto) {
+            vmlType = "tile";
+            xOrigin = "0.5";
+            yOrigin = "0";
+            xPosition = "0.5";
+            yPosition = "0";
+        }
 
-            // Also ensure that images are still cropped the same way
-            originX = new CssCoordinate("0.5", "0.5");
-            originY = new CssCoordinate("0", "0");
+        var vSizeAttributes = new LinkedHashMap<String, String>();
+        vSizeAttributes.put("size", vmlSize);
+        if (vmlAspect != null) {
+            vSizeAttributes.put("aspect", vmlAspect);
         }
 
         var res = new StringBuilder();
@@ -222,8 +244,8 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
                 htmlAttributes(
                         mergeLeft(
                                 mapOf(
-                                        "origin", originX.x + ", " + originY.x,
-                                        "position", originX.y + ", " + originY.y,
+                                        "origin", xOrigin + ", " + yOrigin,
+                                        "position", xPosition + ", " + yPosition,
                                         "src", getAttribute("background-url"),
                                         "color", getAttribute("background-color"),
                                         "type", vmlType
@@ -237,7 +259,33 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
         res.append("</v:textbox>\n");
         res.append("</v:rect>\n");
         res.append("<![endif]-->\n");
+
         return res;
+    }
+
+    private CssCoordinate getOriginBasedForAxis(boolean isXAxis, String positionX, String positionY) {
+        var position = isXAxis ? positionX : positionY;
+        var backgroundRepeat = getAttribute("background-repeat");
+
+        if (position.contains("%")) {
+            var positionUnit = CssUnitParser.parse(position);
+            var positionUnitDouble = positionUnit.value / 100.0;
+            if ("repeat".equals(backgroundRepeat)) {
+                var temp = floatToString(positionUnitDouble);
+                return new CssCoordinate(temp, temp);
+            } else {
+                var temp = floatToString(((positionUnitDouble * 100) - 50.0) / 100);
+                return new CssCoordinate(temp, temp);
+            }
+        } else if ("repeat".equals(backgroundRepeat)) {
+            var temp = isXAxis ? "0.5" : "0";
+
+            return new CssCoordinate(temp, temp);
+        } else {
+            var temp = isXAxis ? "0" : "-0.5";
+
+            return new CssCoordinate(temp, temp);
+        }
     }
 
     private String renderAfter() {
@@ -278,7 +326,7 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
         res.append("<!--[if mso | IE]>");
         res.append("<table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">");
         res.append("<![endif]-->\n");
-        res.append(this.renderChildren(renderer));
+        res.append(renderChildren(renderer));
         res.append("\n<!--[if mso | IE]></table><![endif]-->");
         renderer.closeTag("td", res);
         renderer.closeTag("tr", res);
@@ -295,14 +343,15 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
     StringBuilder renderChildren(HtmlRenderer renderer) {
         var sb = new StringBuilder();
 
-        if (this.getChildren().isEmpty())
+        if (getChildren().isEmpty()) {
             return sb;
+        }
 
         sb.append("\n<!--[if mso | IE]>\n");
         sb.append("<tr>\n");
         sb.append("<![endif]-->\n");
 
-        for (var childComponent : this.getChildren()) {
+        for (var childComponent : getChildren()) {
             var childContent = childComponent.renderMjml(renderer);
             if (Utils.isNullOrWhiteSpace(childContent))
                 continue;
@@ -432,7 +481,6 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
     private CssCoordinate parseBackgroundPosition() {
         var posSplit = Utils.splitBySpace(getAttribute("background-position"));
 
-
         if (posSplit.length == 1) {
             var value = posSplit[0];
 
@@ -457,35 +505,5 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
             return new CssCoordinate(value1, value2);
         }
         return new CssCoordinate("center", "top");
-    }
-
-    private CssCoordinate calculateBackgroundAxisOrigin(String axis, CssCoordinate coordinate) {
-        var isX = axis.equalsIgnoreCase("x");
-        var isBackgroundRepeat = hasAttribute("background-repeat") && getAttribute("background-repeat").equalsIgnoreCase("repeat");
-
-        var position = isX ? coordinate.x : coordinate.y;
-
-        float positionFloat;
-        float originFloat;
-
-        if (position.contains("%")) {
-            var percentage = CssUnitParser.parse(position);
-
-            if (isBackgroundRepeat) {
-                positionFloat = percentage.value;
-                originFloat = percentage.value;
-            } else {
-                float computed = (-50 + (percentage.value * 100)) / 100;
-                positionFloat = computed;
-                originFloat = computed;
-            }
-        } else if (isBackgroundRepeat) {
-            positionFloat = isX ? 0.5f : 0f;
-            originFloat = isX ? 0.5f : 0f;
-        } else {
-            positionFloat = isX ? 0f : -0.5f;
-            originFloat = isX ? 0f : -0.5f;
-        }
-        return new CssCoordinate(floatToString(originFloat), floatToString(positionFloat));
     }
 }

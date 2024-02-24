@@ -50,21 +50,17 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
             var sectionWidth = parent.cssBoxModel.boxWidth;
             if (hasAttribute("width")) {
                 containerWidth = getAttribute("width");
-                childContainerWidth = containerWidth;
             } else {
                 containerWidth = floatToString(sectionWidth / parentSectionColumnCount) + "px";
-                childContainerWidth = containerWidth;
             }
+            childContainerWidth = containerWidth;
 
             var parsedWidth = CssUnitParser.parse(containerWidth);
-            if (Utils.equalsIgnoreCase(parsedWidth.unit, "%")) {
+            if (parsedWidth.isPercent()) {
                 parsedWidth.value = (sectionWidth * parsedWidth.value / 100);
-                containerWidth = floatToString(parsedWidth.value) + "px";
-                childContainerWidth = floatToString(parsedWidth.value - allPaddings) + "px";
-            } else {
-                containerWidth = floatToString(parsedWidth.value) + "px";
-                childContainerWidth = floatToString(parsedWidth.value - allPaddings) + "px";
             }
+            containerWidth = floatToString(parsedWidth.value) + "px";
+            childContainerWidth = floatToString(parsedWidth.value - allPaddings) + "px";
 
             var columnWidth = CssUnitParser.parse(childContainerWidth);
             return new CssBoxModel(
@@ -118,7 +114,7 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
         var parsedWidth = getParsedWidth();
         var parsedContainerWidth = CssUnitParser.parse(containerWidth);
 
-        if ("%".equals(parsedWidth.unit)) {
+        if (parsedWidth.isPercent()) {
             return parsedContainerWidth.toString();
         }
         return parsedWidth.toString();
@@ -132,7 +128,7 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
         var className = "mj-column-px-" + formattedClassNb;
 
 
-        if (parsedWidth.unit.equalsIgnoreCase("%")) {
+        if (parsedWidth.isPercent()) {
             className = "mj-column-per-" + formattedClassNb;
         }
 
@@ -275,7 +271,7 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
                 "width", "100%"
         ))).append(">\n");
         res.append("<tbody>");
-        res.append(this.renderChildren(renderer));
+        res.append(renderChildren(renderer));
         res.append("</tbody>");
         res.append("</table>\n");
 
@@ -294,7 +290,7 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
         res.append("<tbody>\n");
         res.append("<tr>\n");
         res.append("<td ").append(htmlAttributes(mapOf("style", "gutter"))).append(">\n");
-        res.append(this.renderColumn(renderer));
+        res.append(renderColumn(renderer));
         res.append("</td>\n");
         res.append("</tr>\n");
         res.append("</tbody>\n");
@@ -317,7 +313,7 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
                 "class", classesName,
                 "style", "div"
         ))).append(">\n");
-        res.append(bHasGutter ? this.renderGutter(renderer) : this.renderColumn(renderer));
+        res.append(bHasGutter ? renderGutter(renderer) : renderColumn(renderer));
         res.append("</div>\n");
         return res;
     }

@@ -18,7 +18,7 @@ class MjmlComponentCarousel extends BaseComponent.BodyComponent {
 
     MjmlComponentCarousel(Element element, BaseComponent parent, GlobalContext context) {
         super(element, parent, context);
-        this.carouselId = genRandomHexString();
+        carouselId = genRandomHexString();
     }
 
     private static final LinkedHashMap<String, AttributeValueType> ALLOWED_DEFAULT_ATTRIBUTES = mapOf(
@@ -275,7 +275,7 @@ class MjmlComponentCarousel extends BaseComponent.BodyComponent {
 
     private StringBuilder generateRadios(HtmlRenderer renderer) {
         var res = new StringBuilder();
-        this.carouselImages.stream().forEachOrdered(c -> res.append(c.renderRadio(renderer)));
+        carouselImages.stream().forEachOrdered(c -> res.append(c.renderRadio(renderer)));
         return res;
     }
 
@@ -284,7 +284,7 @@ class MjmlComponentCarousel extends BaseComponent.BodyComponent {
         if (!"visible".equals(getAttribute("thumbnails"))) {
             return res;
         }
-        this.carouselImages.stream().forEachOrdered(c -> res.append(c.renderThumbnail(renderer)));
+        carouselImages.stream().forEachOrdered(c -> res.append(c.renderThumbnail(renderer)));
         return res;
     }
 

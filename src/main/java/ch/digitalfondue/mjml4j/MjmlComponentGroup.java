@@ -53,7 +53,7 @@ class MjmlComponentGroup extends BaseComponent.BodyComponent {
     @Override
     CssBoxModel getBoxModel() {
 
-        var containerWidth = CssUnitParser.parse(context.containerWidth);
+        var parsedContextContainerWidth = CssUnitParser.parse(context.containerWidth);
 
 
         if (hasParentComponent()) {
@@ -67,27 +67,25 @@ class MjmlComponentGroup extends BaseComponent.BodyComponent {
 
 
             if (hasAttribute("width")) {
-                this.containerWidth = getAttribute("width");
+                containerWidth = getAttribute("width");
             } else {
-                this.containerWidth = floatToString(sectionWidth / parentSectionColumnCount) + "px";
+                containerWidth = floatToString(sectionWidth / parentSectionColumnCount) + "px";
             }
 
-            var parsedWidth = CssUnitParser.parse(this.containerWidth);
+            var parsedWidth = CssUnitParser.parse(containerWidth);
 
 
-            if (parsedWidth.unit.equals("%")) {
+            if (parsedWidth.isPercent()) {
                 parsedWidth.value = sectionWidth * parsedWidth.value / 100;
-                this.containerWidth = floatToString(parsedWidth.value) + "px";
-            } else {
-                this.containerWidth = floatToString(parsedWidth.value) + "px";
             }
+            containerWidth = floatToString(parsedWidth.value) + "px";
 
             var columnWidth = CssUnitParser.parse(this.containerWidth);
 
             return new CssBoxModel(parsedWidth.value, 0, 0, columnWidth.value);
         }
 
-        return new CssBoxModel(containerWidth.value, 0, 0, containerWidth.value);
+        return new CssBoxModel(parsedContextContainerWidth.value, 0, 0, parsedContextContainerWidth.value);
     }
 
     private int getSectionColumnCount() {
@@ -117,7 +115,7 @@ class MjmlComponentGroup extends BaseComponent.BodyComponent {
         var parsedWidth = getParsedWidth();
         var parsedContainerWidth = CssUnitParser.parse(containerWidth);
 
-        if (parsedWidth.unit.equals("%"))
+        if (parsedWidth.isPercent())
             return floatToString(parsedContainerWidth.value * parsedWidth.value / 100) + "px";
 
         return parsedWidth.toString();
@@ -131,7 +129,7 @@ class MjmlComponentGroup extends BaseComponent.BodyComponent {
         var className = "mj-column-px-" + formattedClassNb;
 
 
-        if (parsedWidth.unit.equals("%")) {
+        if (parsedWidth.isPercent()) {
             className = "mj-column-per-" + formattedClassNb;
         }
 
@@ -148,7 +146,7 @@ class MjmlComponentGroup extends BaseComponent.BodyComponent {
 
         var parsedWidth = CssUnitParser.parse(width);
 
-        if (parsedWidth.unit.equals("%"))
+        if (parsedWidth.isPercent())
             return floatToString(100 * parsedWidth.value / getContainerInnerWidth()) + "px";
 
         return parsedWidth.toString();

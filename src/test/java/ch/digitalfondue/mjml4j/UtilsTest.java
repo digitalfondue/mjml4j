@@ -14,6 +14,7 @@ class UtilsTest {
 
         var defaultPx = CssUnitParser.parse("10");
         Assertions.assertEquals("px", defaultPx.unit);
+        Assertions.assertTrue(defaultPx.isPx());
         Assertions.assertEquals(10., defaultPx.value, 0.001);
     }
 

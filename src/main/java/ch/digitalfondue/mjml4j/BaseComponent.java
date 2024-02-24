@@ -52,7 +52,7 @@ abstract class BaseComponent {
     }
 
     final void setupComponentAttributes() {
-        this.attributes = new LinkedHashMap<>(defaultAttributeValues());
+        attributes = new LinkedHashMap<>(defaultAttributeValues());
         if (!attributes.containsKey("mj-class")) {
             attributes.put("mj-class", null);
         }
@@ -191,7 +191,7 @@ abstract class BaseComponent {
 
     StringBuilder renderChildren(HtmlRenderer renderer) {
         StringBuilder sb = new StringBuilder();
-        for (var childComponent : this.children) {
+        for (var childComponent : children) {
             sb.append(childComponent.renderMjml(renderer));
         }
         return sb;
@@ -209,7 +209,7 @@ abstract class BaseComponent {
     }
 
     StringBuilder renderMjml(HtmlRenderer renderer) {
-        return this.renderChildren(renderer);
+        return renderChildren(renderer);
     }
 
     static abstract class BodyComponent extends BaseComponent {
@@ -222,7 +222,7 @@ abstract class BaseComponent {
         }
 
         void setupPostConstruction() {
-            this.cssBoxModel = getBoxModel();
+            cssBoxModel = getBoxModel();
             var tagName = getTagName();
             context.addHeadStyle(tagName, headStyle());
             context.addComponentHeadStyle(componentsHeadStyle());
@@ -392,7 +392,7 @@ abstract class BaseComponent {
 
         String styles(String styleLibraryName, LinkedHashMap<String, String> styleOverride, boolean outputDefaults) {
 
-            var styleLibrary = this.styleLibraries.getStyleLibrary(styleLibraryName);
+            var styleLibrary = styleLibraries.getStyleLibrary(styleLibraryName);
 
             if (!outputDefaults)
                 return inlineCss(Utils.mergeLeft(styleLibrary, styleOverride));
@@ -431,8 +431,8 @@ abstract class BaseComponent {
 
         @Override
         StringBuilder renderMjml(HtmlRenderer renderer) {
-            this.handler();
-            return this.renderChildren(renderer);
+            handler();
+            return renderChildren(renderer);
         }
     }
 
