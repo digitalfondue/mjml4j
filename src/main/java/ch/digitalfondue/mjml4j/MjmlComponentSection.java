@@ -55,7 +55,7 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
 
     private String getBackgroundString() {
         var backgroundPosition = getBackgroundPosition();
-        return backgroundPosition.x + backgroundPosition.y;
+        return backgroundPosition.x + " " + backgroundPosition.y;
     }
 
     @Override
@@ -130,9 +130,7 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
 
     private StringBuilder renderWithBackground(StringBuilder content) {
 
-        var containerWidth = CssUnitParser.parse(floatToString(getContainerOuterWidth()));
         var isFullWidth = isFullWidth();
-        var isPercentage = "%".equalsIgnoreCase(containerWidth.unit);
         var backgroundPosition = getBackgroundPosition();
 
         switch (backgroundPosition.x) {
@@ -341,15 +339,15 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
             return getAttribute("background-color");
         }
 
-        return getAttribute("background-color") +
-                " url(" +
+        return (nullToEmpty(getAttribute("background-color")) +
+                " url('" +
                 getAttribute("background-url") +
-                ") " +
+                "') " +
                 getBackgroundString() +
                 " / " +
                 getAttribute("background-size") +
                 " " +
-                getAttribute("background-repeat");
+                getAttribute("background-repeat")).trim();
     }
 
     @Override

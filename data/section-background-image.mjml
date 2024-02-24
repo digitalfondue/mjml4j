@@ -1,0 +1,14 @@
+<mjml>
+    <mj-body>
+        <mj-section background-url="https://i.imgur.com/fgQ7pNW.png" background-size="cover" background-repeat="no-repeat">
+            <mj-column>
+                <mj-text align="center" line-height="#" color="white" font-size="40px" font-family="Roboto">February Newsletter</mj-text>
+                <mj-button background-color="green" href="www.fireflyorthoses.com">CTA</mj-button>
+            </mj-column>
+        </mj-section>
+        <mj-hero mode="fixed-height" background-url="https://i.imgur.com/fgQ7pNW.png" background-color="#2a3448" height="171px" width="100%">
+            <mj-text padding="20px" color="#ffffff" font-family="Helvetica" align="center" font-size="40px" line-height="42px" font-weight="900">February Newsletter</mj-text>
+            <mj-button href="www.fireflyorthoses.com" align="center">CTA</mj-button>
+        </mj-hero>
+    </mj-body>
+</mjml>

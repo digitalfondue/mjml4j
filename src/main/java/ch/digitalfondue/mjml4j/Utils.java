@@ -19,6 +19,10 @@ class Utils {
         return v == null || v.isEmpty();
     }
 
+    static String nullToEmpty(String s) {
+        return s == null ? "" : s;
+    }
+
     static String parseIntNumberPart(String s) {
         var res = new StringBuilder();
         for (var c : s.toCharArray()) {

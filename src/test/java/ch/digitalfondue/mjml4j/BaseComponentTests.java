@@ -165,4 +165,11 @@ class BaseComponentTests {
     void testRawSpecial() {
         testTemplate("raw-special");
     }
+
+    @Test
+    @Disabled
+    void testSectionBackgroundImage() {
+        // TODO: fix background positioning logic
+        testTemplate("section-background-image");
+    }
 }
