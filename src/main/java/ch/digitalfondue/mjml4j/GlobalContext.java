@@ -37,7 +37,7 @@ class GlobalContext {
 
     GlobalContext(Document document, Mjml4j.Configuration configuration) {
         this.document = document;
-        this.dir = configuration.dir();
+        this.dir = configuration.dir().value();
         this.language = configuration.language();
     }
 

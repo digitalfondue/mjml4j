@@ -31,13 +31,26 @@ public final class Mjml4j {
         //
     }
 
-    public record Configuration(String language, String dir) {
-        public Configuration(String language) {
-            this(language, "auto");
+    public enum TextDirection {
+
+        LTR("ltr"), RTL("rtl"), AUTO("auto");
+        private String value;
+        TextDirection(String value) {
+            this.value = value;
+        }
+
+        public String value() {
+            return value;
         }
     }
 
-    private static final Configuration DEFAULT_CONFIG = new Configuration("und", "auto");
+    public record Configuration(String language, TextDirection dir) {
+        public Configuration(String language) {
+            this(language, TextDirection.AUTO);
+        }
+    }
+
+    private static final Configuration DEFAULT_CONFIG = new Configuration("und", TextDirection.AUTO);
 
     /**
      * Render the given template with the provided configuration.
