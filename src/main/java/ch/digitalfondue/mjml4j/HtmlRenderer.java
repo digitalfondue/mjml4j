@@ -15,12 +15,20 @@ class HtmlRenderer {
         depth++;
     }
 
-    void openTag(String name, StringBuilder attributes, StringBuilder buffer) {
+    void openTag(String name, StringBuilder attributes, StringBuilder buffer, boolean spaceEnd) {
         for (int i = 0; i < depth; i++) {
             buffer.append("  ");
         }
-        buffer.append("<").append(name).append(" ").append(attributes).append(" >\n");
+        buffer.append("<").append(name).append(" ").append(attributes);
+        if (spaceEnd) {
+            buffer.append(" ");
+        }
+        buffer.append(">\n");
         depth++;
+    }
+
+    void openTag(String name, StringBuilder attributes, StringBuilder buffer) {
+        openTag(name, attributes, buffer, true);
     }
 
     void openCloseTag(String name, StringBuilder attributes, StringBuilder buffer) {
