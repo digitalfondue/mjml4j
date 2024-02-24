@@ -48,7 +48,7 @@ class MjmlComponentNavbar extends BaseComponent.BodyComponent {
 
     @Override
     String headStyle() {
-        String res = "noinput.mj-menu-checkbox { display:block!important; max-height:none!important; visibility:visible!important; }\n" +
+        return "noinput.mj-menu-checkbox { display:block!important; max-height:none!important; visibility:visible!important; }\n" +
                 "@media only screen and (max-width:" + Utils.makeLowerBreakpoint(context.breakpoint) + ") {\n" +
                 ".mj-menu-checkbox[type=\"checkbox\"] ~ .mj-inline-links { display:none!important; }\n" +
                 ".mj-menu-checkbox[type=\"checkbox\"]:checked ~ .mj-inline-links,\n" +
@@ -57,7 +57,6 @@ class MjmlComponentNavbar extends BaseComponent.BodyComponent {
                 ".mj-menu-checkbox[type=\"checkbox\"]:checked ~ .mj-menu-trigger .mj-menu-icon-close { display:block!important; }\n" +
                 ".mj-menu-checkbox[type=\"checkbox\"]:checked ~ .mj-menu-trigger .mj-menu-icon-open { display:none!important; }\n" +
                 "}\n";
-        return res;
     }
 
     @Override

@@ -3,10 +3,8 @@ package ch.digitalfondue.mjml4j;
 import ch.digitalfondue.mjml4j.AttributeValueType.AttributeType;
 import org.w3c.dom.Element;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 import static ch.digitalfondue.mjml4j.AttributeValueType.of;
 import static ch.digitalfondue.mjml4j.Utils.*;
@@ -24,6 +22,9 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
 
     private boolean isFullWidth() {
         return hasAttribute("full-width") && getAttribute("full-width").equalsIgnoreCase("full-width");
+    }
+
+    private record CssCoordinate(String x, String y) {
     }
 
     private static final LinkedHashMap<String, AttributeValueType> ALLOWED_DEFAULT_ATTRIBUTES = mapOf(
@@ -187,8 +188,10 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
 
         String xOrigin = xOriginPosition.x;
         String xPosition = xOriginPosition.y;
+        //
         String yOrigin = yOriginPosition.x;
         String yPosition = yOriginPosition.y;
+        //
 
         var isBackgroundSizeAuto = "auto".equalsIgnoreCase(backgroundSize);
         var isBackgroundSizeCover = "cover".equals(backgroundSize);
@@ -209,7 +212,7 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
                 vmlSize = positions[0];
                 vmlAspect = "atmost";
             } else {
-                vmlSize = Arrays.stream(positions).collect(Collectors.joining(","));
+                vmlSize = String.join(",", positions);
             }
         }
 

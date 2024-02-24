@@ -41,9 +41,7 @@ abstract class BaseComponent {
     private LinkedHashMap<String, String> defaultAttributeValues() {
         var kvt = allowedAttributes();
         var res = new LinkedHashMap<String, String>();
-        kvt.forEach((k, vt) -> {
-            res.put(k, vt.value());
-        });
+        kvt.forEach((k, vt) -> res.put(k, vt.value()));
         return res;
     }
 
@@ -289,11 +287,11 @@ abstract class BaseComponent {
         }
 
         float getContainerInnerWidth() {
-            return cssBoxModel.boxWidth;
+            return cssBoxModel.boxWidth();
         }
 
         float getContainerOuterWidth() {
-            return cssBoxModel.totalWidth;
+            return cssBoxModel.totalWidth();
         }
 
 

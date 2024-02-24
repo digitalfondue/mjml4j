@@ -62,7 +62,7 @@ public final class Mjml4j {
     }
 
     /**
-     * Render the template with the default configuration: mj-include will not be supported out of the box, you must provide/specify a {@link IncludeResolver}.
+     * Render the template with the default configuration.
      *
      * @param template
      * @return
@@ -135,7 +135,7 @@ public final class Mjml4j {
                     <meta http-equiv="X-UA-Compatible" content="IE=edge">
                     <!--<![endif]-->
                     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1">  
+                    <meta name="viewport" content="width=device-width, initial-scale=1">
                     <style type="text/css">
                       #outlook a { padding:0; }
                       body { margin:0;padding:0;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%; }
@@ -306,28 +306,31 @@ public final class Mjml4j {
         for (var i = 0; i < count; i++) {
             var childNode = childNodes.item(i);
             switch (childNode.getNodeType()) {
-                case Node.ELEMENT_NODE:
+                case Node.ELEMENT_NODE: {
                     var childComponent = createMjmlComponent((Element) childNode, parentComponent, context);
                     parentComponent.getChildren().add(childComponent);
-                    traverseTree(childNode, childComponent, document,  context);
+                    traverseTree(childNode, childComponent, document, context);
                     break;
-                case Node.COMMENT_NODE:
+                }
+                case Node.COMMENT_NODE: {
                     var childCommentNode = (Comment) childNode;
                     var commentElement = document.createElement("html-comment");
                     commentElement.setTextContent(childCommentNode.getTextContent());
-                    childComponent = createMjmlComponent(commentElement, parentComponent, context);
+                    var childComponent = createMjmlComponent(commentElement, parentComponent, context);
                     parentComponent.getChildren().add(childComponent);
                     break;
-                case Node.TEXT_NODE:
+                }
+                case Node.TEXT_NODE: {
                     var childElementText = (Text) childNode;
                     if (childElementText.getWholeText().isEmpty())
                         continue;
                     var textElement = document.createElement("html-text");
                     textElement.setNodeValue(childNode.getTextContent());
                     textElement.setTextContent(childNode.getTextContent());
-                    childComponent = createMjmlComponent(textElement, parentComponent, context);
+                    var childComponent = createMjmlComponent(textElement, parentComponent, context);
                     parentComponent.getChildren().add(childComponent);
                     break;
+                }
                 default:
                     break;
             }

@@ -275,7 +275,7 @@ class MjmlComponentCarousel extends BaseComponent.BodyComponent {
 
     private StringBuilder generateRadios(HtmlRenderer renderer) {
         var res = new StringBuilder();
-        carouselImages.stream().forEachOrdered(c -> res.append(c.renderRadio(renderer)));
+        carouselImages.forEach(c -> res.append(c.renderRadio(renderer)));
         return res;
     }
 
@@ -284,7 +284,7 @@ class MjmlComponentCarousel extends BaseComponent.BodyComponent {
         if (!"visible".equals(getAttribute("thumbnails"))) {
             return res;
         }
-        carouselImages.stream().forEachOrdered(c -> res.append(c.renderThumbnail(renderer)));
+        carouselImages.forEach(c -> res.append(c.renderThumbnail(renderer)));
         return res;
     }
 

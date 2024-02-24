@@ -8,17 +8,13 @@ class HtmlRenderer {
     }
 
     void openTag(String name, StringBuilder buffer) {
-        for (int i = 0; i < depth; i++) {
-            buffer.append("  ");
-        }
+        buffer.append("  ".repeat(Math.max(0, depth)));
         buffer.append("<").append(name).append(">\n");
         depth++;
     }
 
     void openTag(String name, StringBuilder attributes, StringBuilder buffer, boolean spaceEnd) {
-        for (int i = 0; i < depth; i++) {
-            buffer.append("  ");
-        }
+        buffer.append("  ".repeat(Math.max(0, depth)));
         buffer.append("<").append(name).append(" ").append(attributes);
         if (spaceEnd) {
             buffer.append(" ");
@@ -33,17 +29,13 @@ class HtmlRenderer {
 
     void openCloseTag(String name, StringBuilder attributes, StringBuilder buffer) {
 
-        for (int i = 0; i < depth; i++) {
-            buffer.append("  ");
-        }
+        buffer.append("  ".repeat(Math.max(0, depth)));
         buffer.append("<").append(name).append(" ").append(attributes).append(" />\n");
     }
 
     void closeTag(String name, StringBuilder buffer) {
         depth--;
-        for (int i = 0; i < depth; i++) {
-            buffer.append("  ");
-        }
+        buffer.append("  ".repeat(Math.max(0, depth)));
         buffer.append("</").append(name).append(">\n");
 
     }
@@ -71,8 +63,6 @@ class HtmlRenderer {
     }
 
     void appendCurrentSpacing(StringBuilder buffer) {
-        for (int i = 0; i < depth; i++) {
-            buffer.append("  ");
-        }
+        buffer.append("  ".repeat(Math.max(0, depth)));
     }
 }

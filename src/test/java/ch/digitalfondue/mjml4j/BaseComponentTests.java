@@ -1,6 +1,5 @@
 package ch.digitalfondue.mjml4j;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static ch.digitalfondue.mjml4j.Helpers.testTemplate;

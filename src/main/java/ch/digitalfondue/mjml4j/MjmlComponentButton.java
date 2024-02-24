@@ -110,7 +110,7 @@ class MjmlComponentButton extends BaseComponent.BodyComponent {
         if (!parsedWidth.isPx())
             return null;
 
-        var borders = cssBoxModel.borderWidth;
+        var borders = cssBoxModel.borderWidth();
         var innerPaddings = getShorthandAttributeValue("inner-padding", "left") +
                 getShorthandAttributeValue("inner-padding", "right");
 

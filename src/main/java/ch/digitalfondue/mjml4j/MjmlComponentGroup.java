@@ -63,7 +63,7 @@ class MjmlComponentGroup extends BaseComponent.BodyComponent {
             var parentSectionColumnCount = getSectionColumnCount();
 
 
-            var sectionWidth = parent.cssBoxModel.boxWidth;
+            var sectionWidth = parent.cssBoxModel.boxWidth();
 
 
             if (hasAttribute("width")) {
@@ -106,9 +106,8 @@ class MjmlComponentGroup extends BaseComponent.BodyComponent {
         if (hasAttribute("width"))
             width = getAttribute("width");
         else
-            width = floatToString(100 / getSectionColumnCount()) + "%";
-        var parsedWidth = CssUnitParser.parse(width);
-        return parsedWidth;
+            width = floatToString(100. / getSectionColumnCount()) + "%";
+        return CssUnitParser.parse(width);
     }
 
     private String getWidthAsPixel() {

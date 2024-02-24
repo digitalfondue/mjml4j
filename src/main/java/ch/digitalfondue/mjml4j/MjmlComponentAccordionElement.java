@@ -70,8 +70,8 @@ class MjmlComponentAccordionElement extends BaseComponent.BodyComponent {
 
     private void ensureMissingElements() {
 
-        var addTitle = !getChildren().stream().anyMatch(MjmlComponentAccordionTitle.class::isInstance);
-        var addText = !getChildren().stream().anyMatch(MjmlComponentAccordionText.class::isInstance);
+        var addTitle = getChildren().stream().noneMatch(MjmlComponentAccordionTitle.class::isInstance);
+        var addText = getChildren().stream().noneMatch(MjmlComponentAccordionText.class::isInstance);
 
         if (addTitle) {
             var element = context.document.createElement("mj-accordion-title");

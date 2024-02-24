@@ -30,10 +30,10 @@ record AttributeValueType(String value, AttributeType type) {
                 if (value != null) {
                     var matcher = COLOR_SHORT.matcher(value);
                     if (matcher.find()) {
-                        return new StringBuilder("#")
-                                .append(matcher.group(1).repeat(2))
-                                .append(matcher.group(2).repeat(2))
-                                .append(matcher.group(3).repeat(2)).toString();
+                        return "#" +
+                                matcher.group(1).repeat(2) +
+                                matcher.group(2).repeat(2) +
+                                matcher.group(3).repeat(2);
                     }
                 }
                 return value;

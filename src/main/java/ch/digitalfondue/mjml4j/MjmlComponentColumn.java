@@ -14,7 +14,7 @@ import static java.util.Map.entry;
 class MjmlComponentColumn extends BaseComponent.BodyComponent {
 
     private String containerWidth;
-    private String childContainerWidth;
+    // private String childContainerWidth;
     private int parentSectionColumnCount;
 
     MjmlComponentColumn(Element element, BaseComponent parent, GlobalContext context) {
@@ -47,13 +47,13 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
         if (hasParentComponent()) {
             var parent = (BodyComponent) getParentComponent();
             parentSectionColumnCount = getSectionColumnCount();
-            var sectionWidth = parent.cssBoxModel.boxWidth;
+            var sectionWidth = parent.cssBoxModel.boxWidth();
             if (hasAttribute("width")) {
                 containerWidth = getAttribute("width");
             } else {
                 containerWidth = floatToString(sectionWidth / parentSectionColumnCount) + "px";
             }
-            childContainerWidth = containerWidth;
+            var childContainerWidth = containerWidth;
 
             var parsedWidth = CssUnitParser.parse(containerWidth);
             if (parsedWidth.isPercent()) {
@@ -84,9 +84,8 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
         if (hasAttribute("width"))
             width = getAttribute("width");
         else
-            width = floatToString(100 / getSectionColumnCount()) + "%";
-        var parsedWidth = CssUnitParser.parse(width);
-        return parsedWidth;
+            width = floatToString(100. / getSectionColumnCount()) + "%";
+        return CssUnitParser.parse(width);
     }
 
 
@@ -99,14 +98,15 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
         }
 
         if (Utils.isNullOrWhiteSpace(width))
-            return floatToString(100 / parentSectionColumnCount) + "%";
+            return floatToString(100. / parentSectionColumnCount) + "%";
 
         var parsedWidth = CssUnitParser.parse(width);
 
-        return switch (parsedWidth.unit.toLowerCase(Locale.ROOT)) {
-            case "%" -> width;
-            default -> floatToString(parsedWidth.value / CssUnitParser.parse(containerWidth).value) + "%";
-        };
+        if (parsedWidth.isPercent()) {
+            return width;
+        } else {
+            return floatToString(parsedWidth.value / CssUnitParser.parse(containerWidth).value) + "%";
+        }
     }
 
     String getWidthAsPixel() {

@@ -1,6 +1,5 @@
 package ch.digitalfondue.mjml4j;
 
-import java.util.Locale;
 import java.util.regex.Pattern;
 
 class CssUnitParser {
@@ -47,9 +46,10 @@ class CssUnitParser {
             widthUnit = "px";
         }
 
-        return switch (widthUnit) {
-            case "%" -> new CssParsedUnit(widthUnit, Float.parseFloat(widthValue));
-            default -> new CssParsedUnit(widthUnit, (int) Float.parseFloat(widthValue));
-        };
+        if ("%".equals(widthUnit)) {
+            return new CssParsedUnit(widthUnit, Float.parseFloat(widthValue));
+        } else {
+            return new CssParsedUnit(widthUnit, (int) Float.parseFloat(widthValue));
+        }
     }
 }

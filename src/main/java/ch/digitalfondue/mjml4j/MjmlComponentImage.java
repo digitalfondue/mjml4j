@@ -103,7 +103,7 @@ class MjmlComponentImage extends BaseComponent.BodyComponent {
 
     @Override
     String headStyle() {
-        String res = "    @media only screen and (max-width:" + makeLowerBreakpoint(context.breakpoint) + ") {\n" +
+        return "    @media only screen and (max-width:" + makeLowerBreakpoint(context.breakpoint) + ") {\n" +
                 "      table.mj-full-width-mobile {\n" +
                 "        width: 100% !important;\n" +
                 "      }\n\n" +
@@ -111,7 +111,6 @@ class MjmlComponentImage extends BaseComponent.BodyComponent {
                 "        width: auto !important;\n" +
                 "      }\n" +
                 "    }\n";
-        return res;
     }
 
     private void renderImage(HtmlRenderer renderer, StringBuilder res) {
