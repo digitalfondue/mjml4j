@@ -24,6 +24,8 @@ Additionally, no pretty print/minimization of the output is provided.
 
 # Use
 
+If you use it as a module, remember to add `requires ch.digitalfondue.mjml4j;` in your module-info.
+
 The api is quite simple:
 
 ```java
@@ -57,7 +59,7 @@ public class App {
 ```
 
 The `render` static method accept as a parameters:
-1) a string, which will be then parsed and processed by the html5 parser (jfiveparse) or it can accept a `org.w3c.dom.Document` document
+1) a string which will be then parsed and processed by the [html5 parser (jfiveparse)](https://github.com/digitalfondue/jfiveparse), or it can accept a `org.w3c.dom.Document` 
 2) a configuration object with language and optionally direction
 
 
