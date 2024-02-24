@@ -31,36 +31,13 @@ public final class Mjml4j {
         //
     }
 
-    /**
-     * Path resolver for handling mj-include directive.
-     */
-    public interface IncludeResolver {
-
-        /**
-         * Given the currentTemplatePath and the includePath, return the new path.
-         *
-         * @param currentTemplatePath
-         * @param includePath
-         * @return
-         */
-        String resolvePath(String currentTemplatePath, String includePath);
-
-        /**
-         * Using the given path, resolve the content as a string.
-         * 
-         * @param path
-         * @return
-         */
-        String resolveContent(String path);
-    }
-
-    public record Configuration(String language, String dir, String path, IncludeResolver includeResolver) {
+    public record Configuration(String language, String dir) {
         public Configuration(String language) {
-            this(language, "auto", null, null);
+            this(language, "auto");
         }
     }
 
-    private static final Configuration DEFAULT_CONFIG = new Configuration("und", "auto", null, null);
+    private static final Configuration DEFAULT_CONFIG = new Configuration("und", "auto");
 
     /**
      * Render the given template with the provided configuration.
