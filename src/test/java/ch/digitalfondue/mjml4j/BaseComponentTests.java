@@ -172,6 +172,11 @@ class BaseComponentTests {
     }
 
     @Test
+    void testSocialVertical() {
+        testTemplate("social-vertical");
+    }
+
+    @Test
     @Disabled
     void testSectionBackgroundImage() {
         // TODO: fix background positioning logic

@@ -84,45 +84,6 @@ class MjmlComponentSocial extends BaseComponent.BodyComponent {
         return INHERITING_ATTRIBUTES.contains(attributeName) ? getAttribute(attributeName) : null;
     }
 
-    @Override
-    StringBuilder renderChildren(HtmlRenderer renderer) {
-
-        var res = new StringBuilder();
-
-        for (var childComponent : getChildren()) {
-            var childContent = childComponent.renderMjml(renderer);
-
-            if (Utils.isNullOrWhiteSpace(childContent))
-                continue;
-
-            if (childComponent.isRawElement()) {
-                res.append(childContent);
-            } else if (childComponent instanceof MjmlComponentSocialElement socialElementComponent) {
-                renderer.appendCurrentSpacing(res);
-                renderer.openIfMsoIE(res, true);
-                renderer.openTag("td", res);
-                renderer.closeEndif(res, true);
-                renderer.openTag("table", socialElementComponent.htmlAttributes(mapOf(
-                        "align", getAttribute("align"),
-                        "border", "0",
-                        "cellpadding", "0",
-                        "cellspacing", "0",
-                        "role", "presentation",
-                        "style", "float:none;display:inline-table;"
-                )), res);
-                renderer.openTag("tbody", res);
-                res.append(childContent);
-                renderer.closeTag("tbody", res);
-                renderer.closeTag("table", res);
-                renderer.appendCurrentSpacing(res);
-                renderer.openIfMsoIE(res, true);
-                renderer.closeTag("td", res);
-                renderer.closeEndif(res, true);
-            }
-        }
-
-        return res;
-    }
 
     private StringBuilder renderVertical(HtmlRenderer renderer) {
         var res = new StringBuilder();
@@ -154,7 +115,37 @@ class MjmlComponentSocial extends BaseComponent.BodyComponent {
         ))).append(" >\n");
         renderer.openTag("tr", res);
         renderer.closeEndif(res, true);
-        res.append(renderChildren(renderer));
+        for (var childComponent : getChildren()) {
+            var childContent = childComponent.renderMjml(renderer);
+
+            if (Utils.isNullOrWhiteSpace(childContent))
+                continue;
+
+            if (childComponent.isRawElement()) {
+                res.append(childContent);
+            } else if (childComponent instanceof MjmlComponentSocialElement socialElementComponent) {
+                renderer.appendCurrentSpacing(res);
+                renderer.openIfMsoIE(res, true);
+                renderer.openTag("td", res);
+                renderer.closeEndif(res, true);
+                renderer.openTag("table", socialElementComponent.htmlAttributes(mapOf(
+                        "align", getAttribute("align"),
+                        "border", "0",
+                        "cellpadding", "0",
+                        "cellspacing", "0",
+                        "role", "presentation",
+                        "style", "float:none;display:inline-table;"
+                )), res);
+                renderer.openTag("tbody", res);
+                res.append(childContent);
+                renderer.closeTag("tbody", res);
+                renderer.closeTag("table", res);
+                renderer.appendCurrentSpacing(res);
+                renderer.openIfMsoIE(res, true);
+                renderer.closeTag("td", res);
+                renderer.closeEndif(res, true);
+            }
+        }
         renderer.openIfMsoIE(res, true);
         renderer.closeTag("tr", res);
         renderer.closeTag("table", res);
