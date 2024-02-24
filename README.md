@@ -1,7 +1,6 @@
 # MJML4J
 
-A java based mjml implementation.
-
+A java based [mjml](https://mjml.io/) implementation.
 
 # License
 
@@ -13,9 +12,18 @@ The code is based on the following projects:
  - https://github.com/SebastianStehle/mjml-net
  - https://github.com/LiamRiddell/MJML.NET
 
+# Status
+
+Most of the mj-* tags are supported. It's currently missing:
+
+ - mj-include: will be implemented
+ - mj-style: the inline attribute will be ignored 
+ - mj-html-attributes: will not be supported, as it requires a css selector
+
+Additionally, no pretty print/minimization of the output is provided.
+
 # TODO:
- - inline style, implement fallback as mjml-net
- - integrate CI + jpackage + release to maven central
+ - jpackage configuration + release to maven central
  - mj-include
  - check https://github.com/mjmlio/mjml/compare/v4.14.1...v4.15.3 , printing especially
  - validation api:
