@@ -6,7 +6,7 @@
 
     <groupId>ch.digitalfondue.mjml4j</groupId>
     <artifactId>mjml4j</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
     <inceptionYear>2024</inceptionYear>
     <description>mjml4j: an unofficial port of MJML to java.
