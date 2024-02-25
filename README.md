@@ -2,6 +2,12 @@
 
 A java based [mjml](https://mjml.io/) implementation.
 
+Require at least java 17.
+
+# Why
+
+As far as I know, there is no pure java porting of mjml. This library is quite compact (~145Kb) with a single dependency - the [html5 parser (jfiveparse)](https://github.com/digitalfondue/jfiveparse) (~150kb).
+
 # License
 
 mjml4j is licensed under the MIT License.
@@ -21,6 +27,24 @@ Most of the mj-* tags are supported. It's currently missing:
  - mj-html-attributes: will not be supported, as it requires a css selector
 
 Additionally, no pretty print/minimization of the output is provided.
+
+# Download
+
+maven:
+
+```xml
+<dependency>
+   <groupId>ch.digitalfondue.mjml4j</groupId>
+   <artifactId>mjml4j</artifactId>
+   <version>1.0.1</version>
+</dependency>
+```
+
+gradle:
+
+```
+implementation 'ch.digitalfondue.mjml4j:mjml4j:1.0.1'
+```
 
 # Use
 
