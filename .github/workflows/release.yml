@@ -2,7 +2,7 @@ name: Publish package to the Maven Central Repository
 on:
   push:
     tags:
-      - jfiveparse-*
+      - mjml4j-*
   pull_request:
     branches: [ main ]
 jobs:
