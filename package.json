@@ -3,6 +3,6 @@
     "mjml": "4.15.2"
   },
   "scripts": {
-    "build": "mjml data/*.mjml --config.beautify false -o data/ && mjml data/alfio/*.mjml --config.beautify false -o data/alfio"
+    "build": "mjml data/*.mjml --config.beautify false -o data/"
   }
 }
