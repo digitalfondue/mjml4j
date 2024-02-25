@@ -88,7 +88,6 @@ The `render` static method accept as a parameters:
 
 
 # TODO:
- - jpackage configuration + release to maven central
  - mj-include
  - check https://github.com/mjmlio/mjml/compare/v4.14.1...v4.15.3 , printing especially
  - validation api:
