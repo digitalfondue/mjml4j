@@ -1,0 +1,11 @@
+<mjml>
+    <mj-body>
+        <mj-section>
+            <mj-column>
+                <mj-text>
+                    &lt;script&gt;alert('test');&lt;/script&gt;
+                </mj-text>
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>

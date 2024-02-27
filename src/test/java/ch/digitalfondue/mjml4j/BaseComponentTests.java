@@ -179,4 +179,10 @@ class BaseComponentTests {
     void testSectionBackgroundImage() {
         testTemplate("section-background-image");
     }
+
+
+    @Test
+    void testEntitiesEscaping() {
+        testTemplate("entities-escaping");
+    }
 }
