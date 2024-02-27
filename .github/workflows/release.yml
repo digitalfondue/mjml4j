@@ -3,18 +3,16 @@ on:
   push:
     tags:
       - mjml4j-*
-  pull_request:
-    branches: [ main ]
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
-          distribution: 'adopt'
+          distribution: 'corretto'
       - name: Publish package
         env:
           JRELEASER_NEXUS2_USERNAME: ${{ secrets.JRELEASER_NEXUS2_USERNAME }}
