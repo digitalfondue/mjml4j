@@ -4,6 +4,8 @@ A java based [mjml](https://mjml.io/) implementation.
 
 Require at least java 17.
 
+Javadoc: https://javadoc.io/doc/ch.digitalfondue.mjml4j/mjml4j
+
 # Why
 
 As far as I know, there is no pure java porting of mjml. This library is quite compact (~145Kb) with a single dependency - the [html5 parser (jfiveparse)](https://github.com/digitalfondue/jfiveparse) (~150kb).
@@ -36,14 +38,14 @@ maven:
 <dependency>
    <groupId>ch.digitalfondue.mjml4j</groupId>
    <artifactId>mjml4j</artifactId>
-   <version>1.0.1</version>
+   <version>1.0.2</version>
 </dependency>
 ```
 
 gradle:
 
 ```
-implementation 'ch.digitalfondue.mjml4j:mjml4j:1.0.1'
+implementation 'ch.digitalfondue.mjml4j:mjml4j:1.0.2'
 ```
 
 # Use
