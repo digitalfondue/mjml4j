@@ -11,16 +11,19 @@ import static ch.digitalfondue.mjml4j.Utils.mapOf;
 class MjmlComponentBody extends BaseComponent.BodyComponent {
     MjmlComponentBody(Element element, BaseComponent parent, GlobalContext context) {
         super(element, parent, context);
+
+        if (hasAttribute("width")) {
+            context.containerWidth = getAttribute("width");
+        }
+
+        if (hasAttribute("background-color")) {
+            context.backgroundColor = getAttribute("background-color");
+        }
     }
 
     @Override
     void setupPostConstruction() {
         super.setupPostConstruction();
-        if (hasAttribute("width"))
-            context.containerWidth = getAttribute("width");
-
-        if (hasAttribute("background-color"))
-            context.backgroundColor = getAttribute("background-color");
     }
 
     private static final LinkedHashMap<String, AttributeValueType> ALLOWED_DEFAULT_ATTRIBUTES = mapOf(

@@ -139,7 +139,6 @@ class DOMSerializer {
             Text t = (Text) node;
             var text = literalAppend ? t.getData() : escapeTextData(t.getData());
             appendable.append(trim ? text.trim() : text);
-
         } else if (node.getNodeType() == Node.COMMENT_NODE) {
             appendable.append("<!--").append(((Comment) node).getData()).append("-->");
         } else if (node.getNodeType() == Node.DOCUMENT_TYPE_NODE) {

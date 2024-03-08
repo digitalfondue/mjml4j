@@ -30,4 +30,65 @@ class ComplexTemplateTests {
     void testAmario() {
         testTemplate("amario");
     }
+
+    @Test
+    void testArturia() {
+        testTemplate("arturia");
+    }
+
+    @Test
+    void testBasic() {
+        testTemplate("basic");
+    }
+
+    @Test
+    void testBlackFriday() {
+        testTemplate("black-friday");
+    }
+
+    @Test
+    void testCard() {
+        testTemplate("card");
+    }
+
+    @Test
+    void testChristmas() {
+        testTemplate("christmas");
+    }
+
+    @Test
+    void testNewsletter() {
+        testTemplate("newsletter");
+    }
+
+    @Test
+    void testOnepage() {
+        testTemplate("onepage");
+    }
+
+    @Test
+    void testProof() {
+        testTemplate("proof");
+    }
+
+    @Test
+    void testRacoon() {
+        testTemplate("racoon");
+    }
+
+    @Test
+    void testReactivationEmail() {
+        testTemplate("reactivation-email");
+    }
+
+    @Test
+    void testRealEstate() {
+        testTemplate("real-estate");
+    }
+
+    @Test
+    void testReceiptEmail() {
+        testTemplate("receipt-email");
+    }
+
 }

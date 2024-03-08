@@ -345,11 +345,6 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
     @Override
     StringBuilder renderChildren(HtmlRenderer renderer) {
         var sb = new StringBuilder();
-
-        if (getChildren().isEmpty()) {
-            return sb;
-        }
-
         sb.append("\n<!--[if mso | IE]>\n");
         sb.append("<tr>\n");
         sb.append("<![endif]-->\n");

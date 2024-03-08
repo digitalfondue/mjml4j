@@ -210,4 +210,14 @@ class BaseComponentTests {
     void testEmptyColumnEmptyNodeSocial() {
         testTemplate("empty-column-empty-node-social");
     }
+
+    @Test
+    void testBodyWidthOverride() {
+        testTemplate("body-width-override");
+    }
+
+    @Test
+    void testEmptySection() {
+        testTemplate("empty-section");
+    }
 }

@@ -42,6 +42,12 @@ class Helpers {
         }
     }
 
+
+
+    static String simplifyBrTags(String input) {
+        return input.replaceAll("<br\s*/>", "<br>");
+    }
+
     // align all values defined in ids -> mjml use random strings, for coherence reason we find all id="...." and replace them with
     // a sequence. this allows to align id=".." and for=".."
     static String alignIdFor(String input) {
@@ -65,7 +71,7 @@ class Helpers {
             var template = FileUtils.readFileToString(new File("data/" + name + ".mjml"), StandardCharsets.UTF_8);
             var res = Mjml4j.render(template);
             var comparison = FileUtils.readFileToString(new File("data/" + name + ".html"), StandardCharsets.UTF_8);
-            Assertions.assertEquals(alignIdFor(beautifyHtml(comparison)), alignIdFor(beautifyHtml(res)));
+            Assertions.assertEquals(simplifyBrTags(alignIdFor(beautifyHtml(comparison))), alignIdFor(beautifyHtml(res)));
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

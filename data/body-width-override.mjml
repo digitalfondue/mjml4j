@@ -1,0 +1,9 @@
+<mjml>
+    <mj-body background-color="#E7E7E7" width="700px">
+        <mj-section background-color="#000000" padding-bottom="15px" border-radius="10px" >
+            <mj-column width="100%">
+                <mj-text>test</mj-text>
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>
