@@ -24,6 +24,8 @@ jobs:
         with:
           commit_message: "Prepare release version ${{ github.event.inputs.tag }}"
   publish:
+    name: "Publish"
+    needs: [ bump_version ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
