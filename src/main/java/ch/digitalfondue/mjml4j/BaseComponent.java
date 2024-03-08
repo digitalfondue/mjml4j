@@ -246,7 +246,7 @@ abstract class BaseComponent {
 
             if (hasParentComponent() && getParent() instanceof BodyComponent parent) {
 
-                containerWidth.value = parent.getContainerInnerWidth() - paddings - borders;
+                containerWidth = containerWidth.withValue(parent.getContainerInnerWidth() - paddings - borders);
 
                 return new CssBoxModel(
                         parent.getContainerInnerWidth(),
@@ -265,7 +265,7 @@ abstract class BaseComponent {
 
         private static final Pattern PATTERN_SHORTHAND_BORDER_VALUE = Pattern.compile("(?:(?:^| )([0-9]+))");
 
-        float getShorthandBorderValue(String direction) {
+        double getShorthandBorderValue(String direction) {
             var mjAttributeDirection = getAttribute("border-" + direction);
             var mjAttribute = getAttribute("border");
 
@@ -283,19 +283,19 @@ abstract class BaseComponent {
             if (!match.find())
                 return 0;
 
-            return Float.parseFloat(match.group().trim());
+            return Double.parseDouble(match.group().trim());
         }
 
-        float getContainerInnerWidth() {
+        double getContainerInnerWidth() {
             return cssBoxModel.boxWidth();
         }
 
-        float getContainerOuterWidth() {
+        double getContainerOuterWidth() {
             return cssBoxModel.totalWidth();
         }
 
 
-        float getShorthandAttributeValue(String attribute, String direction) {
+        double getShorthandAttributeValue(String attribute, String direction) {
             var mjAttributeDirection = getAttribute(attribute + "-" + direction);
             var mjAttribute = getAttribute(attribute);
 

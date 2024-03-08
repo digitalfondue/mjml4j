@@ -27,7 +27,7 @@ class MjmlComponentWrapper extends MjmlComponentSection {
                 res.append("<td ").append(component.htmlAttributes(Utils.mapOf(
                         "align", component.getAttribute("align"),
                         "class", Utils.suffixCssClasses(component.getAttribute("css-class"), "outlook"),
-                        "width", Utils.floatToString(getContainerOuterWidth()) + "px"
+                        "width", Utils.doubleToString(getContainerOuterWidth()) + "px"
                 ))).append(" >\n");
                 renderer.appendCurrentSpacing(res);
                 renderer.closeEndif(res, true);

@@ -6,7 +6,7 @@ import org.w3c.dom.Element;
 import java.util.LinkedHashMap;
 
 import static ch.digitalfondue.mjml4j.AttributeValueType.of;
-import static ch.digitalfondue.mjml4j.Utils.floatToString;
+import static ch.digitalfondue.mjml4j.Utils.doubleToString;
 import static ch.digitalfondue.mjml4j.Utils.mapOf;
 import static java.util.Map.entry;
 
@@ -115,7 +115,7 @@ class MjmlComponentButton extends BaseComponent.BodyComponent {
                 getShorthandAttributeValue("inner-padding", "right");
 
         var calculatedWidth = parsedWidth.value - innerPaddings - borders;
-        return floatToString(calculatedWidth) + "px";
+        return doubleToString(calculatedWidth) + "px";
     }
 
     @Override

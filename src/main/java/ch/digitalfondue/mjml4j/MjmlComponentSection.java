@@ -83,8 +83,8 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
                 "cellspacing", "0",
                 "class", suffixCssClasses(getAttribute("css-class"), "outlook"),
                 "role", "presentation",
-                "style", inlineCss(mapOf("width", floatToString(getContainerOuterWidth()) + "px")),
-                "width", floatToString(getContainerOuterWidth())
+                "style", inlineCss(mapOf("width", doubleToString(getContainerOuterWidth()) + "px")),
+                "width", doubleToString(getContainerOuterWidth())
         );
         if (!isNullOrWhiteSpace(bgcolorAttr)) {
             tableAttr.put("bgcolor", bgcolorAttr);
@@ -236,7 +236,7 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
                 htmlAttributes(
                         mapOf("style", inlineCss(isFullWidth ?
                                         mapOf("mso-width-percent", "1000") :
-                                        mapOf("width", floatToString(getContainerOuterWidth()) + "px")),
+                                        mapOf("width", doubleToString(getContainerOuterWidth()) + "px")),
                                 "xmlns:v", "urn:schemas-microsoft-com:vml",
                                 "fill", "true",
                                 "stroke", "false"
@@ -274,10 +274,10 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
             var positionUnit = CssUnitParser.parse(position);
             var positionUnitDouble = positionUnit.value / 100.0;
             if ("repeat".equals(backgroundRepeat)) {
-                var temp = floatToString(positionUnitDouble);
+                var temp = doubleToString(positionUnitDouble);
                 return new CssCoordinate(temp, temp);
             } else {
-                var temp = floatToString(((positionUnitDouble * 100) - 50.0) / 100);
+                var temp = doubleToString(((positionUnitDouble * 100) - 50.0) / 100);
                 return new CssCoordinate(temp, temp);
             }
         } else if ("repeat".equals(backgroundRepeat)) {
@@ -459,12 +459,12 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
                 isFullWidth ? mapOf(
                         "margin", "0px auto",
                         "border-radius", getAttribute("border-radius"),
-                        "max-width", floatToString(getContainerOuterWidth()) + "px"
+                        "max-width", doubleToString(getContainerOuterWidth()) + "px"
 
                 ) : mergeLeft(background, mapOf(
                         "margin", "0px auto",
                         "border-radius", getAttribute("border-radius"),
-                        "max-width", floatToString(getContainerOuterWidth()) + "px")
+                        "max-width", doubleToString(getContainerOuterWidth()) + "px")
                 ));
 
         cssStyleLibraries.add("innerDiv", mapOf(

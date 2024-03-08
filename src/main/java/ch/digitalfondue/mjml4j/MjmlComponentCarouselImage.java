@@ -34,7 +34,7 @@ class MjmlComponentCarouselImage extends BaseComponent.BodyComponent {
         cssStyleLibraries.add("images_img", mapOf(
                 "border-radius", getAttribute("border-radius"),
                 "display", "block",
-                "width", floatToString(getContainerOuterWidth()) + "px",
+                "width", doubleToString(getContainerOuterWidth()) + "px",
                 "max-width", "100%",
                 "height", "auto"
         ));
@@ -98,7 +98,7 @@ class MjmlComponentCarouselImage extends BaseComponent.BodyComponent {
                 "style", "thumbnails_img",
                 "src", src,
                 "alt", getAttribute("alt"),
-                "width", floatToString(CssUnitParser.parse(getAttribute("tb-width")).value)
+                "width", doubleToString(CssUnitParser.parse(getAttribute("tb-width")).value)
         )), res);
 
         renderer.closeTag("label", res);
@@ -134,7 +134,7 @@ class MjmlComponentCarouselImage extends BaseComponent.BodyComponent {
                 "src", getAttribute("src"),
                 "alt", getAttribute("alt"),
                 "style", "images_img",
-                "width", floatToString(getContainerOuterWidth()), // this.context.containerWidth
+                "width", doubleToString(getContainerOuterWidth()), // this.context.containerWidth
                 "border", "0"
         )), res);
 

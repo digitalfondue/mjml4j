@@ -4,10 +4,9 @@ import ch.digitalfondue.mjml4j.AttributeValueType.AttributeType;
 import org.w3c.dom.Element;
 
 import java.util.LinkedHashMap;
-import java.util.Locale;
 
 import static ch.digitalfondue.mjml4j.AttributeValueType.of;
-import static ch.digitalfondue.mjml4j.Utils.floatToString;
+import static ch.digitalfondue.mjml4j.Utils.doubleToString;
 import static ch.digitalfondue.mjml4j.Utils.mapOf;
 import static java.util.Map.entry;
 
@@ -51,16 +50,16 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
             if (hasAttribute("width")) {
                 containerWidth = getAttribute("width");
             } else {
-                containerWidth = floatToString(sectionWidth / parentSectionColumnCount) + "px";
+                containerWidth = doubleToString(sectionWidth / parentSectionColumnCount) + "px";
             }
             var childContainerWidth = containerWidth;
 
             var parsedWidth = CssUnitParser.parse(containerWidth);
             if (parsedWidth.isPercent()) {
-                parsedWidth.value = (sectionWidth * parsedWidth.value / 100);
+                parsedWidth = parsedWidth.withValue((sectionWidth * parsedWidth.value / 100));
             }
-            containerWidth = floatToString(parsedWidth.value) + "px";
-            childContainerWidth = floatToString(parsedWidth.value - allPaddings) + "px";
+            containerWidth = doubleToString(parsedWidth.valueFullPrecision) + "px";
+            childContainerWidth = doubleToString(parsedWidth.value - allPaddings) + "px";
 
             var columnWidth = CssUnitParser.parse(childContainerWidth);
             return new CssBoxModel(
@@ -84,7 +83,7 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
         if (hasAttribute("width"))
             width = getAttribute("width");
         else
-            width = floatToString(100. / getSectionColumnCount()) + "%";
+            width = doubleToString(100. / getSectionColumnCount()) + "%";
         return CssUnitParser.parse(width);
     }
 
@@ -97,15 +96,16 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
             return "100%";
         }
 
-        if (Utils.isNullOrWhiteSpace(width))
-            return floatToString(100. / parentSectionColumnCount) + "%";
+        if (Utils.isNullOrWhiteSpace(width)) {
+            return doubleToString(100. / parentSectionColumnCount) + "%";
+        }
 
         var parsedWidth = CssUnitParser.parse(width);
 
         if (parsedWidth.isPercent()) {
             return width;
         } else {
-            return floatToString(parsedWidth.value / CssUnitParser.parse(containerWidth).value) + "%";
+            return doubleToString(parsedWidth.value / CssUnitParser.parse(containerWidth).value) + "%";
         }
     }
 
@@ -115,14 +115,14 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
         var parsedContainerWidth = CssUnitParser.parse(containerWidth);
 
         if (parsedWidth.isPercent()) {
-            return parsedContainerWidth.toString();
+            return parsedContainerWidth.toFullPrecisionString(); // we don't want to cut off the precision here
         }
         return parsedWidth.toString();
     }
 
     private String getColumnClass() {
         var parsedWidth = getParsedWidth();
-        var formattedClassNb = floatToString(parsedWidth.value).replace('.', '-');
+        var formattedClassNb = doubleToString(parsedWidth.value).replace('.', '-');
 
 
         var className = "mj-column-px-" + formattedClassNb;

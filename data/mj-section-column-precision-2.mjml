@@ -1,0 +1,12 @@
+<mjml>
+    <mj-body>
+        <mj-section background-color="#FCFCFD" padding-top="20px" padding-bottom="20px" padding-left="25px">
+            <mj-column vertical-align="middle">
+                <mj-text>hello</mj-text>
+            </mj-column>
+            <mj-column vertical-align="middle">
+                <mj-text>world</mj-text>
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>

@@ -6,7 +6,7 @@ import org.w3c.dom.Element;
 import java.util.LinkedHashMap;
 
 import static ch.digitalfondue.mjml4j.AttributeValueType.of;
-import static ch.digitalfondue.mjml4j.Utils.floatToString;
+import static ch.digitalfondue.mjml4j.Utils.doubleToString;
 import static ch.digitalfondue.mjml4j.Utils.mapOf;
 import static java.util.Map.entry;
 
@@ -63,11 +63,11 @@ class MjmlComponentHero extends BaseComponent.BodyComponent {
         var backgroundHeight = CssUnitParser.parse(getAttribute("background-height"));
         var backgroundWidth = CssUnitParser.parse(getAttribute("background-width"));
         var backgroundRatio = Math.round(backgroundHeight.value / backgroundWidth.value * 100d);
-        var width = getElement().hasAttribute("background-width") ? getAttribute("background-width") : Utils.floatToString(getContainerInnerWidth()) + "px";
+        var width = getElement().hasAttribute("background-width") ? getAttribute("background-width") : Utils.doubleToString(getContainerInnerWidth()) + "px";
 
         cssStyleLibraries.add("div", mapOf(
                 "margin", "0 auto",
-                "max-width", Utils.floatToString(getContainerInnerWidth()) + "px"
+                "max-width", Utils.doubleToString(getContainerInnerWidth()) + "px"
         ));
 
         cssStyleLibraries.add("table", mapOf(
@@ -97,7 +97,7 @@ class MjmlComponentHero extends BaseComponent.BodyComponent {
         ));
 
         cssStyleLibraries.add("outlook-table", mapOf(
-                "width", floatToString(getContainerInnerWidth()) + "px"
+                "width", doubleToString(getContainerInnerWidth()) + "px"
         ));
 
         cssStyleLibraries.add("outlook-td", mapOf(
@@ -107,7 +107,7 @@ class MjmlComponentHero extends BaseComponent.BodyComponent {
         ));
 
         cssStyleLibraries.add("outlook-inner-table", mapOf(
-                "width", floatToString(getContainerInnerWidth()) + "px"
+                "width", doubleToString(getContainerInnerWidth()) + "px"
         ));
 
         cssStyleLibraries.add("outlook-image", mapOf(
@@ -183,7 +183,7 @@ class MjmlComponentHero extends BaseComponent.BodyComponent {
                 "cellpadding", "0",
                 "cellspacing", "0",
                 "style", "outlook-inner-table",
-                "width", floatToString(getContainerInnerWidth())
+                "width", doubleToString(getContainerInnerWidth())
         ))).append(" >");
         res.append("<tr>");
         res.append("<td ").append(htmlAttributes(mapOf("style", "outlook-inner-td"))).append(">");
@@ -252,8 +252,8 @@ class MjmlComponentHero extends BaseComponent.BodyComponent {
             renderer.openTag("td", htmlAttributes(mapOf(
                     "background", background,
                     "style", "hero",
-                    "height", floatToString(height)
-            ), mapOf("height", floatToString(height) + "px")), res);
+                    "height", doubleToString(height)
+            ), mapOf("height", doubleToString(height) + "px")), res);
             res.append(renderContent(renderer));
             renderer.closeTag("td", res);
         }
@@ -272,7 +272,7 @@ class MjmlComponentHero extends BaseComponent.BodyComponent {
                 "cellspacing", "0",
                 "role", "presentation",
                 "style", "outlook-table",
-                "width", floatToString(getContainerInnerWidth())
+                "width", doubleToString(getContainerInnerWidth())
         ))).append(" >");
         res.append("<tr>");
         res.append("<td ").append(htmlAttributes(mapOf(

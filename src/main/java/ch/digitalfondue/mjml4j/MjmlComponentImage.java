@@ -62,7 +62,7 @@ class MjmlComponentImage extends BaseComponent.BodyComponent {
                 CssUnitParser.parse(getAttribute("width")) :
                 CssUnitParser.parse(999999 + "px");
 
-        return floatToString(Math.min(width.value, getContainerInnerWidth()));
+        return doubleToString(Math.min(width.value, getContainerInnerWidth()));
     }
 
     @Override
@@ -134,7 +134,7 @@ class MjmlComponentImage extends BaseComponent.BodyComponent {
                 "title", getAttribute("title"),
                 "width", getContentWidth(),
                 "usemap", getAttribute("usemap"),
-                "height", bHasHeight && height.equalsIgnoreCase("auto") ? height : floatToString(CssUnitParser.parse(height).value)
+                "height", bHasHeight && height.equalsIgnoreCase("auto") ? height : doubleToString(CssUnitParser.parse(height).value)
         )), res);
         if (hasHref) {
             renderer.closeTag("a", res);

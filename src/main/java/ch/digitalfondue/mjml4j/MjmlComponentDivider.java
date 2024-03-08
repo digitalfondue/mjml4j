@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 
 import static ch.digitalfondue.mjml4j.AttributeValueType.of;
-import static ch.digitalfondue.mjml4j.Utils.floatToString;
+import static ch.digitalfondue.mjml4j.Utils.doubleToString;
 import static ch.digitalfondue.mjml4j.Utils.mapOf;
 import static java.util.Map.entry;
 
@@ -37,7 +37,7 @@ class MjmlComponentDivider extends BaseComponent.BodyComponent {
     }
 
     private String getOutlookWidth() {
-        var containerWidth = CssUnitParser.parse(floatToString(getContainerOuterWidth()));
+        var containerWidth = CssUnitParser.parse(doubleToString(getContainerOuterWidth()));
         var paddingSize =
                 getShorthandAttributeValue("padding", "left") +
                         getShorthandAttributeValue("padding", "right");
@@ -48,12 +48,12 @@ class MjmlComponentDivider extends BaseComponent.BodyComponent {
             case "%": {
                 var effectiveWidth = containerWidth.value - paddingSize;
                 var percentMultiplier = parsedWidth.value / 100;
-                return floatToString(effectiveWidth * percentMultiplier) + "px";
+                return doubleToString(effectiveWidth * percentMultiplier) + "px";
             }
             case "px":
                 return parsedWidth.toString();
             default:
-                return floatToString(containerWidth.value - paddingSize) + "px";
+                return doubleToString(containerWidth.value - paddingSize) + "px";
         }
     }
 

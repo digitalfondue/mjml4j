@@ -297,8 +297,8 @@ class MjmlComponentCarousel extends BaseComponent.BodyComponent {
         if (!Utils.isNullOrEmpty(tbWidth)) {
             return tbWidth;
         }
-        var containerWidth = CssUnitParser.parse(floatToString(getContainerOuterWidth()));
-        return floatToString(Math.min(containerWidth.value, 110));
+        var containerWidth = CssUnitParser.parse(doubleToString(getContainerOuterWidth()));
+        return doubleToString(Math.min(containerWidth.value, 110));
     }
 
     @Override

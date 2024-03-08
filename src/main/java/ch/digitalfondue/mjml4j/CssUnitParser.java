@@ -7,11 +7,14 @@ class CssUnitParser {
 
     static class CssParsedUnit {
         final String unit;
-        float value;
+        final double value;
 
-        CssParsedUnit(String unit, float value) {
+        final double valueFullPrecision;
+
+        CssParsedUnit(String unit, double value, double valueFullPrecision) {
             this.unit = unit;
             this.value = value;
+            this.valueFullPrecision = valueFullPrecision;
         }
 
         boolean isPercent() {
@@ -22,7 +25,15 @@ class CssUnitParser {
 
         @Override
         public String toString() {
-            return Utils.floatToString(value) + unit;
+            return Utils.doubleToString(value) + unit;
+        }
+
+        public String toFullPrecisionString() {
+            return Utils.doubleToString(valueFullPrecision) + unit;
+        }
+
+        CssParsedUnit withValue(double value) {
+            return new CssParsedUnit(unit, value, value);
         }
 
     }
@@ -32,7 +43,7 @@ class CssUnitParser {
     static CssParsedUnit parse(String cssValue) {
 
         if (Utils.isNullOrWhiteSpace(cssValue)) {
-            return new CssParsedUnit(null, 0);
+            return new CssParsedUnit(null, 0, 0);
         }
 
         var match = UNIT_PATTERN.matcher(cssValue);
@@ -46,10 +57,11 @@ class CssUnitParser {
             widthUnit = "px";
         }
 
+        var valueFullPrecision = Double.parseDouble(widthValue);
         if ("%".equals(widthUnit)) {
-            return new CssParsedUnit(widthUnit, Float.parseFloat(widthValue));
+            return new CssParsedUnit(widthUnit, valueFullPrecision, valueFullPrecision);
         } else {
-            return new CssParsedUnit(widthUnit, (int) Float.parseFloat(widthValue));
+            return new CssParsedUnit(widthUnit, (int) valueFullPrecision, valueFullPrecision);
         }
     }
 }

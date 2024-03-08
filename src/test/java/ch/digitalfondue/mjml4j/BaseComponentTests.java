@@ -185,4 +185,24 @@ class BaseComponentTests {
     void testEntitiesEscaping() {
         testTemplate("entities-escaping");
     }
+
+
+    @Test
+    void testSectionMisc() {
+        testTemplate("mj-section-with-background");
+        testTemplate("mj-section-with-background-url");
+        testTemplate("mj-section-with-css-class");
+        testTemplate("mj-section-with-full-width");
+        testTemplate("mj-section-with-mj-class");
+    }
+
+    @Test
+    void testSectionColumnPrecision() {
+        testTemplate("section-column-precision");
+    }
+
+    @Test
+    void testSectionColumnPrecision2() {
+        testTemplate("mj-section-column-precision-2");
+    }
 }

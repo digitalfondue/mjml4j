@@ -241,7 +241,7 @@ class Utils {
     }
 
 
-    static String floatToString(double d) {
+    static String doubleToString(double d) {
         if (d == (long) d)
             return Long.toString((long) d);
         else
