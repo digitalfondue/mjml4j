@@ -1,5 +1,8 @@
 package ch.digitalfondue.mjml4j;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
@@ -317,5 +320,25 @@ class Utils {
             })).replaceAll(" ");
             return prefix + processedContent + suffix;
         });
+    }
+
+    /**
+     * return true if the element has: 0 childs or only empty text nodes
+     */
+    static boolean hasNonEmptyChildNodes(Element element) {
+        if (!element.hasChildNodes()) {
+            return false;
+        }
+        var childNodes = element.getChildNodes();
+        var childNodesSize = childNodes.getLength();
+        for (var i = 0; i < childNodesSize; i++) {
+            var childNode = childNodes.item(i);
+            if (childNode.getNodeType() == Node.TEXT_NODE && !childNode.getTextContent().isBlank()) {
+                return true;
+            } else if (childNode.getNodeType() != Node.TEXT_NODE) {
+                return true;
+            }
+        }
+        return false;
     }
 }

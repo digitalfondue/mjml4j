@@ -25,4 +25,9 @@ class ComplexTemplateTests {
     void testSpheroMini() {
         testTemplate("sphero-mini");
     }
+
+    @Test
+    void testAmario() {
+        testTemplate("amario");
+    }
 }

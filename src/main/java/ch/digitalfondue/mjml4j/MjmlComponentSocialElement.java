@@ -220,7 +220,7 @@ class MjmlComponentSocialElement extends BaseComponent.BodyComponent {
         renderer.closeTag("table", res);
         renderer.closeTag("td", res);
 
-        if (getElement().hasChildNodes()) {
+        if (Utils.hasNonEmptyChildNodes(getElement())) {
             res.append(renderContent(renderer, hasLink));
         }
         renderer.closeTag("tr", res);

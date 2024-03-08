@@ -270,7 +270,7 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
                 "style", "table",
                 "width", "100%"
         ))).append(">\n");
-        res.append("<tbody>");
+        res.append("<tbody>\n");
         res.append(renderChildren(renderer));
         res.append("</tbody>");
         res.append("</table>\n");

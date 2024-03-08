@@ -205,4 +205,9 @@ class BaseComponentTests {
     void testSectionColumnPrecision2() {
         testTemplate("mj-section-column-precision-2");
     }
+
+    @Test
+    void testEmptyColumnEmptyNodeSocial() {
+        testTemplate("empty-column-empty-node-social");
+    }
 }

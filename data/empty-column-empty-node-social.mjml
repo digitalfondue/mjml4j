@@ -1,0 +1,18 @@
+<mjml>
+    <mj-body>
+        <mj-section>
+            <mj-column width="25%" vertical-align="top"></mj-column>
+            <mj-column width="50%" vertical-align="top">
+                <mj-social padding-top="20px">
+                    <mj-social-element name="facebook" href="[[SHORT_PERMALINK]]">
+
+
+
+
+                    </mj-social-element>
+                </mj-social>
+            </mj-column>
+            <mj-column width="25%" vertical-align="top"></mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>
