@@ -1,9 +1,28 @@
 name: Publish package to the Maven Central Repository
 on:
-  push:
-    tags:
-      - mjml4j-*
+  workflow_dispatch:
+    inputs:
+      tag:
+        type: string
+        description: tag
 jobs:
+  bump_version:
+    name: "Bump Version"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+      - name: Bump version
+        id: bump
+        run: "./mvnw versions:set -DnewVersion=${{ github.event.inputs.tag }} -DprocessAllModules && ./mvnw versions:commit -DprocessAllModules"
+      - name: Commit bumped version
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Prepare release version ${{ github.event.inputs.tag }}"
   publish:
     runs-on: ubuntu-latest
     steps:

@@ -91,4 +91,14 @@ class ComplexTemplateTests {
         testTemplate("receipt-email");
     }
 
+    @Test
+    void testReferralEmail() {
+        testTemplate("referral-email");
+    }
+
+    @Test
+    void testSpheroDroids() {
+        testTemplate("sphero-droids");
+    }
+
 }
