@@ -5,7 +5,7 @@
 
     <groupId>ch.digitalfondue.mjml4j</groupId>
     <artifactId>mjml4j</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
     <inceptionYear>2024</inceptionYear>
     <description>mjml4j: an unofficial port of MJML to java.
@@ -27,7 +27,7 @@
         <connection>scm:git:git@github.com:digitalfondue/mjml4j.git</connection>
         <developerConnection>scm:git:git@github.com:digitalfondue/mjml4j.git</developerConnection>
         <url>https://github.com/digitalfondue/mjml4j.git</url>
-        <tag>HEAD</tag>
+        <tag>mjml4j-1.0.3</tag>
     </scm>
 
     <licenses>
