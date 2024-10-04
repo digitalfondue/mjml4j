@@ -44,7 +44,15 @@ public final class Mjml4j {
         }
     }
 
-    public record Configuration(String language, TextDirection dir) {
+    interface IncludeResolver {
+    }
+
+    public record Configuration(String language, TextDirection dir, IncludeResolver includeResolver) {
+
+        public Configuration(String language, TextDirection dir) {
+            this(language, dir, null);
+        }
+
         public Configuration(String language) {
             this(language, TextDirection.AUTO);
         }
