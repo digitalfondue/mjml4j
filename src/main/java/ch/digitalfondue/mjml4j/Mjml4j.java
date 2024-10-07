@@ -9,10 +9,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -46,7 +43,9 @@ public final class Mjml4j {
     }
 
     interface IncludeResolver {
-        String resolveAsString(String name, String base, List<String> parents);
+        String resolveAsString(String resolvedResourcePath);
+        org.w3c.dom.Document resolveAsDocument(String resolvedResourcePath);
+        String resolvePath(String name, String base, Collection<String> parents);
     }
 
     public record Configuration(
@@ -407,16 +406,26 @@ public final class Mjml4j {
 
     private static BaseComponent handleInclude(Element element, BaseComponent parent, GlobalContext context) {
 
-        if (context.includeResolver == null) {
+        var path = element.getAttribute("path");
+        if (context.includeResolver == null || path == null) {
             return new HtmlComponent.HtmlRawComponent(element, parent, context);
         }
 
-        // FIXME: implement
+        var includeResolver = context.includeResolver;
+        var resolvedPath = includeResolver.resolvePath(path, context.basePath, context.currentResourcePaths);
+
         var attributeType = element.getAttribute("type");
         if ("html".equals(attributeType) || "css".equals(attributeType)) {
+            var resource = includeResolver.resolveAsString(resolvedPath);
             return new HtmlComponent.HtmlRawComponent(element, parent, context);
         } else {
-            throw new IllegalStateException("");
+            context.currentResourcePaths.push(resolvedPath);
+            try {
+                // read document as mjml
+                throw new IllegalStateException("");
+            } finally {
+                context.currentResourcePaths.pop();
+            }
         }
     }
 }
