@@ -38,16 +38,21 @@ class Utils {
         return res.toString();
     }
 
+    static <K, V> LinkedHashMap<K, V> mergeLeft(LinkedHashMap<K, V> f, LinkedHashMap<K, V> f2) {
+        return mergeLeft(f, f2, null);
+    }
 
-    static <K, V> LinkedHashMap<K, V> mergeLeft(LinkedHashMap<K, V> f, LinkedHashMap<K, V>... others) {
+    static <K, V> LinkedHashMap<K, V> mergeLeft(LinkedHashMap<K, V> f, LinkedHashMap<K, V> f2, LinkedHashMap<K, V> f3) {
         var res = new LinkedHashMap<K, V>();
 
         List<Map.Entry<K, V>> entries = new ArrayList<>(f.entrySet());
-        for (var other : others) {
-            if (other != null) {
-                entries.addAll(other.entrySet());
-            }
+        if (f2 != null) {
+            entries.addAll(f2.entrySet());
         }
+        if (f3 != null) {
+            entries.addAll(f3.entrySet());
+        }
+
         for (var entry : entries) {
             if (entry != null) {
                 res.put(entry.getKey(), entry.getValue());

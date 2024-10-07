@@ -11,6 +11,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -45,12 +46,16 @@ public final class Mjml4j {
     }
 
     interface IncludeResolver {
+        String resolveAsString(String name, String base, List<String> parents);
     }
 
-    public record Configuration(String language, TextDirection dir, IncludeResolver includeResolver) {
+    public record Configuration(
+            String language, TextDirection dir,
+            IncludeResolver includeResolver, String basePath, String currentResourcePath
+    ) {
 
         public Configuration(String language, TextDirection dir) {
-            this(language, dir, null);
+            this(language, dir, null, null, null);
         }
 
         public Configuration(String language) {
@@ -409,7 +414,6 @@ public final class Mjml4j {
         // FIXME: implement
         var attributeType = element.getAttribute("type");
         if ("html".equals(attributeType) || "css".equals(attributeType)) {
-
             return new HtmlComponent.HtmlRawComponent(element, parent, context);
         } else {
             throw new IllegalStateException("");
