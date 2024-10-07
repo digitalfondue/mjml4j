@@ -380,6 +380,7 @@ public final class Mjml4j {
             case "mj-divider" -> new MjmlComponentDivider(element, parent, context);
             case "mj-raw" -> new MjmlComponentRaw(element, parent, context);
             case "mj-image" -> new MjmlComponentImage(element, parent, context);
+            case "mj-include" -> handleInclude(element, parent, context);
             case "mj-button" -> new MjmlComponentButton(element, parent, context);
             case "mj-hero" -> new MjmlComponentHero(element, parent, context);
             case "mj-social" -> new MjmlComponentSocial(element, parent, context);
@@ -397,5 +398,21 @@ public final class Mjml4j {
             case "html-comment" -> new HtmlComponent.HtmlCommentComponent(element, parent, context);
             default -> new HtmlComponent.HtmlRawComponent(element, parent, context);
         };
+    }
+
+    private static BaseComponent handleInclude(Element element, BaseComponent parent, GlobalContext context) {
+
+        if (context.includeResolver == null) {
+            return new HtmlComponent.HtmlRawComponent(element, parent, context);
+        }
+
+        // FIXME: implement
+        var attributeType = element.getAttribute("type");
+        if ("html".equals(attributeType) || "css".equals(attributeType)) {
+
+            return new HtmlComponent.HtmlRawComponent(element, parent, context);
+        } else {
+            throw new IllegalStateException("");
+        }
     }
 }
