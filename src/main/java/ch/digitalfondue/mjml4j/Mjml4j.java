@@ -47,12 +47,45 @@ public final class Mjml4j {
     }
 
     interface IncludeResolver {
+        /**
+         * Read the content of the file (with UTF-8) at a given resolved path.
+         *
+         * @param resolvedResourcePath
+         * @return
+         * @throws IOException
+         */
         String resolveAsString(String resolvedResourcePath) throws IOException;
+
+        /**
+         * Read the content of the file (with UTF-8 content) and parse it's content.
+         *
+         * @param resolvedResourcePath
+         * @return
+         */
         org.w3c.dom.Document resolveAsDocument(String resolvedResourcePath);
-        String resolvePath(String name, String base, Deque<String> parents);
+
+        /**
+         * Resolve the given path.
+         *
+         * @param name
+         * @param parents
+         * @return
+         */
+        String resolvePath(String name, Deque<String> parents);
     }
 
+    /**
+     * Filesystem based resolver. The content _must_ be within the provided basePath.
+     * 
+     * The check can be customized, see {@link #checkAccess(Path, Path)}.
+     */
     public static class FileSystemResolver implements IncludeResolver {
+
+        private final Path basePath;
+
+        public FileSystemResolver(Path basePath) {
+            this.basePath = Objects.requireNonNull(basePath).toAbsolutePath();
+        }
 
         @Override
         public String resolveAsString(String resolvedResourcePath) throws IOException {
@@ -64,28 +97,26 @@ public final class Mjml4j {
             throw new IllegalStateException("to implement");
         }
 
-        @Override
-        public String resolvePath(String name, String base, Deque<String> parents) {
-            if (parents.isEmpty()) {
-                return Path.of(base, name).toAbsolutePath().toString();
-            } else {
-                return Path.of(parents.peek(), name).toAbsolutePath().toString();
+        public void checkAccess(Path basePath, Path resolvedPath) {
+            if (!resolvedPath.startsWith(basePath)) {
+                throw new IllegalStateException("Cannot access path outside of basePath");
             }
+        }
+
+        @Override
+        public String resolvePath(String name, Deque<String> parents) {
+            var resolvedPath = (parents.isEmpty() ? basePath.resolve(name) : Path.of(parents.peek(), name)).toAbsolutePath();
+            checkAccess(basePath, resolvedPath);
+            return resolvedPath.toString();
         }
     }
 
     public record Configuration(
             String language, TextDirection dir,
-            IncludeResolver includeResolver, String basePath
+            IncludeResolver includeResolver
     ) {
-        public Configuration {
-            if (includeResolver != null && basePath == null) {
-                throw new IllegalStateException("basepath must be defined if includeResolver is defined");
-            }
-        }
-
         public Configuration(String language, TextDirection dir) {
-            this(language, dir, null, null);
+            this(language, dir, null);
         }
 
         public Configuration(String language) {
@@ -438,12 +469,12 @@ public final class Mjml4j {
     private static BaseComponent handleInclude(Element element, BaseComponent parent, GlobalContext context) {
 
         var path = element.getAttribute("path");
-        if (context.includeResolver == null || path == null) {
+        if (context.includeResolver == null || path == null || path.isEmpty()) {
             return new HtmlComponent.HtmlRawComponent(element, parent, context);
         }
 
         var includeResolver = context.includeResolver;
-        var resolvedPath = includeResolver.resolvePath(path, context.basePath, context.currentResourcePaths);
+        var resolvedPath = includeResolver.resolvePath(path, context.currentResourcePaths);
 
         var attributeType = element.getAttribute("type");
         if ("html".equals(attributeType) || "css".equals(attributeType)) {

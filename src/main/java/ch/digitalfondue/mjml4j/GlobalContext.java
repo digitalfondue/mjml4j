@@ -19,7 +19,6 @@ class GlobalContext {
     final String dir;
     //
     final Mjml4j.IncludeResolver includeResolver;
-    final String basePath;
     final ArrayDeque<String> currentResourcePaths = new ArrayDeque<>();
     //
 
@@ -48,7 +47,6 @@ class GlobalContext {
 
         //
         this.includeResolver = configuration.includeResolver();
-        this.basePath = configuration.basePath();
         //
     }
 
