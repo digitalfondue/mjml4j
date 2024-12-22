@@ -1,0 +1,12 @@
+<mjml>
+    <mj-body>
+        <mj-section>
+            <mj-column>
+                <mj-include type="html" path="include/type.html" />
+            </mj-column>
+            <mj-column>
+                <mj-include type="html" path="include/non-exist.html" />
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>

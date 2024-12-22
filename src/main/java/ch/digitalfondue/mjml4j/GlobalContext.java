@@ -49,9 +49,6 @@ class GlobalContext {
         //
         this.includeResolver = configuration.includeResolver();
         this.basePath = configuration.basePath();
-        if (configuration.currentResourcePath() != null) {
-            currentResourcePaths.push(configuration.currentResourcePath());
-        }
         //
     }
 

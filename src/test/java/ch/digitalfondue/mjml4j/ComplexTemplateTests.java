@@ -101,4 +101,9 @@ class ComplexTemplateTests {
         testTemplate("sphero-droids");
     }
 
+    @Test
+    void testIncludeHtml() {
+        testTemplate("include-type-html");
+    }
+
 }

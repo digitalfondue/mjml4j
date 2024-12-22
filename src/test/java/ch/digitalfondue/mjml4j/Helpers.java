@@ -70,7 +70,8 @@ class Helpers {
     static void testTemplate(String name) {
         try {
             var template = Files.readString(new File("data/" + name + ".mjml").toPath(), StandardCharsets.UTF_8);
-            var res = Mjml4j.render(template);
+            var conf = new Mjml4j.Configuration("und", Mjml4j.TextDirection.AUTO, new Mjml4j.FileSystemResolver(), "data");
+            var res = Mjml4j.render(template, conf);
             var comparison = Files.readString(new File("data/" + name + ".html").toPath(), StandardCharsets.UTF_8);
             Assertions.assertEquals(simplifyBrTags(alignIdFor(beautifyHtml(comparison))), alignIdFor(beautifyHtml(res)));
         } catch (IOException e) {

@@ -9,6 +9,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -43,18 +47,45 @@ public final class Mjml4j {
     }
 
     interface IncludeResolver {
-        String resolveAsString(String resolvedResourcePath);
+        String resolveAsString(String resolvedResourcePath) throws IOException;
         org.w3c.dom.Document resolveAsDocument(String resolvedResourcePath);
-        String resolvePath(String name, String base, Collection<String> parents);
+        String resolvePath(String name, String base, Deque<String> parents);
+    }
+
+    public static class FileSystemResolver implements IncludeResolver {
+
+        @Override
+        public String resolveAsString(String resolvedResourcePath) throws IOException {
+            return Files.readString(Path.of(resolvedResourcePath), StandardCharsets.UTF_8);
+        }
+
+        @Override
+        public org.w3c.dom.Document resolveAsDocument(String resolvedResourcePath) {
+            throw new IllegalStateException("to implement");
+        }
+
+        @Override
+        public String resolvePath(String name, String base, Deque<String> parents) {
+            if (parents.isEmpty()) {
+                return Path.of(base, name).toAbsolutePath().toString();
+            } else {
+                return Path.of(parents.peek(), name).toAbsolutePath().toString();
+            }
+        }
     }
 
     public record Configuration(
             String language, TextDirection dir,
-            IncludeResolver includeResolver, String basePath, String currentResourcePath
+            IncludeResolver includeResolver, String basePath
     ) {
+        public Configuration {
+            if (includeResolver != null && basePath == null) {
+                throw new IllegalStateException("basepath must be defined if includeResolver is defined");
+            }
+        }
 
         public Configuration(String language, TextDirection dir) {
-            this(language, dir, null, null, null);
+            this(language, dir, null, null);
         }
 
         public Configuration(String language) {
@@ -416,11 +447,20 @@ public final class Mjml4j {
 
         var attributeType = element.getAttribute("type");
         if ("html".equals(attributeType) || "css".equals(attributeType)) {
-            var resource = includeResolver.resolveAsString(resolvedPath);
+            var resource = "";
+            try {
+                resource = includeResolver.resolveAsString(resolvedPath);
+            } catch (IOException e) {
+                resource = "<!-- mj-include fails to read file : " + path + " at " + resolvedPath + " -->";
+            }
+            if ("html".equals(attributeType)) {
+                return new MjmlComponentRaw(element, parent, context, resource);
+            }
             return new HtmlComponent.HtmlRawComponent(element, parent, context);
         } else {
             context.currentResourcePaths.push(resolvedPath);
             try {
+                var doc = includeResolver.resolveAsDocument(resolvedPath);
                 // read document as mjml
                 throw new IllegalStateException("");
             } finally {
