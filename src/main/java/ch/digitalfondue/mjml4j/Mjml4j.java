@@ -479,15 +479,19 @@ public final class Mjml4j {
         var attributeType = element.getAttribute("type");
         if ("html".equals(attributeType) || "css".equals(attributeType)) {
             var resource = "";
+            var failed = false;
             try {
                 resource = includeResolver.resolveAsString(resolvedPath);
             } catch (IOException e) {
+                failed = true;
                 resource = "<!-- mj-include fails to read file : " + path + " at " + resolvedPath + " -->";
             }
-            if ("html".equals(attributeType)) {
+            if ("html".equals(attributeType) || failed) {
                 return new MjmlComponentRaw(element, parent, context, resource);
+            } else {
+                context.addStyle(resource, "inline".equals(element.getAttribute("css-inline")));
+                return new MjmlComponentRaw(element, parent, context, ""); // dummy empty component
             }
-            return new HtmlComponent.HtmlRawComponent(element, parent, context);
         } else {
             context.currentResourcePaths.push(resolvedPath);
             try {

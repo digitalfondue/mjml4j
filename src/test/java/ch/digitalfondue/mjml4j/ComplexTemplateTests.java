@@ -106,4 +106,9 @@ class ComplexTemplateTests {
         testTemplate("include-type-html");
     }
 
+    @Test
+    void testIncludeCss() {
+        testTemplate("include-type-css");
+    }
+
 }
