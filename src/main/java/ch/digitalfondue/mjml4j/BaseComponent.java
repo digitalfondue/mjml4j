@@ -10,8 +10,8 @@ import static ch.digitalfondue.mjml4j.Utils.equalsIgnoreCase;
 abstract class BaseComponent {
 
     private final Element element;
-    private final BaseComponent parent;
     private final List<BaseComponent> children = new ArrayList<>();
+    private BaseComponent parent;
 
     final GlobalContext context;
 
@@ -29,6 +29,10 @@ abstract class BaseComponent {
         for (var child : children) {
             child.doSetupPostConstruction();
         }
+    }
+
+    public void setParent(BaseComponent parent) {
+        this.parent = parent;
     }
 
     void setupPostConstruction() {

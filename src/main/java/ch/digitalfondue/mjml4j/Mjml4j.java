@@ -105,7 +105,7 @@ public final class Mjml4j {
 
         @Override
         public String resolvePath(String name, Deque<String> parents) {
-            var resolvedPath = (parents.isEmpty() ? basePath.resolve(name) : Path.of(parents.peek(), name)).toAbsolutePath();
+            var resolvedPath = (parents.isEmpty() ? basePath.resolve(name) : Path.of(parents.peek()).getParent().resolve(name)).toAbsolutePath();
             checkAccess(basePath, resolvedPath);
             return resolvedPath.toString();
         }
@@ -170,22 +170,23 @@ public final class Mjml4j {
         return render(template, DEFAULT_CONFIG);
     }
 
-    private static StringBuilder renderHead(MjmlComponent.MjmlRootComponent rootComponent, HtmlRenderer renderer) {
+    private static Optional<BaseComponent> findFirstComponent(MjmlComponent.MjmlRootComponent rootComponent, String name) {
         return rootComponent
                 .getChildren()
                 .stream()
-                .filter(c -> c.getTagName().equals("mj-head"))
-                .findFirst().map(component -> component.renderMjml(renderer)).orElseGet(StringBuilder::new);
+                .filter(c -> name.equals(c.getTagName()))
+                .findFirst();
+    }
+
+    private static StringBuilder renderHead(MjmlComponent.MjmlRootComponent rootComponent, HtmlRenderer renderer) {
+        return findFirstComponent(rootComponent, "mj-head").map(component -> component.renderMjml(renderer)).orElseGet(StringBuilder::new);
 
     }
 
     private static String renderBody(MjmlComponent.MjmlRootComponent rootComponent, HtmlRenderer renderer) {
         renderer.increaseDepth();
-        return rootComponent
-                .getChildren()
-                .stream()
-                .filter(c -> c.getTagName().equals("mj-body"))
-                .findFirst().map(component -> component.renderMjml(renderer).toString())
+        return findFirstComponent(rootComponent, "mj-body")
+                .map(component -> component.renderMjml(renderer).toString())
                 .orElse("");
     }
 
@@ -388,8 +389,15 @@ public final class Mjml4j {
     private static MjmlComponent.MjmlRootComponent buildMjmlDocument(org.w3c.dom.Document document, GlobalContext context) {
         var root = (Element) document.getElementsByTagName("mjml").item(0);
         var rootComponent = new MjmlComponent.MjmlRootComponent(root, null, context);
-        traverseTree(rootComponent.getElement(), rootComponent, document,  context);
-        rootComponent.doSetupPostConstruction();
+        context.rootComponents.push(rootComponent);
+        try {
+            traverseTree(rootComponent.getElement(), rootComponent, document, context);
+        } finally {
+            context.rootComponents.pop();
+        }
+        if (context.rootComponents.isEmpty()) {
+            rootComponent.doSetupPostConstruction();
+        }
         return rootComponent;
     }
 
@@ -508,9 +516,18 @@ public final class Mjml4j {
             context.currentResourcePaths.push(resolvedPath);
             try {
                 var doc = includeResolver.resolveAsDocument(resolvedPath);
-                // read document as mjml
-                // FIXME
-                return new MjmlComponentRaw(element, parent, context);
+                var includedDoc = buildMjmlDocument(doc, context);
+                findFirstComponent(includedDoc, "mj-head").ifPresent(head -> {
+                    // FIXME
+                });
+
+                findFirstComponent(includedDoc, "mj-body").ifPresent(body -> {
+                    for (var c : body.getChildren()) {
+                        c.setParent(parent);
+                        parent.getChildren().add(c);
+                    }
+                });
+                return new MjmlComponentRaw(element, parent, context, ""); // dummy empty component
             } catch (IOException e) {
                 // FIXME
                 return new MjmlComponentRaw(element, parent, context);

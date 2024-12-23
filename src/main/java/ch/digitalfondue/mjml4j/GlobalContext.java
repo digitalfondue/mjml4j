@@ -20,6 +20,7 @@ class GlobalContext {
     //
     final Mjml4j.IncludeResolver includeResolver;
     final ArrayDeque<String> currentResourcePaths = new ArrayDeque<>();
+    final ArrayDeque<MjmlComponent.MjmlRootComponent> rootComponents = new ArrayDeque<>();
     //
 
     final LinkedHashMap<String, String> fonts = Utils.mapOf(
