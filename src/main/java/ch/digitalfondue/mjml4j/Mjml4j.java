@@ -127,9 +127,10 @@ public final class Mjml4j {
     private static final Configuration DEFAULT_CONFIG = new Configuration("und", TextDirection.AUTO);
 
     private static org.w3c.dom.Document parseFragment(String template) {
-        // FIXME: wrap template with mjml+mj-body tag if not present
         //
-        var nodes = JFiveParse.parseFragment(template, EnumSet.of(Option.DISABLE_IGNORE_TOKEN_IN_BODY_START_TAG, Option.INTERPRET_SELF_CLOSING_ANYTHING_ELSE, Option.DONT_TRANSFORM_ENTITIES));
+        var wrappedFragment = !template.contains("<mjml>") ? "<mjml><mj-body>" + template + "</mj-body></mjml>" : template;
+        //
+        var nodes = JFiveParse.parseFragment(wrappedFragment, EnumSet.of(Option.DISABLE_IGNORE_TOKEN_IN_BODY_START_TAG, Option.INTERPRET_SELF_CLOSING_ANYTHING_ELSE, Option.DONT_TRANSFORM_ENTITIES));
         var doc = new Document();
         for (var n : nodes) {
             doc.appendChild(n);

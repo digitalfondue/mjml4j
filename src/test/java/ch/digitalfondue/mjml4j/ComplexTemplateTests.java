@@ -1,5 +1,6 @@
 package ch.digitalfondue.mjml4j;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static ch.digitalfondue.mjml4j.Helpers.testTemplate;
@@ -109,6 +110,19 @@ class ComplexTemplateTests {
     @Test
     void testIncludeCss() {
         testTemplate("include-type-css");
+    }
+
+    // imported from issue https://github.com/SebastianStehle/mjml-net/issues/177
+    @Test
+    @Disabled
+    void testIncludeIndex() {
+        testTemplate("include-index");
+    }
+
+    @Test
+    @Disabled
+    void testIncludeAbout() {
+        testTemplate("include-about");
     }
 
 }
