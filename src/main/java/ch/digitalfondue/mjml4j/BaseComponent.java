@@ -39,9 +39,10 @@ abstract class BaseComponent {
     }
 
     private LinkedHashMap<String, String> defaultAttributeValues() {
-        var kvt = allowedAttributes();
         var res = new LinkedHashMap<String, String>();
-        kvt.forEach((k, vt) -> res.put(k, vt.value()));
+        for (var kvt : allowedAttributes().entrySet()) {
+            res.put(kvt.getKey(), kvt.getValue().value());
+        }
         return res;
     }
 

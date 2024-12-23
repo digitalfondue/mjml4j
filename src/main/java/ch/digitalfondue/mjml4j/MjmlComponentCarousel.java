@@ -275,7 +275,9 @@ class MjmlComponentCarousel extends BaseComponent.BodyComponent {
 
     private StringBuilder generateRadios(HtmlRenderer renderer) {
         var res = new StringBuilder();
-        carouselImages.forEach(c -> res.append(c.renderRadio(renderer)));
+        for (var ci : carouselImages) {
+            res.append(ci.renderRadio(renderer));
+        }
         return res;
     }
 
@@ -284,7 +286,9 @@ class MjmlComponentCarousel extends BaseComponent.BodyComponent {
         if (!"visible".equals(getAttribute("thumbnails"))) {
             return res;
         }
-        carouselImages.forEach(c -> res.append(c.renderThumbnail(renderer)));
+        for (var c : carouselImages) {
+            res.append(c.renderThumbnail(renderer));
+        }
         return res;
     }
 
@@ -384,9 +388,8 @@ class MjmlComponentCarousel extends BaseComponent.BodyComponent {
     }
 
     private StringBuilder renderFallback(HtmlRenderer renderer) {
-        var res = new StringBuilder();
         if (carouselImagesCount == 0) {
-            return res;
+            return new StringBuilder(0);
         }
         return new StringBuilder(msoConditionalTag(carouselImages.get(0).renderMjml(renderer).toString()));
     }

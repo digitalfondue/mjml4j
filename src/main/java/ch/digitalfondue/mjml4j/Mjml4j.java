@@ -62,7 +62,7 @@ public final class Mjml4j {
          * @param resolvedResourcePath
          * @return
          */
-        org.w3c.dom.Document resolveAsDocument(String resolvedResourcePath);
+        org.w3c.dom.Document resolveAsDocument(String resolvedResourcePath) throws IOException;
 
         /**
          * Resolve the given path.
@@ -93,8 +93,8 @@ public final class Mjml4j {
         }
 
         @Override
-        public org.w3c.dom.Document resolveAsDocument(String resolvedResourcePath) {
-            throw new IllegalStateException("to implement");
+        public org.w3c.dom.Document resolveAsDocument(String resolvedResourcePath) throws IOException {
+            return parseFragment(resolveAsString(resolvedResourcePath));
         }
 
         public void checkAccess(Path basePath, Path resolvedPath) {
@@ -125,6 +125,15 @@ public final class Mjml4j {
     }
 
     private static final Configuration DEFAULT_CONFIG = new Configuration("und", TextDirection.AUTO);
+
+    private static org.w3c.dom.Document parseFragment(String template) {
+        var nodes = JFiveParse.parseFragment(template, EnumSet.of(Option.DISABLE_IGNORE_TOKEN_IN_BODY_START_TAG, Option.INTERPRET_SELF_CLOSING_ANYTHING_ELSE, Option.DONT_TRANSFORM_ENTITIES));
+        var doc = new Document();
+        for (var n : nodes) {
+            doc.appendChild(n);
+        }
+        return W3CDom.toW3CDocument(doc);
+    }
 
     /**
      * Render the given template with the provided configuration.
@@ -497,7 +506,11 @@ public final class Mjml4j {
             try {
                 var doc = includeResolver.resolveAsDocument(resolvedPath);
                 // read document as mjml
-                throw new IllegalStateException("");
+                // FIXME
+                return new MjmlComponentRaw(element, parent, context);
+            } catch (IOException e) {
+                // FIXME
+                return new MjmlComponentRaw(element, parent, context);
             } finally {
                 context.currentResourcePaths.pop();
             }
