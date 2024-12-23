@@ -302,7 +302,7 @@ class MjmlComponentCarousel extends BaseComponent.BodyComponent {
             return tbWidth;
         }
         var containerWidth = CssUnitParser.parse(doubleToString(getContainerOuterWidth()));
-        return doubleToString(Math.min(containerWidth.value, 110));
+        return doubleToString(Math.min(containerWidth.value(), 110));
     }
 
     @Override

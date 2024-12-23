@@ -5,23 +5,15 @@ import java.util.regex.Pattern;
 class CssUnitParser {
 
 
-    static class CssParsedUnit {
-        final String unit;
-        final double value;
-
-        final double valueFullPrecision;
-
-        CssParsedUnit(String unit, double value, double valueFullPrecision) {
-            this.unit = unit;
-            this.value = value;
-            this.valueFullPrecision = valueFullPrecision;
-        }
+    record CssParsedUnit(String unit, double value, double valueFullPrecision) {
 
         boolean isPercent() {
             return "%".equals(unit);
         }
 
-        boolean isPx() { return "px".equals(unit); }
+        boolean isPx() {
+            return "px".equals(unit);
+        }
 
         @Override
         public String toString() {

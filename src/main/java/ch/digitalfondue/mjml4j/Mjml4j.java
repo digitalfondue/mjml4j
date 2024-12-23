@@ -36,7 +36,7 @@ public final class Mjml4j {
     public enum TextDirection {
 
         LTR("ltr"), RTL("rtl"), AUTO("auto");
-        private String value;
+        private final String value;
         TextDirection(String value) {
             this.value = value;
         }
@@ -127,6 +127,8 @@ public final class Mjml4j {
     private static final Configuration DEFAULT_CONFIG = new Configuration("und", TextDirection.AUTO);
 
     private static org.w3c.dom.Document parseFragment(String template) {
+        // FIXME: wrap template with mjml+mj-body tag if not present
+        //
         var nodes = JFiveParse.parseFragment(template, EnumSet.of(Option.DISABLE_IGNORE_TOKEN_IN_BODY_START_TAG, Option.INTERPRET_SELF_CLOSING_ANYTHING_ELSE, Option.DONT_TRANSFORM_ENTITIES));
         var doc = new Document();
         for (var n : nodes) {

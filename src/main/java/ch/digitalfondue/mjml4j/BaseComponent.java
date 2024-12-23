@@ -253,14 +253,14 @@ abstract class BaseComponent {
                         parent.getContainerInnerWidth(),
                         borders,
                         paddings,
-                        containerWidth.value
+                        containerWidth.value()
                 );
             }
             return new CssBoxModel(
-                    containerWidth.value,
+                    containerWidth.value(),
                     borders,
                     paddings,
-                    containerWidth.value);
+                    containerWidth.value());
         }
 
 
@@ -271,7 +271,7 @@ abstract class BaseComponent {
             var mjAttribute = getAttribute("border");
 
             if (!Utils.isNullOrWhiteSpace(mjAttributeDirection))
-                return CssUnitParser.parse(mjAttributeDirection).value;
+                return CssUnitParser.parse(mjAttributeDirection).value();
 
             if (Utils.isNullOrWhiteSpace(mjAttribute))
                 return 0;
@@ -301,7 +301,7 @@ abstract class BaseComponent {
             var mjAttribute = getAttribute(attribute);
 
             if (!Utils.isNullOrWhiteSpace(mjAttributeDirection))
-                return CssUnitParser.parse(mjAttributeDirection).value;
+                return CssUnitParser.parse(mjAttributeDirection).value();
 
             if (Utils.isNullOrWhiteSpace(mjAttribute))
                 return 0;
@@ -338,10 +338,10 @@ abstract class BaseComponent {
                     break;
                 case 1:
                 default:
-                    return CssUnitParser.parse(mjAttribute).value;
+                    return CssUnitParser.parse(mjAttribute).value();
             }
 
-            return CssUnitParser.parse(splittedCssValue[directions.get(direction)]).value;
+            return CssUnitParser.parse(splittedCssValue[directions.get(direction)]).value();
         }
 
         StringBuilder htmlAttributes(LinkedHashMap<String, String> htmlAttributes) {

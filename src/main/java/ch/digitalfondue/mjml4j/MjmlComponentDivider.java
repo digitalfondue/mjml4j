@@ -44,16 +44,16 @@ class MjmlComponentDivider extends BaseComponent.BodyComponent {
 
         var parsedWidth = CssUnitParser.parse(getAttribute("width"));
 
-        switch (parsedWidth.unit.toLowerCase(Locale.ROOT)) {
+        switch (parsedWidth.unit().toLowerCase(Locale.ROOT)) {
             case "%": {
-                var effectiveWidth = containerWidth.value - paddingSize;
-                var percentMultiplier = parsedWidth.value / 100;
+                var effectiveWidth = containerWidth.value() - paddingSize;
+                var percentMultiplier = parsedWidth.value() / 100;
                 return doubleToString(effectiveWidth * percentMultiplier) + "px";
             }
             case "px":
                 return parsedWidth.toString();
             default:
-                return doubleToString(containerWidth.value - paddingSize) + "px";
+                return doubleToString(containerWidth.value() - paddingSize) + "px";
         }
     }
 

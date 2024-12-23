@@ -272,7 +272,7 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
 
         if (position.contains("%")) {
             var positionUnit = CssUnitParser.parse(position);
-            var positionUnitDouble = positionUnit.value / 100.0;
+            var positionUnitDouble = positionUnit.value() / 100.0;
             if ("repeat".equals(backgroundRepeat)) {
                 var temp = doubleToString(positionUnitDouble);
                 return new CssCoordinate(temp, temp);

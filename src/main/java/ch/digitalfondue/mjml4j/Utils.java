@@ -11,7 +11,7 @@ class Utils {
 
 
     static boolean isNullOrWhiteSpace(String v) {
-        return v == null || v.isEmpty() || v.isBlank();
+        return v == null || v.isBlank();
     }
 
     static boolean isNullOrWhiteSpace(StringBuilder v) {

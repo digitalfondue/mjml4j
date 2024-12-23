@@ -65,29 +65,11 @@ class DOMSerializer {
     }
 
     private static boolean isNoEndTag(String nodeName) {
-        switch (nodeName) {
-            case "area":
-            case "base":
-            case "basefont":
-            case "bgsound":
-            case "br":
-            case "col":
-            case "embed":
-            case "frame":
-            case "hr":
-            case "img":
-            case "input":
-            case "keygen":
-            case "link":
-            case "meta":
-            case "param":
-            case "source":
-            case "track":
-            case "wbr":
-                return true;
-            default:
-                return false;
-        }
+        return switch (nodeName) {
+            case "area", "base", "basefont", "bgsound", "br", "col", "embed", "frame", "hr", "img", "input", "keygen",
+                 "link", "meta", "param", "source", "track", "wbr" -> true;
+            default -> false;
+        };
     }
 
     private static String escapeAttributeValue(Attr attribute) {
@@ -156,17 +138,9 @@ class DOMSerializer {
     }
 
     private static boolean isTextNodeParent(String nodeName) {
-        switch (nodeName) {
-            case "style":
-            case "script":
-            case "xmp":
-            case "iframe":
-            case "noembed":
-            case "noframes":
-            case "plaintext":
-                return true;
-            default:
-                return false;
-        }
+        return switch (nodeName) {
+            case "style", "script", "xmp", "iframe", "noembed", "noframes", "plaintext" -> true;
+            default -> false;
+        };
     }
 }
