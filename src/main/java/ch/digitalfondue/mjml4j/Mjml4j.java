@@ -518,14 +518,17 @@ public final class Mjml4j {
                 var doc = includeResolver.resolveAsDocument(resolvedPath);
                 var includedDoc = buildMjmlDocument(doc, context);
                 findFirstComponent(includedDoc, "mj-head").ifPresent(head -> {
-                    // FIXME
+                    var root = Objects.requireNonNull(context.rootComponents.peekLast());
+                    findFirstComponent(root, "mj-head").ifPresentOrElse((headToAppend) -> {
+                        bindToParent(headToAppend, head.getChildren());
+                    }, () -> {
+                        var headToAppend = new MjmlComponentHead(context.document.createElement("mj-head"), root, context);
+                        root.getChildren().add(0, headToAppend);
+                        bindToParent(headToAppend, head.getChildren());
+                    });
                 });
-
                 findFirstComponent(includedDoc, "mj-body").ifPresent(body -> {
-                    for (var c : body.getChildren()) {
-                        c.setParent(parent);
-                        parent.getChildren().add(c);
-                    }
+                    bindToParent(parent, body.getChildren());
                 });
                 return new MjmlComponentRaw(element, parent, context, ""); // dummy empty component
             } catch (IOException e) {
@@ -534,6 +537,13 @@ public final class Mjml4j {
             } finally {
                 context.currentResourcePaths.pop();
             }
+        }
+    }
+
+    private static void bindToParent(BaseComponent parent, List<BaseComponent> children) {
+        for (var c : children) {
+            c.setParent(parent);
+            parent.getChildren().add(c);
         }
     }
 }

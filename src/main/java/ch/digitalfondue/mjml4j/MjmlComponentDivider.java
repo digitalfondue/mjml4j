@@ -60,10 +60,17 @@ class MjmlComponentDivider extends BaseComponent.BodyComponent {
     @Override
     void setupStyles(CssStyleLibraries cssStyleLibraries) {
 
+        var computeAlign = "0px auto";
+        var alignAttribute = getAttribute("align");
+        if ("left".equals(alignAttribute)) {
+            computeAlign = "0px";
+        } else if ("right".equals(alignAttribute)) {
+            computeAlign = "0px 0px 0px auto";
+        }
         var pStyle = mapOf(
                 "border-top", getAttribute("border-style") + " " + getAttribute("border-width") + " " + getAttribute("border-color"),
                 "font-size", "1px",
-                "margin", "0px auto",
+                "margin", computeAlign,
                 "width", getAttribute("width")
         );
 
@@ -80,7 +87,7 @@ class MjmlComponentDivider extends BaseComponent.BodyComponent {
         renderer.appendCurrentSpacing(res);
         res.append("<!--[if mso | IE]>");
         res.append("<table ").append(htmlAttributes(mapOf(
-                "align", "center",
+                "align", getAttribute("align"),
                 "border", "0",
                 "cellpadding", "0",
                 "cellspacing", "0",
