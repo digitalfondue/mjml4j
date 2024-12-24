@@ -68,6 +68,8 @@ public final class Mjml4j {
 
     /**
      * Filesystem based resolver. The content _must_ be within the provided basePath.
+     *
+     * The basePath will also be considered the root for any absolute paths.
      * 
      * The check can be customized, see {@link #checkAccess(Path, Path)}.
      */
@@ -90,9 +92,15 @@ public final class Mjml4j {
             }
         }
 
+
         @Override
         public String resolvePath(String name, String parent) {
-            var resolvedPath = (parent == null ? basePath.resolve(name) : Path.of(parent).getParent().resolve(name)).toAbsolutePath();
+            var providedPath = Path.of(name);
+            if (providedPath.isAbsolute()) { // resolve the absolute path over the basePath
+                providedPath = basePath.resolve(providedPath.getRoot().relativize(providedPath));
+            }
+
+            var resolvedPath = (parent == null ? basePath.resolve(providedPath) : Path.of(parent).getParent().resolve(providedPath)).normalize().toAbsolutePath();
             checkAccess(basePath, resolvedPath);
             return resolvedPath.toString();
         }

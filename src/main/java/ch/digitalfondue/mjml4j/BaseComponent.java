@@ -70,8 +70,9 @@ abstract class BaseComponent {
 
     void setAttributes() {
         var attributesLength = element.getAttributes().getLength();
+        var elemAttr = element.getAttributes();
         for (int i = 0; i < attributesLength; i++) {
-            var attr = element.getAttributes().item(i);
+            var attr = elemAttr.item(i);
             var userAttributeName = attr.getNodeName().toLowerCase(Locale.ROOT);
             var userAttributeValue = attr.getNodeValue();
             if (!attributes.containsKey(userAttributeName)) {

@@ -40,8 +40,9 @@ class CssUnitParser {
 
         var match = UNIT_PATTERN.matcher(cssValue);
 
-        if (!match.find())
+        if (!match.find()) {
             throw new IllegalStateException("CssWidthParser could not parse " + cssValue + " due to invalid format");
+        }
 
         var widthValue = match.group(1);
         var widthUnit = match.groupCount() != 2 ? "px" : match.group(2);
