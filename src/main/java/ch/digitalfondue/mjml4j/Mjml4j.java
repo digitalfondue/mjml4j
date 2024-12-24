@@ -48,7 +48,7 @@ public final class Mjml4j {
 
     interface IncludeResolver {
         /**
-         * Read the content of the file (with UTF-8) at a given resolved path.
+         * Read the content of the resource at a given resolved path.
          *
          * @param resolvedResourcePath
          * @return
@@ -57,21 +57,13 @@ public final class Mjml4j {
         String resolveAsString(String resolvedResourcePath) throws IOException;
 
         /**
-         * Read the content of the file (with UTF-8 content) and parse it's content.
-         *
-         * @param resolvedResourcePath
-         * @return
-         */
-        org.w3c.dom.Document resolveAsDocument(String resolvedResourcePath) throws IOException;
-
-        /**
          * Resolve the given path.
          *
          * @param name
-         * @param parents
+         * @param parent
          * @return
          */
-        String resolvePath(String name, Deque<String> parents);
+        String resolvePath(String name, String parent);
     }
 
     /**
@@ -92,11 +84,6 @@ public final class Mjml4j {
             return Files.readString(Path.of(resolvedResourcePath), StandardCharsets.UTF_8);
         }
 
-        @Override
-        public org.w3c.dom.Document resolveAsDocument(String resolvedResourcePath) throws IOException {
-            return parseFragment(resolveAsString(resolvedResourcePath));
-        }
-
         public void checkAccess(Path basePath, Path resolvedPath) {
             if (!resolvedPath.startsWith(basePath)) {
                 throw new IllegalStateException("Cannot access path outside of basePath");
@@ -104,8 +91,8 @@ public final class Mjml4j {
         }
 
         @Override
-        public String resolvePath(String name, Deque<String> parents) {
-            var resolvedPath = (parents.isEmpty() ? basePath.resolve(name) : Path.of(parents.peek()).getParent().resolve(name)).toAbsolutePath();
+        public String resolvePath(String name, String parent) {
+            var resolvedPath = (parent == null ? basePath.resolve(name) : Path.of(parent).getParent().resolve(name)).toAbsolutePath();
             checkAccess(basePath, resolvedPath);
             return resolvedPath.toString();
         }
@@ -126,11 +113,16 @@ public final class Mjml4j {
 
     private static final Configuration DEFAULT_CONFIG = new Configuration("und", TextDirection.AUTO);
 
-    private static org.w3c.dom.Document parseFragment(String template) {
+
+    private static List<ch.digitalfondue.jfiveparse.Node> parseHtmlFragment(String template) {
+        return JFiveParse.parseFragment(template, EnumSet.of(Option.DISABLE_IGNORE_TOKEN_IN_BODY_START_TAG, Option.INTERPRET_SELF_CLOSING_ANYTHING_ELSE, Option.DONT_TRANSFORM_ENTITIES));
+    }
+
+    private static org.w3c.dom.Document parseMjmlFragment(String template) {
         //
         var wrappedFragment = !template.contains("<mjml>") ? "<mjml><mj-body>" + template + "</mj-body></mjml>" : template;
         //
-        var nodes = JFiveParse.parseFragment(wrappedFragment, EnumSet.of(Option.DISABLE_IGNORE_TOKEN_IN_BODY_START_TAG, Option.INTERPRET_SELF_CLOSING_ANYTHING_ELSE, Option.DONT_TRANSFORM_ENTITIES));
+        var nodes = parseHtmlFragment(wrappedFragment);
         var doc = new Document();
         for (var n : nodes) {
             doc.appendChild(n);
@@ -146,9 +138,7 @@ public final class Mjml4j {
      * @return
      */
     public static String render(String template, Configuration configuration) {
-        var nodes = JFiveParse.parseFragment(template, EnumSet.of(Option.DISABLE_IGNORE_TOKEN_IN_BODY_START_TAG, Option.INTERPRET_SELF_CLOSING_ANYTHING_ELSE, Option.DONT_TRANSFORM_ENTITIES));
-
-        var rootElemMaybe = nodes.stream().filter(node -> "mjml".equals(node.getNodeName())).findFirst();
+        var rootElemMaybe = parseHtmlFragment(template).stream().filter(node -> "mjml".equals(node.getNodeName())).findFirst();
         if (rootElemMaybe.isEmpty()) {
             throw new IllegalStateException("no root element mjml found");
         }
@@ -494,19 +484,18 @@ public final class Mjml4j {
         }
 
         var includeResolver = context.includeResolver;
-        var resolvedPath = includeResolver.resolvePath(path, context.currentResourcePaths);
+        var resolvedPath = includeResolver.resolvePath(path, context.currentResourcePaths.peek());
+        var resource = "";
+        try {
+            resource = includeResolver.resolveAsString(resolvedPath);
+        } catch (IOException e) {
+            resource = "<!-- mj-include fails to read file : " + path + " at " + resolvedPath + " -->";
+            return new MjmlComponentRaw(element, parent, context, resource);
+        }
 
         var attributeType = element.getAttribute("type");
         if ("html".equals(attributeType) || "css".equals(attributeType)) {
-            var resource = "";
-            var failed = false;
-            try {
-                resource = includeResolver.resolveAsString(resolvedPath);
-            } catch (IOException e) {
-                failed = true;
-                resource = "<!-- mj-include fails to read file : " + path + " at " + resolvedPath + " -->";
-            }
-            if ("html".equals(attributeType) || failed) {
+            if ("html".equals(attributeType)) {
                 return new MjmlComponentRaw(element, parent, context, resource);
             } else {
                 context.addStyle(resource, "inline".equals(element.getAttribute("css-inline")));
@@ -515,25 +504,21 @@ public final class Mjml4j {
         } else {
             context.currentResourcePaths.push(resolvedPath);
             try {
-                var doc = includeResolver.resolveAsDocument(resolvedPath);
+                var doc = parseMjmlFragment(resource);
                 var includedDoc = buildMjmlDocument(doc, context);
                 findFirstComponent(includedDoc, "mj-head").ifPresent(head -> {
-                    var root = Objects.requireNonNull(context.rootComponents.peekLast());
-                    findFirstComponent(root, "mj-head").ifPresentOrElse((headToAppend) -> {
-                        bindToParent(headToAppend, head.getChildren());
-                    }, () -> {
-                        var headToAppend = new MjmlComponentHead(context.document.createElement("mj-head"), root, context);
-                        root.getChildren().add(0, headToAppend);
-                        bindToParent(headToAppend, head.getChildren());
+                    var targetRoot = Objects.requireNonNull(context.rootComponents.peekLast());
+                    var targetHead = findFirstComponent(targetRoot, "mj-head").orElseGet(() -> {
+                        var headToAppend = new MjmlComponentHead(context.document.createElement("mj-head"), targetRoot, context);
+                        targetRoot.getChildren().add(0, headToAppend);
+                        return headToAppend;
                     });
+                    bindToParent(targetHead, head.getChildren());
                 });
                 findFirstComponent(includedDoc, "mj-body").ifPresent(body -> {
                     bindToParent(parent, body.getChildren());
                 });
                 return new MjmlComponentRaw(element, parent, context, ""); // dummy empty component
-            } catch (IOException e) {
-                // FIXME
-                return new MjmlComponentRaw(element, parent, context);
             } finally {
                 context.currentResourcePaths.pop();
             }
