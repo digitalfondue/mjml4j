@@ -12,5 +12,6 @@
         </mj-section>
 
         <mj-include path="include/footer.mjml" />
+        <mj-include path="not-found.mjml" />
     </mj-body>
 </mjml>
