@@ -328,7 +328,7 @@ class Utils {
     }
 
     /**
-     * return true if the element has: 0 childs or only empty text nodes
+     * return true if the element has: 0 child or only empty text nodes
      */
     static boolean hasNonEmptyChildNodes(Element element) {
         if (!element.hasChildNodes()) {
