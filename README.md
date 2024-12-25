@@ -8,7 +8,7 @@ Javadoc: https://javadoc.io/doc/ch.digitalfondue.mjml4j/mjml4j
 
 # Why
 
-As far as I know, there is no pure java porting of mjml. This library is quite compact (~145Kb) with a single dependency - the [html5 parser (jfiveparse)](https://github.com/digitalfondue/jfiveparse) (~150kb).
+As far as I know, there is no pure java porting of mjml. This library is quite compact (~150Kb) with a single dependency - the [html5 parser (jfiveparse)](https://github.com/digitalfondue/jfiveparse) (~153kb).
 
 # License
 
