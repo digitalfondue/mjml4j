@@ -1,0 +1,16 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-class name="blue" color="blue" />
+        </mj-attributes>
+    </mj-head>
+    <mj-body>
+        <mj-section>
+            <mj-column width="100%">
+                <mj-text mj-class="blue">
+                    Test include 2 is here. It's blue.
+                </mj-text>
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>

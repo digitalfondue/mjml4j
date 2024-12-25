@@ -1,0 +1,18 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-class name="basic-column" color="green" />
+        </mj-attributes>
+    </mj-head>
+    <mj-body>
+        <mj-section>
+            <mj-column width="100%">
+                <mj-text mj-class="basic-column">
+                    Basic column here. It's green.
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-include path="include/test-partial.mjml" />
+        <mj-include path="include/test-partial-two.mjml" />
+    </mj-body>
+</mjml>

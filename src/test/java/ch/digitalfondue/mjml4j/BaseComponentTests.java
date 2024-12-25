@@ -225,4 +225,9 @@ class BaseComponentTests {
     void testImportHead() {
         testTemplate("import-head");
     }
+
+    @Test
+    void test2Import() {
+        testTemplate("import-2-import");
+    }
 }
