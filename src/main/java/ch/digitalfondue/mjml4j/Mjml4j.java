@@ -21,10 +21,10 @@ import static ch.digitalfondue.mjml4j.Utils.isNullOrWhiteSpace;
 
 /**
  * mjml java implementation.
- * 
+ *
  * <p>You can use the default methods {@link Mjml4j#render(String)} or for a little bit more control {@link #render(String, Configuration)} if you
  * specify the language (recommended).</p>
- *
+ * <p>
  * See the record {@link Configuration}.
  */
 public final class Mjml4j {
@@ -37,6 +37,7 @@ public final class Mjml4j {
 
         LTR("ltr"), RTL("rtl"), AUTO("auto");
         private final String value;
+
         TextDirection(String value) {
             this.value = value;
         }
@@ -46,6 +47,10 @@ public final class Mjml4j {
         }
     }
 
+    /**
+     * Resolver used for mj-include. By default, no resource resolver is defined.
+     * See also {@link FileSystemResolver}.
+     */
     interface IncludeResolver {
         /**
          * Read the content of the resource at a given resolved path.
@@ -54,7 +59,7 @@ public final class Mjml4j {
          * @return
          * @throws IOException
          */
-        String resolveAsString(String resolvedResourcePath) throws IOException;
+        String readResource(String resolvedResourcePath) throws IOException;
 
         /**
          * Resolve the given path.
@@ -68,9 +73,9 @@ public final class Mjml4j {
 
     /**
      * Filesystem based resolver. The content _must_ be within the provided basePath.
-     *
+     * <p>
      * The basePath will also be considered the root for any absolute paths.
-     * 
+     * <p>
      * The check can be customized, see {@link #checkAccess(Path, Path)}.
      */
     public static class FileSystemResolver implements IncludeResolver {
@@ -82,7 +87,7 @@ public final class Mjml4j {
         }
 
         @Override
-        public String resolveAsString(String resolvedResourcePath) throws IOException {
+        public String readResource(String resolvedResourcePath) throws IOException {
             return Files.readString(Path.of(resolvedResourcePath), StandardCharsets.UTF_8);
         }
 
@@ -485,30 +490,28 @@ public final class Mjml4j {
     }
 
     private static BaseComponent handleInclude(Element element, BaseComponent parent, GlobalContext context) {
-
         var path = element.getAttribute("path");
         if (context.includeResolver == null || path == null || path.isEmpty()) {
             return new HtmlComponent.HtmlRawComponent(element, parent, context);
         }
 
         var includeResolver = context.includeResolver;
-        var resolvedPath = includeResolver.resolvePath(path, context.currentResourcePaths.peek());
+        var resolvedPath = "";
         var resource = "";
         try {
-            resource = includeResolver.resolveAsString(resolvedPath);
-        } catch (IOException e) {
+            resolvedPath = includeResolver.resolvePath(path, context.currentResourcePaths.peek());
+            resource = includeResolver.readResource(resolvedPath);
+        } catch (IOException | IllegalStateException e) {
             resource = "<!-- mj-include fails to read file : " + path + " at " + resolvedPath + " -->";
             return new MjmlComponentRaw(element, parent, context, resource);
         }
 
         var attributeType = element.getAttribute("type");
-        if ("html".equals(attributeType) || "css".equals(attributeType)) {
-            if ("html".equals(attributeType)) {
-                return new MjmlComponentRaw(element, parent, context, resource);
-            } else {
-                context.addStyle(resource, "inline".equals(element.getAttribute("css-inline")));
-                return new MjmlComponentRaw(element, parent, context, ""); // dummy empty component
-            }
+        if ("html".equals(attributeType)) {
+            return new MjmlComponentRaw(element, parent, context, resource);
+        } else if ("css".equals(attributeType)) {
+            context.addStyle(resource, "inline".equals(element.getAttribute("css-inline")));
+            return new MjmlComponentRaw(element, parent, context, ""); // dummy empty component
         } else {
             context.currentResourcePaths.push(resolvedPath);
             try {
