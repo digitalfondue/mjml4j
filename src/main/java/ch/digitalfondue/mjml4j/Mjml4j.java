@@ -51,7 +51,7 @@ public final class Mjml4j {
      * Resolver used for mj-include. By default, no resource resolver is defined.
      * See also {@link FileSystemResolver}.
      */
-    interface IncludeResolver {
+    public interface IncludeResolver {
         /**
          * Read the content of the resource at a given resolved path.
          *
