@@ -69,9 +69,13 @@ class Helpers {
     }
 
     static void testTemplate(String name) {
+        testTemplate(name, new Mjml4j.FileSystemResolver(Path.of("data")));
+    }
+
+    static void testTemplate(String name, Mjml4j.IncludeResolver resolver) {
         try {
             var template = Files.readString(new File("data/" + name + ".mjml").toPath(), StandardCharsets.UTF_8);
-            var conf = new Mjml4j.Configuration("und", Mjml4j.TextDirection.AUTO, new Mjml4j.FileSystemResolver(Path.of("data")));
+            var conf = new Mjml4j.Configuration("und", Mjml4j.TextDirection.AUTO, resolver);
             var res = Mjml4j.render(template, conf);
             var comparison = Files.readString(new File("data/" + name + ".html").toPath(), StandardCharsets.UTF_8);
             Assertions.assertEquals(simplifyBrTags(alignIdFor(beautifyHtml(comparison))), alignIdFor(beautifyHtml(res)));

@@ -1,0 +1,8 @@
+<mjml>
+    <mj-head>
+        <mj-include path="include/import-head-styles.mjml" />
+    </mj-head>
+    <mj-body>
+        <mj-text>test</mj-text>
+    </mj-body>
+</mjml>

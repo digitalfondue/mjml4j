@@ -220,4 +220,9 @@ class BaseComponentTests {
     void testEmptySection() {
         testTemplate("empty-section");
     }
+
+    @Test
+    void testImportHead() {
+        testTemplate("import-head");
+    }
 }

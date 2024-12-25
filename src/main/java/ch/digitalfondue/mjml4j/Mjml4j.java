@@ -71,6 +71,41 @@ public final class Mjml4j {
         String resolvePath(String name, String parent);
     }
 
+    @FunctionalInterface
+    public interface ResourceLoader {
+        /**
+         *
+         * @param id resource id
+         * @return loaded resource
+         * @throws IOException if the resource does not exist or a problem during loading happened
+         */
+        String load(String id) throws IOException;
+    }
+
+    /**
+     * Simple resource resolver, does not try to do any fancy relative / absolute handling.
+     * The name of the resource is the identifier used by {@link #readResource(String)}.
+     * The user must provide a resource handler.
+     */
+    public static class SimpleResourceResolver implements IncludeResolver {
+
+        private final ResourceLoader resourceHandler;
+
+        public SimpleResourceResolver(ResourceLoader resourceHandler) {
+            this.resourceHandler = resourceHandler;
+        }
+
+        @Override
+        public String readResource(String resolvedResourcePath) throws IOException {
+            return resourceHandler.load(resolvedResourcePath);
+        }
+
+        @Override
+        public String resolvePath(String name, String parent) {
+            return name;
+        }
+    }
+
     /**
      * Filesystem based resolver. The content _must_ be within the provided basePath.
      * <p>
