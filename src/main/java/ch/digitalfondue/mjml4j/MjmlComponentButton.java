@@ -114,7 +114,7 @@ class MjmlComponentButton extends BaseComponent.BodyComponent {
         var innerPaddings = getShorthandAttributeValue("inner-padding", "left") +
                 getShorthandAttributeValue("inner-padding", "right");
 
-        var calculatedWidth = parsedWidth.value - innerPaddings - borders;
+        var calculatedWidth = parsedWidth.value() - innerPaddings - borders;
         return doubleToString(calculatedWidth) + "px";
     }
 

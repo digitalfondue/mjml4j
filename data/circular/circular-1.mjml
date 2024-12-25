@@ -1,0 +1,5 @@
+<mj-section css-class="bg-white">
+    <mj-column padding="32px 48px">
+        <mj-include path="circular-2.mjml" />
+    </mj-column>
+</mj-section>

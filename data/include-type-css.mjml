@@ -1,0 +1,15 @@
+<mjml>
+    <mj-body>
+        <mj-section>
+            <mj-column>
+                <mj-include type="css" path="include/type.css" />
+            </mj-column>
+            <mj-column>
+                <mj-include type="css" path="include/type2.css" />
+            </mj-column>
+            <mj-column>
+                <mj-include type="css" path="include/non-exist.css" />
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>

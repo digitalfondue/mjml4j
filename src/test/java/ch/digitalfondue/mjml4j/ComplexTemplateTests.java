@@ -1,5 +1,6 @@
 package ch.digitalfondue.mjml4j;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static ch.digitalfondue.mjml4j.Helpers.testTemplate;
@@ -101,4 +102,36 @@ class ComplexTemplateTests {
         testTemplate("sphero-droids");
     }
 
+    @Test
+    void testIncludeHtml() {
+        testTemplate("include-type-html");
+    }
+
+    @Test
+    void testIncludeCss() {
+        testTemplate("include-type-css");
+    }
+
+    // imported from issue https://github.com/SebastianStehle/mjml-net/issues/177
+    @Test
+    void testIncludeIndex() {
+        testTemplate("include-index");
+    }
+
+    @Test
+    void testIncludeAbout() {
+        testTemplate("include-about");
+    }
+
+
+    @Test
+    void testDividerAttributeAll() {
+        testTemplate("mj-divider-mj-all");
+    }
+
+    @Test
+    void testCircularInclude() {
+        var t = Assertions.assertThrows(IllegalStateException.class, () -> testTemplate("circular/include-circular"));
+        Assertions.assertTrue(t.getMessage().startsWith("Circular inclusion detected on file"));
+    }
 }

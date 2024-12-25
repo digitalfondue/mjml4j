@@ -11,7 +11,7 @@ class Utils {
 
 
     static boolean isNullOrWhiteSpace(String v) {
-        return v == null || v.isEmpty() || v.isBlank();
+        return v == null || v.isBlank();
     }
 
     static boolean isNullOrWhiteSpace(StringBuilder v) {
@@ -38,16 +38,21 @@ class Utils {
         return res.toString();
     }
 
+    static <K, V> LinkedHashMap<K, V> mergeLeft(LinkedHashMap<K, V> f, LinkedHashMap<K, V> f2) {
+        return mergeLeft(f, f2, null);
+    }
 
-    static <K, V> LinkedHashMap<K, V> mergeLeft(LinkedHashMap<K, V> f, LinkedHashMap<K, V>... others) {
+    static <K, V> LinkedHashMap<K, V> mergeLeft(LinkedHashMap<K, V> f, LinkedHashMap<K, V> f2, LinkedHashMap<K, V> f3) {
         var res = new LinkedHashMap<K, V>();
 
         List<Map.Entry<K, V>> entries = new ArrayList<>(f.entrySet());
-        for (var other : others) {
-            if (other != null) {
-                entries.addAll(other.entrySet());
-            }
+        if (f2 != null) {
+            entries.addAll(f2.entrySet());
         }
+        if (f3 != null) {
+            entries.addAll(f3.entrySet());
+        }
+
         for (var entry : entries) {
             if (entry != null) {
                 res.put(entry.getKey(), entry.getValue());
@@ -218,9 +223,9 @@ class Utils {
         return res;
     }
 
-    static <K, V> LinkedHashMap<K, V> mapOf(Map.Entry<K, V> e, Map.Entry<K, V>... rest) {
-        var res = new LinkedHashMap<K, V>();
-        res.put(e.getKey(), e.getValue());
+    @SafeVarargs
+    static <V> LinkedHashMap<String, V> mapOf(Map.Entry<String, V>... rest) {
+        var res = new LinkedHashMap<java.lang.String, V>();
         for (var r : rest) {
             res.put(r.getKey(), r.getValue());
         }
@@ -323,7 +328,7 @@ class Utils {
     }
 
     /**
-     * return true if the element has: 0 childs or only empty text nodes
+     * return true if the element has: 0 child or only empty text nodes
      */
     static boolean hasNonEmptyChildNodes(Element element) {
         if (!element.hasChildNodes()) {

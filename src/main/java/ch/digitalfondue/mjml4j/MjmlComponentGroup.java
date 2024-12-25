@@ -76,16 +76,16 @@ class MjmlComponentGroup extends BaseComponent.BodyComponent {
 
 
             if (parsedWidth.isPercent()) {
-                parsedWidth = parsedWidth.withValue(sectionWidth * parsedWidth.value / 100);
+                parsedWidth = parsedWidth.withValue(sectionWidth * parsedWidth.value() / 100);
             }
-            containerWidth = doubleToString(parsedWidth.value) + "px";
+            containerWidth = doubleToString(parsedWidth.value()) + "px";
 
             var columnWidth = CssUnitParser.parse(this.containerWidth);
 
-            return new CssBoxModel(parsedWidth.value, 0, 0, columnWidth.value);
+            return new CssBoxModel(parsedWidth.value(), 0, 0, columnWidth.value());
         }
 
-        return new CssBoxModel(parsedContextContainerWidth.value, 0, 0, parsedContextContainerWidth.value);
+        return new CssBoxModel(parsedContextContainerWidth.value(), 0, 0, parsedContextContainerWidth.value());
     }
 
     private int getSectionColumnCount() {
@@ -115,14 +115,14 @@ class MjmlComponentGroup extends BaseComponent.BodyComponent {
         var parsedContainerWidth = CssUnitParser.parse(containerWidth);
 
         if (parsedWidth.isPercent())
-            return doubleToString(parsedContainerWidth.value * parsedWidth.value / 100) + "px";
+            return doubleToString(parsedContainerWidth.value() * parsedWidth.value() / 100) + "px";
 
         return parsedWidth.toString();
     }
 
     private String getColumnClass() {
         var parsedWidth = getParsedWidth();
-        var formattedClassNb = doubleToString(parsedWidth.value).replace('.', '-');
+        var formattedClassNb = doubleToString(parsedWidth.value()).replace('.', '-');
 
 
         var className = "mj-column-px-" + formattedClassNb;
@@ -139,14 +139,14 @@ class MjmlComponentGroup extends BaseComponent.BodyComponent {
     private String getElementWidth(String width) {
         if (Utils.isNullOrWhiteSpace(width)) {
             var parsedContainerWidth = CssUnitParser.parse(containerWidth);
-            var columnWidth = parsedContainerWidth.value / getSectionColumnCount();
+            var columnWidth = parsedContainerWidth.value() / getSectionColumnCount();
             return doubleToString(columnWidth) + "px";
         }
 
         var parsedWidth = CssUnitParser.parse(width);
 
         if (parsedWidth.isPercent())
-            return doubleToString(100 * parsedWidth.value / getContainerInnerWidth()) + "px";
+            return doubleToString(100 * parsedWidth.value() / getContainerInnerWidth()) + "px";
 
         return parsedWidth.toString();
     }

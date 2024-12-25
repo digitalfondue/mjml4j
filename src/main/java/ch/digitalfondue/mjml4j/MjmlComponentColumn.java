@@ -56,26 +56,26 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
 
             var parsedWidth = CssUnitParser.parse(containerWidth);
             if (parsedWidth.isPercent()) {
-                parsedWidth = parsedWidth.withValue((sectionWidth * parsedWidth.value / 100));
+                parsedWidth = parsedWidth.withValue((sectionWidth * parsedWidth.value() / 100));
             }
-            containerWidth = doubleToString(parsedWidth.valueFullPrecision) + "px";
-            childContainerWidth = doubleToString(parsedWidth.value - allPaddings) + "px";
+            containerWidth = doubleToString(parsedWidth.valueFullPrecision()) + "px";
+            childContainerWidth = doubleToString(parsedWidth.value() - allPaddings) + "px";
 
             var columnWidth = CssUnitParser.parse(childContainerWidth);
             return new CssBoxModel(
-                    parsedWidth.value,
+                    parsedWidth.value(),
                     borders,
                     paddings,
-                    columnWidth.value
+                    columnWidth.value()
             );
         }
 
         var parsedContainerWidth = CssUnitParser.parse(context.containerWidth);
         return new CssBoxModel(
-                parsedContainerWidth.value,
+                parsedContainerWidth.value(),
                 borders,
                 paddings,
-                parsedContainerWidth.value);
+                parsedContainerWidth.value());
     }
 
     private CssUnitParser.CssParsedUnit getParsedWidth() {
@@ -105,7 +105,7 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
         if (parsedWidth.isPercent()) {
             return width;
         } else {
-            return doubleToString(parsedWidth.value / CssUnitParser.parse(containerWidth).value) + "%";
+            return doubleToString(parsedWidth.value() / CssUnitParser.parse(containerWidth).value()) + "%";
         }
     }
 
@@ -122,7 +122,7 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
 
     private String getColumnClass() {
         var parsedWidth = getParsedWidth();
-        var formattedClassNb = doubleToString(parsedWidth.value).replace('.', '-');
+        var formattedClassNb = doubleToString(parsedWidth.value()).replace('.', '-');
 
 
         var className = "mj-column-px-" + formattedClassNb;

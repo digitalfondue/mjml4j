@@ -44,26 +44,33 @@ class MjmlComponentDivider extends BaseComponent.BodyComponent {
 
         var parsedWidth = CssUnitParser.parse(getAttribute("width"));
 
-        switch (parsedWidth.unit.toLowerCase(Locale.ROOT)) {
+        switch (parsedWidth.unit().toLowerCase(Locale.ROOT)) {
             case "%": {
-                var effectiveWidth = containerWidth.value - paddingSize;
-                var percentMultiplier = parsedWidth.value / 100;
+                var effectiveWidth = containerWidth.value() - paddingSize;
+                var percentMultiplier = parsedWidth.value() / 100;
                 return doubleToString(effectiveWidth * percentMultiplier) + "px";
             }
             case "px":
                 return parsedWidth.toString();
             default:
-                return doubleToString(containerWidth.value - paddingSize) + "px";
+                return doubleToString(containerWidth.value() - paddingSize) + "px";
         }
     }
 
     @Override
     void setupStyles(CssStyleLibraries cssStyleLibraries) {
 
+        var computeAlign = "0px auto";
+        var alignAttribute = getAttribute("align");
+        if ("left".equals(alignAttribute)) {
+            computeAlign = "0px";
+        } else if ("right".equals(alignAttribute)) {
+            computeAlign = "0px 0px 0px auto";
+        }
         var pStyle = mapOf(
                 "border-top", getAttribute("border-style") + " " + getAttribute("border-width") + " " + getAttribute("border-color"),
                 "font-size", "1px",
-                "margin", "0px auto",
+                "margin", computeAlign,
                 "width", getAttribute("width")
         );
 
@@ -80,7 +87,7 @@ class MjmlComponentDivider extends BaseComponent.BodyComponent {
         renderer.appendCurrentSpacing(res);
         res.append("<!--[if mso | IE]>");
         res.append("<table ").append(htmlAttributes(mapOf(
-                "align", "center",
+                "align", getAttribute("align"),
                 "border", "0",
                 "cellpadding", "0",
                 "cellspacing", "0",

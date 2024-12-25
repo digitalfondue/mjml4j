@@ -8,14 +8,14 @@ class UtilsTest {
     @Test
     void testParseUnit() {
         var em = CssUnitParser.parse("32em");
-        Assertions.assertEquals("em", em.unit);
-        Assertions.assertEquals(32., em.value, 0.001);
+        Assertions.assertEquals("em", em.unit());
+        Assertions.assertEquals(32., em.value(), 0.001);
 
 
         var defaultPx = CssUnitParser.parse("10");
-        Assertions.assertEquals("px", defaultPx.unit);
+        Assertions.assertEquals("px", defaultPx.unit());
         Assertions.assertTrue(defaultPx.isPx());
-        Assertions.assertEquals(10., defaultPx.value, 0.001);
+        Assertions.assertEquals(10., defaultPx.value(), 0.001);
     }
 
     @Test

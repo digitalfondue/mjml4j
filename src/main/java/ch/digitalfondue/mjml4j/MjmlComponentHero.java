@@ -62,7 +62,7 @@ class MjmlComponentHero extends BaseComponent.BodyComponent {
     void setupStyles(CssStyleLibraries cssStyleLibraries) {
         var backgroundHeight = CssUnitParser.parse(getAttribute("background-height"));
         var backgroundWidth = CssUnitParser.parse(getAttribute("background-width"));
-        var backgroundRatio = Math.round(backgroundHeight.value / backgroundWidth.value * 100d);
+        var backgroundRatio = Math.round(backgroundHeight.value() / backgroundWidth.value() * 100d);
         var width = getElement().hasAttribute("background-width") ? getAttribute("background-width") : Utils.doubleToString(getContainerInnerWidth()) + "px";
 
         cssStyleLibraries.add("div", mapOf(
@@ -244,7 +244,7 @@ class MjmlComponentHero extends BaseComponent.BodyComponent {
             var heightCss = CssUnitParser.parse(getAttribute("height"));
             var paddingTop = getShorthandAttributeValue("padding", "top");
             var paddingBottom = getShorthandAttributeValue("padding", "bottom");
-            var height = heightCss.value;
+            var height = heightCss.value();
             if (heightCss.isPercent()) {
                 height = getContainerInnerWidth() / 100 * height;
             }

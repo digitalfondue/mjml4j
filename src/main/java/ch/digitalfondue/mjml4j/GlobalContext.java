@@ -2,6 +2,7 @@ package ch.digitalfondue.mjml4j;
 
 import org.w3c.dom.Document;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,6 +17,11 @@ class GlobalContext {
     String backgroundColor = "";
     final String language;
     final String dir;
+    //
+    final Mjml4j.IncludeResolver includeResolver;
+    final ArrayDeque<String> currentResourcePaths = new ArrayDeque<>();
+    final ArrayDeque<MjmlComponent.MjmlRootComponent> rootComponents = new ArrayDeque<>();
+    //
 
     final LinkedHashMap<String, String> fonts = Utils.mapOf(
             "Open Sans", "https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700",
@@ -39,6 +45,10 @@ class GlobalContext {
         this.document = document;
         this.dir = configuration.dir().value();
         this.language = configuration.language();
+
+        //
+        this.includeResolver = configuration.includeResolver();
+        //
     }
 
     void addFont(String name, String href) {

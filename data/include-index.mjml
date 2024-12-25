@@ -1,0 +1,17 @@
+<mjml>
+    <mj-body>
+        <mj-include path="include/styling.mjml" />
+        <mj-include path="include/header.mjml" />
+
+        <mj-section css-class="bg-white">
+            <mj-column>
+                <mj-text padding="48px 48px 0 48px">
+                    <p>This is the Index!</p>
+                </mj-text>
+            </mj-column>
+        </mj-section>
+
+        <mj-include path="include/footer.mjml" />
+        <mj-include path="not-found.mjml" />
+    </mj-body>
+</mjml>

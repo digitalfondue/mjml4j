@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static ch.digitalfondue.mjml4j.Helpers.testTemplate;
 
 /**
- * Unit test for simple App.
+ * Unit test for base cases.
  */
 class BaseComponentTests {
 
@@ -219,5 +219,10 @@ class BaseComponentTests {
     @Test
     void testEmptySection() {
         testTemplate("empty-section");
+    }
+
+    @Test
+    void testImportHead() {
+        testTemplate("import-head");
     }
 }

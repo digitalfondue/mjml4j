@@ -98,7 +98,7 @@ class MjmlComponentCarouselImage extends BaseComponent.BodyComponent {
                 "style", "thumbnails_img",
                 "src", src,
                 "alt", getAttribute("alt"),
-                "width", doubleToString(CssUnitParser.parse(getAttribute("tb-width")).value)
+                "width", doubleToString(CssUnitParser.parse(getAttribute("tb-width")).value())
         )), res);
 
         renderer.closeTag("label", res);

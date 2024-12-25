@@ -10,8 +10,8 @@ import static ch.digitalfondue.mjml4j.Utils.equalsIgnoreCase;
 abstract class BaseComponent {
 
     private final Element element;
-    private final BaseComponent parent;
     private final List<BaseComponent> children = new ArrayList<>();
+    private BaseComponent parent;
 
     final GlobalContext context;
 
@@ -31,6 +31,10 @@ abstract class BaseComponent {
         }
     }
 
+    public void setParent(BaseComponent parent) {
+        this.parent = parent;
+    }
+
     void setupPostConstruction() {
     }
 
@@ -39,9 +43,10 @@ abstract class BaseComponent {
     }
 
     private LinkedHashMap<String, String> defaultAttributeValues() {
-        var kvt = allowedAttributes();
         var res = new LinkedHashMap<String, String>();
-        kvt.forEach((k, vt) -> res.put(k, vt.value()));
+        for (var kvt : allowedAttributes().entrySet()) {
+            res.put(kvt.getKey(), kvt.getValue().value());
+        }
         return res;
     }
 
@@ -65,8 +70,9 @@ abstract class BaseComponent {
 
     void setAttributes() {
         var attributesLength = element.getAttributes().getLength();
+        var elemAttr = element.getAttributes();
         for (int i = 0; i < attributesLength; i++) {
-            var attr = element.getAttributes().item(i);
+            var attr = elemAttr.item(i);
             var userAttributeName = attr.getNodeName().toLowerCase(Locale.ROOT);
             var userAttributeValue = attr.getNodeValue();
             if (!attributes.containsKey(userAttributeName)) {
@@ -252,14 +258,14 @@ abstract class BaseComponent {
                         parent.getContainerInnerWidth(),
                         borders,
                         paddings,
-                        containerWidth.value
+                        containerWidth.value()
                 );
             }
             return new CssBoxModel(
-                    containerWidth.value,
+                    containerWidth.value(),
                     borders,
                     paddings,
-                    containerWidth.value);
+                    containerWidth.value());
         }
 
 
@@ -270,7 +276,7 @@ abstract class BaseComponent {
             var mjAttribute = getAttribute("border");
 
             if (!Utils.isNullOrWhiteSpace(mjAttributeDirection))
-                return CssUnitParser.parse(mjAttributeDirection).value;
+                return CssUnitParser.parse(mjAttributeDirection).value();
 
             if (Utils.isNullOrWhiteSpace(mjAttribute))
                 return 0;
@@ -300,7 +306,7 @@ abstract class BaseComponent {
             var mjAttribute = getAttribute(attribute);
 
             if (!Utils.isNullOrWhiteSpace(mjAttributeDirection))
-                return CssUnitParser.parse(mjAttributeDirection).value;
+                return CssUnitParser.parse(mjAttributeDirection).value();
 
             if (Utils.isNullOrWhiteSpace(mjAttribute))
                 return 0;
@@ -337,10 +343,10 @@ abstract class BaseComponent {
                     break;
                 case 1:
                 default:
-                    return CssUnitParser.parse(mjAttribute).value;
+                    return CssUnitParser.parse(mjAttribute).value();
             }
 
-            return CssUnitParser.parse(splittedCssValue[directions.get(direction)]).value;
+            return CssUnitParser.parse(splittedCssValue[directions.get(direction)]).value();
         }
 
         StringBuilder htmlAttributes(LinkedHashMap<String, String> htmlAttributes) {

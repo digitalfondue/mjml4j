@@ -21,11 +21,6 @@ class MjmlComponentBody extends BaseComponent.BodyComponent {
         }
     }
 
-    @Override
-    void setupPostConstruction() {
-        super.setupPostConstruction();
-    }
-
     private static final LinkedHashMap<String, AttributeValueType> ALLOWED_DEFAULT_ATTRIBUTES = mapOf(
             "width", of("600px", AttributeType.PIXELS),
             "background-color", of(null, AttributeType.COLOR)

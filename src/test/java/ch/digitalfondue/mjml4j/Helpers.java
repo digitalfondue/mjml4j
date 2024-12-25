@@ -1,13 +1,15 @@
 package ch.digitalfondue.mjml4j;
 
-import org.apache.commons.io.FileUtils;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Source;
+import org.graalvm.polyglot.io.IOAccess;
 import org.junit.jupiter.api.Assertions;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -24,7 +26,7 @@ class Helpers {
 
         try (Context context = Context.newBuilder("js")
                 .allowExperimentalOptions(true)
-                .allowIO(true)
+                .allowIO(IOAccess.ALL)
                 .options(options)
                 .build()) {
             context.eval(Source.newBuilder("js", new File("node_modules/js-beautify/js/index.js")).build());
@@ -67,10 +69,15 @@ class Helpers {
     }
 
     static void testTemplate(String name) {
+        testTemplate(name, new Mjml4j.FileSystemResolver(Path.of("data")));
+    }
+
+    static void testTemplate(String name, Mjml4j.IncludeResolver resolver) {
         try {
-            var template = FileUtils.readFileToString(new File("data/" + name + ".mjml"), StandardCharsets.UTF_8);
-            var res = Mjml4j.render(template);
-            var comparison = FileUtils.readFileToString(new File("data/" + name + ".html"), StandardCharsets.UTF_8);
+            var template = Files.readString(new File("data/" + name + ".mjml").toPath(), StandardCharsets.UTF_8);
+            var conf = new Mjml4j.Configuration("und", Mjml4j.TextDirection.AUTO, resolver);
+            var res = Mjml4j.render(template, conf);
+            var comparison = Files.readString(new File("data/" + name + ".html").toPath(), StandardCharsets.UTF_8);
             Assertions.assertEquals(simplifyBrTags(alignIdFor(beautifyHtml(comparison))), alignIdFor(beautifyHtml(res)));
         } catch (IOException e) {
             throw new IllegalStateException(e);
