@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static ch.digitalfondue.mjml4j.Helpers.testTemplate;
 
 /**
- * Unit test for simple App.
+ * Unit test for base cases.
  */
 class BaseComponentTests {
 

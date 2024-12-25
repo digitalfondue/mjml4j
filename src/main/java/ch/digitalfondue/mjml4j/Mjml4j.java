@@ -501,7 +501,10 @@ public final class Mjml4j {
         try {
             resolvedPath = includeResolver.resolvePath(path, context.currentResourcePaths.peek());
             resource = includeResolver.readResource(resolvedPath);
-        } catch (IOException | IllegalStateException e) {
+            if (context.currentResourcePaths.contains(resolvedPath)) {
+                throw new IllegalStateException("Circular inclusion detected on file : " + resolvedPath);
+            }
+        } catch (IOException e) {
             resource = "<!-- mj-include fails to read file : " + path + " at " + resolvedPath + " -->";
             return new MjmlComponentRaw(element, parent, context, resource);
         }

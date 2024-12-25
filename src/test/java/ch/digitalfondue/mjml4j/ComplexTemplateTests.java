@@ -1,5 +1,6 @@
 package ch.digitalfondue.mjml4j;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static ch.digitalfondue.mjml4j.Helpers.testTemplate;
@@ -126,5 +127,11 @@ class ComplexTemplateTests {
     @Test
     void testDividerAttributeAll() {
         testTemplate("mj-divider-mj-all");
+    }
+
+    @Test
+    void testCircularInclude() {
+        var t = Assertions.assertThrows(IllegalStateException.class, () -> testTemplate("circular/include-circular"));
+        Assertions.assertTrue(t.getMessage().startsWith("Circular inclusion detected on file"));
     }
 }
