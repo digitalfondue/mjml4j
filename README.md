@@ -38,14 +38,14 @@ maven:
 <dependency>
    <groupId>ch.digitalfondue.mjml4j</groupId>
    <artifactId>mjml4j</artifactId>
-   <version>1.1.1</version>
+   <version>1.1.2</version>
 </dependency>
 ```
 
 gradle:
 
 ```
-implementation 'ch.digitalfondue.mjml4j:mjml4j:1.1.1'
+implementation 'ch.digitalfondue.mjml4j:mjml4j:1.1.2'
 ```
 
 # Use
@@ -61,8 +61,8 @@ import ch.digitalfondue.mjml4j.Mjml4j;
 
 public class App {
    public static void main(String[] args) {
-      var configuration = new Mjml4j.Configuration("en");
-      var renderedTemplate = Mjml4j.render("""
+      Mjml4j.Configuration configuration = new Mjml4j.Configuration("en");
+      String renderedTemplate = Mjml4j.render("""
               <mjml>
                 <mj-body>
                   <mj-section>
