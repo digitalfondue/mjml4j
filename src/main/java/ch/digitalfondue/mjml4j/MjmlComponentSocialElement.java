@@ -152,17 +152,11 @@ class MjmlComponentSocialElement extends BaseComponent.BodyComponent {
 
     private SocialAttributes getSocialAttributes() {
         var socialNetworkName = getAttribute("name");
-
-
-        if (!DEFAULT_SOCIAL_NETWORKS.containsKey(socialNetworkName))
-            return new SocialAttributes(null, null, null, null, null, null, null);
-
         var socialNetwork = DEFAULT_SOCIAL_NETWORKS.get(socialNetworkName);
-
 
         var href = getAttribute("href");
 
-        if (!Utils.isNullOrEmpty(href) && !Utils.isNullOrEmpty(socialNetwork.shareUrl)) {
+        if (socialNetwork != null && !Utils.isNullOrEmpty(href) && !Utils.isNullOrEmpty(socialNetwork.shareUrl)) {
             href = socialNetwork.shareUrl.replace("[[URL]]", href);
         }
 
@@ -172,8 +166,8 @@ class MjmlComponentSocialElement extends BaseComponent.BodyComponent {
                 getAttribute("icon-size"),
                 getAttribute("srcset"),
                 getAttribute("sizes"),
-                hasAttribute("src") ? getAttribute("src") : socialNetwork.src,
-                hasAttribute("background-color") ? getAttribute("background-color") : socialNetwork.backgroundColor
+                hasAttribute("src") ? getAttribute("src") : socialNetwork != null ? socialNetwork.src : null,
+                hasAttribute("background-color") ? getAttribute("background-color") : socialNetwork != null ? socialNetwork.backgroundColor : null
         );
     }
 
