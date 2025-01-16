@@ -13,7 +13,6 @@ import static java.util.Map.entry;
 class MjmlComponentColumn extends BaseComponent.BodyComponent {
 
     private String containerWidth;
-    // private String childContainerWidth;
     private int parentSectionColumnCount;
 
     MjmlComponentColumn(Element element, BaseComponent parent, GlobalContext context) {
@@ -79,11 +78,7 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
     }
 
     private CssUnitParser.CssParsedUnit getParsedWidth() {
-        var width = "";
-        if (hasAttribute("width"))
-            width = getAttribute("width");
-        else
-            width = doubleToString(100. / getSectionColumnCount()) + "%";
+        String width = hasAttribute("width") ? getAttribute("width") : doubleToString(100. / getSectionColumnCount()) + "%";
         return CssUnitParser.parse(width);
     }
 
@@ -102,11 +97,7 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
 
         var parsedWidth = CssUnitParser.parse(width);
 
-        if (parsedWidth.isPercent()) {
-            return width;
-        } else {
-            return doubleToString(parsedWidth.value() / CssUnitParser.parse(containerWidth).value()) + "%";
-        }
+        return parsedWidth.isPercent() ? width : doubleToString(parsedWidth.value() / CssUnitParser.parse(containerWidth).value()) + "%";
     }
 
     String getWidthAsPixel() {
@@ -114,23 +105,15 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
         var parsedWidth = getParsedWidth();
         var parsedContainerWidth = CssUnitParser.parse(containerWidth);
 
-        if (parsedWidth.isPercent()) {
-            return parsedContainerWidth.toFullPrecisionString(); // we don't want to cut off the precision here
-        }
-        return parsedWidth.toString();
+        // we don't want to cut off the precision if percent
+        return parsedWidth.isPercent() ? parsedContainerWidth.toFullPrecisionString() : parsedWidth.toString();
     }
 
     private String getColumnClass() {
         var parsedWidth = getParsedWidth();
         var formattedClassNb = doubleToString(parsedWidth.value()).replace('.', '-');
 
-
-        var className = "mj-column-px-" + formattedClassNb;
-
-
-        if (parsedWidth.isPercent()) {
-            className = "mj-column-per-" + formattedClassNb;
-        }
+        var className = parsedWidth.isPercent() ? "mj-column-per-" + formattedClassNb :  "mj-column-px-" + formattedClassNb;
 
         context.addMediaQuery(className, parsedWidth);
         return className;
@@ -300,17 +283,18 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
 
     @Override
     StringBuilder renderMjml(HtmlRenderer renderer) {
-        var classesName = getColumnClass() + " mj-outlook-group-fix";
+        var classesName = new StringBuilder(getColumnClass()).append(" mj-outlook-group-fix");
 
-        if (hasAttribute("css-class"))
-            classesName += " " + getAttribute("css-class");
+        if (hasAttribute("css-class")) {
+            classesName.append(" ").append(getAttribute("css-class"));
+        }
 
 
         var bHasGutter = hasGutter();
         var res = new StringBuilder();
 
         res.append("<div ").append(htmlAttributes(mapOf(
-                "class", classesName,
+                "class", classesName.toString(),
                 "style", "div"
         ))).append(">\n");
         res.append(bHasGutter ? renderGutter(renderer) : renderColumn(renderer));

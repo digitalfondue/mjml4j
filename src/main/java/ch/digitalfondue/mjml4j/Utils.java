@@ -250,10 +250,7 @@ class Utils {
 
 
     static String doubleToString(double d) {
-        if (d == (long) d)
-            return Long.toString((long) d);
-        else
-            return Double.toString(d);
+        return d == (long) d ? Long.toString((long) d) : Double.toString(d);
     }
 
     private static final String startConditionalTag = "<!--[if mso | IE]>";
@@ -338,9 +335,7 @@ class Utils {
         var childNodesSize = childNodes.getLength();
         for (var i = 0; i < childNodesSize; i++) {
             var childNode = childNodes.item(i);
-            if (childNode.getNodeType() == Node.TEXT_NODE && !childNode.getTextContent().isBlank()) {
-                return true;
-            } else if (childNode.getNodeType() != Node.TEXT_NODE) {
+            if (childNode.getNodeType() != Node.TEXT_NODE || !childNode.getTextContent().isBlank()) {
                 return true;
             }
         }

@@ -114,23 +114,14 @@ class MjmlComponentGroup extends BaseComponent.BodyComponent {
         var parsedWidth = getParsedWidth();
         var parsedContainerWidth = CssUnitParser.parse(containerWidth);
 
-        if (parsedWidth.isPercent())
-            return doubleToString(parsedContainerWidth.value() * parsedWidth.value() / 100) + "px";
-
-        return parsedWidth.toString();
+        return parsedWidth.isPercent() ? doubleToString(parsedContainerWidth.value() * parsedWidth.value() / 100) + "px" : parsedWidth.toString();
     }
 
     private String getColumnClass() {
         var parsedWidth = getParsedWidth();
         var formattedClassNb = doubleToString(parsedWidth.value()).replace('.', '-');
 
-
-        var className = "mj-column-px-" + formattedClassNb;
-
-
-        if (parsedWidth.isPercent()) {
-            className = "mj-column-per-" + formattedClassNb;
-        }
+        var className = parsedWidth.isPercent() ? "mj-column-per-" + formattedClassNb : "mj-column-px-" + formattedClassNb;
 
         context.addMediaQuery(className, parsedWidth);
         return className;
@@ -145,10 +136,7 @@ class MjmlComponentGroup extends BaseComponent.BodyComponent {
 
         var parsedWidth = CssUnitParser.parse(width);
 
-        if (parsedWidth.isPercent())
-            return doubleToString(100 * parsedWidth.value() / getContainerInnerWidth()) + "px";
-
-        return parsedWidth.toString();
+        return parsedWidth.isPercent() ? doubleToString(100 * parsedWidth.value() / getContainerInnerWidth()) + "px" : parsedWidth.toString();
     }
 
     @Override

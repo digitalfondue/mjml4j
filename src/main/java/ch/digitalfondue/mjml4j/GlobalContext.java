@@ -54,15 +54,17 @@ class GlobalContext {
     void addFont(String name, String href) {
         if (fonts.containsKey(name)) {
             var hrefCurrent = mediaQueries.get(name);
-            if (hrefCurrent != null && hrefCurrent.equalsIgnoreCase(href))
+            if (hrefCurrent != null && hrefCurrent.equalsIgnoreCase(href)) {
                 return;
+            }
         }
         fonts.put(name, href);
     }
 
     void addStyle(String css, boolean inline) {
-        if (css == null || css.isBlank())
+        if (css == null || css.isBlank()) {
             return;
+        }
 
         if (inline) {
             inlineStyles.add(css);
@@ -73,16 +75,16 @@ class GlobalContext {
 
 
     void addHeadStyle(String componentName, String css) {
-        if (Utils.isNullOrWhiteSpace(componentName) || Utils.isNullOrWhiteSpace(css))
+        if (Utils.isNullOrWhiteSpace(componentName) || Utils.isNullOrWhiteSpace(css) || headStyle.containsKey(componentName)) {
             return;
-        if (headStyle.containsKey(componentName))
-            return;
+        }
         headStyle.put(componentName, css);
     }
 
     void addComponentHeadStyle(String css) {
-        if (Utils.isNullOrWhiteSpace(css))
+        if (Utils.isNullOrWhiteSpace(css)) {
             return;
+        }
         componentsHeadStyle.add(css);
     }
 
@@ -92,8 +94,9 @@ class GlobalContext {
         if (mediaQueries.containsKey(className)) {
             var mediaQueryCurrent = mediaQueries.get(className);
 
-            if (Utils.equalsIgnoreCase(mediaQueryCurrent, mediaQuery))
+            if (Utils.equalsIgnoreCase(mediaQueryCurrent, mediaQuery)) {
                 return;
+            }
         }
         mediaQueries.put(className, mediaQuery);
     }

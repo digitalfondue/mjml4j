@@ -208,24 +208,24 @@ public final class Mjml4j {
         return render(template, DEFAULT_CONFIG);
     }
 
-    private static Optional<BaseComponent> findFirstComponent(MjmlComponent.MjmlRootComponent rootComponent, String name) {
-        return rootComponent
-                .getChildren()
-                .stream()
-                .filter(c -> name.equals(c.getTagName()))
-                .findFirst();
+    private static BaseComponent findFirstComponent(MjmlComponent.MjmlRootComponent rootComponent, String name) {
+        for (var c : rootComponent.getChildren()) {
+            if (name.equals(c.getTagName())) {
+                return c;
+            }
+        }
+        return null;
     }
 
     private static StringBuilder renderHead(MjmlComponent.MjmlRootComponent rootComponent, HtmlRenderer renderer) {
-        return findFirstComponent(rootComponent, "mj-head").map(component -> component.renderMjml(renderer)).orElseGet(StringBuilder::new);
-
+        var head = findFirstComponent(rootComponent, "mj-head");
+        return head != null ? head.renderMjml(renderer) : new StringBuilder();
     }
 
     private static String renderBody(MjmlComponent.MjmlRootComponent rootComponent, HtmlRenderer renderer) {
         renderer.increaseDepth();
-        return findFirstComponent(rootComponent, "mj-body")
-                .map(component -> component.renderMjml(renderer).toString())
-                .orElse("");
+        var body = findFirstComponent(rootComponent, "mj-body");
+        return body != null ? body.renderMjml(renderer).toString() : "";
     }
 
     /**
@@ -298,16 +298,17 @@ public final class Mjml4j {
                     <![endif]-->
                 """);
         buildFontsTags(body, context, res);
-        res.append(buildMediaQueriesTags(forceOWADesktop, context));
+        buildMediaQueriesTags(forceOWADesktop, context, res);
         if (!context.componentsHeadStyle.isEmpty() || !context.headStyle.isEmpty()) {
             res.append("    \n    \n    <style type=\"text/css\">\n");
-            res.append(buildComponentsHeadStyle(context));
-            res.append(buildHeadStyle(context));
+            buildComponentsHeadStyleAndHeadStyle(context, res);
             res.append("    \n    \n    </style>\n");
         }
         if (!context.styles.isEmpty()) {
             res.append("    <style type=\"text/css\">\n");
-            res.append(buildStyles(context));
+            for (var css : context.styles) {
+                res.append(css).append("\n");
+            }
             res.append("    \n    </style>\n");
         }
         res.append(headRaw);
@@ -336,36 +337,23 @@ public final class Mjml4j {
         res.append("</div>\n");
     }
 
-    private static StringBuilder buildComponentsHeadStyle(GlobalContext context) {
-        var sb = new StringBuilder();
+    private static void buildComponentsHeadStyleAndHeadStyle(GlobalContext context, StringBuilder sb) {
         for (var css : context.componentsHeadStyle) {
             sb.append(css).append("\n");
         }
-        return sb;
-    }
-
-    private static StringBuilder buildHeadStyle(GlobalContext context) {
-        var sb = new StringBuilder();
         for (var css : context.headStyle.entrySet()) {
-            if (isNullOrWhiteSpace(css.getValue()))
+            if (isNullOrWhiteSpace(css.getValue())) {
                 continue;
+            }
             sb.append(css.getValue()).append("\n");
         }
-        return sb;
     }
 
-    private static StringBuilder buildStyles(GlobalContext context) {
-        var sb = new StringBuilder();
-        for (var css : context.styles) {
-            sb.append(css).append("\n");
+    private static void buildMediaQueriesTags(boolean forceOWADesktop, GlobalContext context, StringBuilder sb) {
+
+        if (context.mediaQueries.isEmpty()) {
+            return;
         }
-        return sb;
-    }
-
-    private static StringBuilder buildMediaQueriesTags(boolean forceOWADesktop, GlobalContext context) {
-        var sb = new StringBuilder();
-        if (context.mediaQueries.isEmpty())
-            return sb;
 
         sb.append("  <style type=\"text/css\">\n");
         sb.append("    @media only screen and (min-width:").append(context.breakpoint).append(") {\n");
@@ -391,7 +379,6 @@ public final class Mjml4j {
             }
             sb.append("  </style>\n");
         }
-        return sb;
     }
 
     // https://github.com/mjmlio/mjml/blob/master/packages/mjml-core/src/helpers/fonts.js
@@ -406,9 +393,9 @@ public final class Mjml4j {
             }
         }
 
-        if (fontsToImport.isEmpty())
+        if (fontsToImport.isEmpty()) {
             return;
-
+        }
 
         sb.append("  <!--[if !mso]><!-->\n");
 
@@ -467,8 +454,9 @@ public final class Mjml4j {
                 }
                 case Node.TEXT_NODE: {
                     var childElementText = (Text) childNode;
-                    if (childElementText.getWholeText().isEmpty())
+                    if (childElementText.getWholeText().isEmpty()) {
                         continue;
+                    }
                     var textElement = document.createElement("html-text");
                     textElement.setNodeValue(childNode.getTextContent());
                     textElement.setTextContent(childNode.getTextContent());
@@ -555,18 +543,21 @@ public final class Mjml4j {
             try {
                 var doc = parseMjmlFragment(resource);
                 var includedDoc = buildMjmlDocument(doc, context);
-                findFirstComponent(includedDoc, "mj-head").ifPresent(head -> {
+                var head = findFirstComponent(includedDoc, "mj-head");
+                if (head != null) {
                     var targetRoot = Objects.requireNonNull(context.rootComponents.peekLast());
-                    var targetHead = findFirstComponent(targetRoot, "mj-head").orElseGet(() -> {
+                    var targetHead = findFirstComponent(targetRoot, "mj-head");
+                    if (targetHead == null) {
                         var headToAppend = new MjmlComponentHead(context.document.createElement("mj-head"), targetRoot, context);
                         targetRoot.getChildren().add(0, headToAppend);
-                        return headToAppend;
-                    });
+                        targetHead = headToAppend;
+                    }
                     bindToParent(targetHead, head.getChildren());
-                });
-                findFirstComponent(includedDoc, "mj-body").ifPresent(body -> {
+                }
+                var body = findFirstComponent(includedDoc, "mj-body");
+                if (body != null) {
                     bindToParent(parent, body.getChildren());
-                });
+                }
                 return new MjmlComponentRaw(element, parent, context, ""); // dummy empty component
             } finally {
                 context.currentResourcePaths.pop();

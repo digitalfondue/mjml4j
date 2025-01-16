@@ -275,11 +275,13 @@ abstract class BaseComponent {
             var mjAttributeDirection = getAttribute("border-" + direction);
             var mjAttribute = getAttribute("border");
 
-            if (!Utils.isNullOrWhiteSpace(mjAttributeDirection))
+            if (!Utils.isNullOrWhiteSpace(mjAttributeDirection)) {
                 return CssUnitParser.parse(mjAttributeDirection).value();
+            }
 
-            if (Utils.isNullOrWhiteSpace(mjAttribute))
+            if (Utils.isNullOrWhiteSpace(mjAttribute)) {
                 return 0;
+            }
 
             // MERGED borderParser: https://github.com/mjmlio/mjml/blob/d4c6ea0744e05c928044108c3117c16a9c4110fe/packages/mjml-core/src/helpers/shorthandParser.js#L3
             //return CssUnitParser.Parse(mjAttribute).Value;

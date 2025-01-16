@@ -102,13 +102,15 @@ class MjmlComponentButton extends BaseComponent.BodyComponent {
     }
 
     private String calculateAWidth(String content) {
-        if (Utils.isNullOrWhiteSpace(content))
+        if (Utils.isNullOrWhiteSpace(content)) {
             return null;
+        }
 
         var parsedWidth = CssUnitParser.parse(content);
 
-        if (!parsedWidth.isPx())
+        if (!parsedWidth.isPx()) {
             return null;
+        }
 
         var borders = cssBoxModel.borderWidth();
         var innerPaddings = getShorthandAttributeValue("inner-padding", "left") +
