@@ -31,7 +31,7 @@ abstract class BaseComponent {
         }
     }
 
-    public void setParent(BaseComponent parent) {
+    void setParent(BaseComponent parent) {
         this.parent = parent;
     }
 

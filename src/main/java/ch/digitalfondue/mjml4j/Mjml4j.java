@@ -166,8 +166,8 @@ public final class Mjml4j {
         return JFiveParse.parseFragment(template, EnumSet.of(Option.DISABLE_IGNORE_TOKEN_IN_BODY_START_TAG, Option.INTERPRET_SELF_CLOSING_ANYTHING_ELSE, Option.DONT_TRANSFORM_ENTITIES));
     }
 
-    private static org.w3c.dom.Document parseMjmlFragment(String template) {
-        //
+    private static Element parseMjmlFragment(String template, GlobalContext context) {
+        // wrap template if mjml is not present
         var wrappedFragment = !template.contains("<mjml>") ? "<mjml><mj-body>" + template + "</mj-body></mjml>" : template;
         //
         var nodes = parseHtmlFragment(wrappedFragment);
@@ -175,7 +175,8 @@ public final class Mjml4j {
         for (var n : nodes) {
             doc.appendChild(n);
         }
-        return W3CDom.toW3CDocument(doc);
+        var elem = (Element) W3CDom.toW3CDocument(doc).getElementsByTagName("mjml").item(0);
+        return (Element) context.document.importNode(elem, true);
     }
 
     /**
@@ -247,7 +248,9 @@ public final class Mjml4j {
      */
     public static String render(org.w3c.dom.Document document, Configuration configuration) {
         var context = new GlobalContext(document, configuration);
-        var rootComponent = buildMjmlDocument(document, context);
+        var root = (Element) document.getElementsByTagName("mjml").item(0);
+        var rootComponent = buildMjmlDocument(root, context);
+
         var renderer = new HtmlRenderer();
 
         var headRaw = renderHead(rootComponent, renderer);
@@ -411,12 +414,11 @@ public final class Mjml4j {
         sb.append("  <!--<![endif]-->\n");
     }
 
-    private static MjmlComponent.MjmlRootComponent buildMjmlDocument(org.w3c.dom.Document document, GlobalContext context) {
-        var root = (Element) document.getElementsByTagName("mjml").item(0);
+    private static MjmlComponent.MjmlRootComponent buildMjmlDocument(Element root, GlobalContext context) {
         var rootComponent = new MjmlComponent.MjmlRootComponent(root, null, context);
         context.rootComponents.push(rootComponent);
         try {
-            traverseTree(rootComponent.getElement(), rootComponent, document, context);
+            traverseTree(rootComponent.getElement(), rootComponent, context);
         } finally {
             context.rootComponents.pop();
         }
@@ -426,7 +428,7 @@ public final class Mjml4j {
         return rootComponent;
     }
 
-    private static void traverseTree(Node element, BaseComponent parentComponent, org.w3c.dom.Document document, GlobalContext context) {
+    private static void traverseTree(Node element, BaseComponent parentComponent, GlobalContext context) {
         if (parentComponent.isEndingTag()) {
             return;
         }
@@ -441,12 +443,12 @@ public final class Mjml4j {
                 case Node.ELEMENT_NODE: {
                     var childComponent = createMjmlComponent((Element) childNode, parentComponent, context);
                     parentComponent.getChildren().add(childComponent);
-                    traverseTree(childNode, childComponent, document, context);
+                    traverseTree(childNode, childComponent, context);
                     break;
                 }
                 case Node.COMMENT_NODE: {
                     var childCommentNode = (Comment) childNode;
-                    var commentElement = document.createElement("html-comment");
+                    var commentElement = context.document.createElement("html-comment");
                     commentElement.setTextContent(childCommentNode.getTextContent());
                     var childComponent = createMjmlComponent(commentElement, parentComponent, context);
                     parentComponent.getChildren().add(childComponent);
@@ -457,7 +459,7 @@ public final class Mjml4j {
                     if (childElementText.getWholeText().isEmpty()) {
                         continue;
                     }
-                    var textElement = document.createElement("html-text");
+                    var textElement = context.document.createElement("html-text");
                     textElement.setNodeValue(childNode.getTextContent());
                     textElement.setTextContent(childNode.getTextContent());
                     var childComponent = createMjmlComponent(textElement, parentComponent, context);
@@ -541,8 +543,7 @@ public final class Mjml4j {
         } else {
             context.currentResourcePaths.push(resolvedPath);
             try {
-                var doc = parseMjmlFragment(resource);
-                var includedDoc = buildMjmlDocument(doc, context);
+                var includedDoc = buildMjmlDocument(parseMjmlFragment(resource, context), context);
                 var head = findFirstComponent(includedDoc, "mj-head");
                 if (head != null) {
                     var targetRoot = Objects.requireNonNull(context.rootComponents.peekLast());
@@ -568,6 +569,9 @@ public final class Mjml4j {
     private static void bindToParent(BaseComponent parent, List<BaseComponent> children) {
         for (var c : children) {
             c.setParent(parent);
+            if (parent.getElement() != null) {
+                parent.getElement().appendChild(c.getElement());
+            }
             parent.getChildren().add(c);
         }
     }
