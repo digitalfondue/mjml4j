@@ -47,7 +47,7 @@
         <dependency>
             <groupId>ch.digitalfondue.jfiveparse</groupId>
             <artifactId>jfiveparse</artifactId>
-            <version>1.1.1</version>
+            <version>1.1.2</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -239,7 +239,7 @@
                     <plugin>
                         <groupId>org.jreleaser</groupId>
                         <artifactId>jreleaser-maven-plugin</artifactId>
-                        <version>1.10.0</version>
+                        <version>1.17.0</version>
                         <configuration>
                             <jreleaser>
                                 <signing>
@@ -248,15 +248,13 @@
                                 </signing>
                                 <deploy>
                                     <maven>
-                                        <nexus2>
-                                            <maven-central>
+                                        <mavenCentral>
+                                            <sonatype>
                                                 <active>ALWAYS</active>
-                                                <url>https://oss.sonatype.org/service/local</url>;
-                                                <closeRepository>true</closeRepository>
-                                                <releaseRepository>true</releaseRepository>
+                                                <url>https://central.sonatype.com/api/v1/publisher</url>
                                                 <stagingRepositories>target/staging-deploy</stagingRepositories>
-                                            </maven-central>
-                                        </nexus2>
+                                            </sonatype>
+                                        </mavenCentral>
                                     </maven>
                                 </deploy>
                             </jreleaser>
