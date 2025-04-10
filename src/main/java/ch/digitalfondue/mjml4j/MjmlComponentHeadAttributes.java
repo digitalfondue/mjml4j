@@ -43,7 +43,7 @@ class MjmlComponentHeadAttributes extends BaseComponent.HeadComponent {
     private void handleElement(Element element) {
         if ("mj-class".equals(element.getTagName())) {
             var className = element.getAttribute("name");
-            if (className != null) {
+            if (!Utils.isNullOrEmpty(className)) {
                 var attributesLength = element.getAttributes().getLength();
                 var attributes = element.getAttributes();
                 for (var i = 0; i < attributesLength; i++) {

@@ -1,0 +1,21 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-class name="footer" css-class="footer" padding="28px 55px 36px" background-color="#2b2f38">
+         <mj-text font-size="14px" align="center" color="#b0b1b5" line-height="18px" />
+      </mj-class>
+      <mj-class name="mjexampleclass" align="center" icon-size="200px">
+        <mj-social-element padding="0 10px 0 0" alt="christmas tree" src="https://cdn.pixabay.com/photo/2023/12/14/20/24/christmas-balls-8449615_1280.jpg" />
+    	</mj-class>
+    </mj-attributes>
+  </mj-head>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-social mj-class="mjexampleclass">
+          <mj-social-element href="#">This image is not displayed when complied with mjml-net</mj-social-element>
+      </mj-social>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
