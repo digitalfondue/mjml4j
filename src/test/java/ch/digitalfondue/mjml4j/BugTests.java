@@ -12,6 +12,12 @@ class BugTests {
         testTemplate("bug-mj-social");
     }
 
+    // imported from https://github.com/FelixSchwarz/mjml-python/issues/51
+    @Test
+    void checkMjAttributeBody() {
+        testTemplate("mj-attribute-body");
+    }
+
     // imported from https://github.com/SebastianStehle/mjml-net/issues/210
     @Test
     void checkMjClass() {
