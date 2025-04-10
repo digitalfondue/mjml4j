@@ -11,4 +11,10 @@ class BugTests {
     void checkMjSocialNpe() {
         testTemplate("bug-mj-social");
     }
+
+    // imported from https://github.com/SebastianStehle/mjml-net/issues/210
+    @Test
+    void checkMjClass() {
+        testTemplate("mj-class-check");
+    }
 }
