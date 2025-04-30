@@ -38,8 +38,8 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
     CssBoxModel getBoxModel() {
 
         var paddings = getShorthandAttributeValue("padding", "right") + getShorthandAttributeValue("padding", "left");
-        var borders = getShorthandBorderValue("right") + getShorthandBorderValue("left");
-        var innerBorders = getShorthandAttributeValue("inner-border", "left") + getShorthandAttributeValue("inner-border", "right");
+        var borders = getShorthandBorderValue("border", "right") + getShorthandBorderValue("border", "left");
+        var innerBorders = getShorthandBorderValue("inner-border", "left") + getShorthandBorderValue("inner-border", "right");
         var allPaddings = paddings + borders + innerBorders;
 
         if (hasParentComponent()) {

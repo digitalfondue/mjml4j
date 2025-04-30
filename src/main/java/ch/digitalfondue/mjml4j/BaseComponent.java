@@ -2,7 +2,11 @@ package ch.digitalfondue.mjml4j;
 
 import org.w3c.dom.Element;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static ch.digitalfondue.mjml4j.Utils.equalsIgnoreCase;
@@ -247,7 +251,7 @@ abstract class BaseComponent {
 
             var paddings = getShorthandAttributeValue("padding", "right") + getShorthandAttributeValue("padding", "left");
 
-            var borders = getShorthandBorderValue("right") + getShorthandBorderValue("left");
+            var borders = getShorthandBorderValue("border", "right") + getShorthandBorderValue("border", "left");
 
 
             if (hasParentComponent() && getParent() instanceof BodyComponent parent) {
@@ -271,9 +275,9 @@ abstract class BaseComponent {
 
         private static final Pattern PATTERN_SHORTHAND_BORDER_VALUE = Pattern.compile("(?:(?:^| )([0-9]+))");
 
-        double getShorthandBorderValue(String direction) {
-            var mjAttributeDirection = getAttribute("border-" + direction);
-            var mjAttribute = getAttribute("border");
+        double getShorthandBorderValue(String attributeName, String direction) {
+            var mjAttributeDirection = getAttribute(attributeName + "-" + direction);
+            var mjAttribute = getAttribute(attributeName);
 
             if (!Utils.isNullOrWhiteSpace(mjAttributeDirection)) {
                 return CssUnitParser.parse(mjAttributeDirection).value();
