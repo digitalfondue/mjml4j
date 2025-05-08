@@ -13,7 +13,11 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -74,7 +78,6 @@ public final class Mjml4j {
     @FunctionalInterface
     public interface ResourceLoader {
         /**
-         *
          * @param id resource id
          * @return loaded resource
          * @throws IOException if the resource does not exist or a problem during loading happened
@@ -326,8 +329,16 @@ public final class Mjml4j {
         res.append("  </body>\n");
         res.append("</html>\n  ");
 
-        //
-        return Utils.mergeOutlookConditionals(res);
+        return Utils.mergeOutlookConditionals(
+                !context.inlineStyles.isEmpty() ? applyInlineStyles(context, res) : res);
+    }
+
+    private static String applyInlineStyles(GlobalContext context, StringBuilder res) {
+        var document = JFiveParse.parse(res.toString());
+        for (var css : context.inlineStyles) {
+            CssStyleInjector.applyInlineStyles(document, CssParser.parseCss(css));
+        }
+        return JFiveParse.serialize(document, EnumSet.of(Option.HIDE_EMPTY_ATTRIBUTE_VALUE));
     }
 
     private static void buildPreview(GlobalContext context, StringBuilder res) {
@@ -471,7 +482,6 @@ public final class Mjml4j {
             }
         }
     }
-
 
     private static BaseComponent createMjmlComponent(Element element, BaseComponent parent, GlobalContext context) {
         var elementTag = element.getNodeName().toLowerCase(Locale.ROOT);
