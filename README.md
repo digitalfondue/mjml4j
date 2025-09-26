@@ -25,8 +25,8 @@ The code is based on the following projects:
 Most of the mj-* tags are supported. It's currently missing:
 
  - ~~mj-include: will be implemented~~ implemented in 1.1.1
- - mj-style: the inline attribute will be ignored 
- - mj-html-attributes: will not be supported, as it requires a css selector
+ - mj-style: the inline attribute will be ignored: will be supported when the work on css selector support is done. WIP
+ - mj-html-attributes: will be supported when the work on css selector support is done. WIP
 
 Additionally, no pretty print/minimization of the output is provided.
 
