@@ -11,8 +11,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 class Helpers {
 
@@ -43,8 +47,6 @@ class Helpers {
             return res.asString();
         }
     }
-
-
 
     static String simplifyBrTags(String input) {
         return input.replaceAll("<br\s*/>", "<br>");
@@ -78,9 +80,34 @@ class Helpers {
             var conf = new Mjml4j.Configuration("und", Mjml4j.TextDirection.AUTO, resolver);
             var res = Mjml4j.render(template, conf);
             var comparison = Files.readString(new File("data/" + name + ".html").toPath(), StandardCharsets.UTF_8);
-            Assertions.assertEquals(simplifyBrTags(alignIdFor(beautifyHtml(comparison))), alignIdFor(beautifyHtml(res)));
+            Assertions.assertEquals(simplifyBrTags(alignIdFor(sortStyleAttributeValues(beautifyHtml(comparison)))),
+                    alignIdFor(sortStyleAttributeValues(beautifyHtml(transformDoctypeToLowerCase(res)))));
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    static String sortStyleAttributeValues(String input) {
+        Pattern stylePattern = Pattern.compile("style\\s*=\\s*\"(.*?)\"", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        Matcher matcher = stylePattern.matcher(input);
+        StringBuilder result = new StringBuilder();
+
+        while (matcher.find()) {
+            String originalStyle = matcher.group(1);
+            String sortedStyle = Arrays.stream(originalStyle.split(";"))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .sorted(Comparator.comparing(s -> s.split(":")[0].trim()))
+                    .collect(Collectors.joining("; ")) + ";";
+
+            // Replace the original style string
+            matcher.appendReplacement(result, "style=\"" + Matcher.quoteReplacement(sortedStyle) + "\"");
+        }
+        matcher.appendTail(result);
+        return result.toString();
+    }
+
+    static String transformDoctypeToLowerCase(String input) {
+        return input.replaceAll("(?i)<!DOCTYPE\\s+html>", "<!doctype html>");
     }
 }

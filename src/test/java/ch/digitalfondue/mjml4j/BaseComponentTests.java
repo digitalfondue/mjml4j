@@ -106,6 +106,11 @@ class BaseComponentTests {
     }
 
     @Test
+    void testStyleInline() {
+        testTemplate("style-inline");
+    }
+
+    @Test
     void testGroup() {
         testTemplate("group");
     }
