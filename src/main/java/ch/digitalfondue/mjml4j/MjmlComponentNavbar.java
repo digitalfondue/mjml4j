@@ -78,11 +78,11 @@ class MjmlComponentNavbar extends BaseComponent.BodyComponent {
                 "text-transform", getAttribute("ico-text-transform"),
                 "text-decoration", getAttribute("ico-text-decoration"),
                 "line-height", getAttribute("ico-line-height"),
+                "padding", getAttribute("ico-padding"),
                 "padding-top", getAttribute("ico-padding-top"),
                 "padding-right", getAttribute("ico-padding-right"),
                 "padding-bottom", getAttribute("ico-padding-bottom"),
-                "padding-left", getAttribute("ico-padding-left"),
-                "padding", getAttribute("ico-padding")
+                "padding-left", getAttribute("ico-padding-left")
         ));
 
         cssStyleLibraries.add("trigger", mapOf(

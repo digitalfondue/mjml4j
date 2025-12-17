@@ -57,6 +57,7 @@ class MjmlComponentSocialElement extends BaseComponent.BodyComponent {
 
     private static final LinkedHashMap<String, AttributeValueType> ALLOWED_DEFAULT_ATTRIBUTES = mapOf(
             entry("align", of("left")),
+            entry("icon-position", of("left")),
             entry("background-color", of(null, AttributeType.COLOR)),
             entry("color", of("#000", AttributeType.COLOR)),
             entry("border-radius", of("3px")),
@@ -132,7 +133,8 @@ class MjmlComponentSocialElement extends BaseComponent.BodyComponent {
 
         cssStyleLibraries.add("tdText", mapOf(
                 "vertical-align", "middle",
-                "padding", getAttribute("text-padding")
+                "padding", getAttribute("text-padding"),
+                "text-align", getAttribute("align")
         ));
 
         cssStyleLibraries.add("text", mapOf(
@@ -163,7 +165,7 @@ class MjmlComponentSocialElement extends BaseComponent.BodyComponent {
         return new SocialAttributes(
                 href,
                 getAttribute("icon-size"),
-                getAttribute("icon-size"),
+                getAttribute("icon-height"),
                 getAttribute("srcset"),
                 getAttribute("sizes"),
                 hasAttribute("src") ? getAttribute("src") : socialNetwork != null ? socialNetwork.src : null,
@@ -174,8 +176,25 @@ class MjmlComponentSocialElement extends BaseComponent.BodyComponent {
     @Override
     StringBuilder renderMjml(HtmlRenderer renderer) {
         var hasLink = hasAttribute("href");
+        var iconPosition = getAttribute("icon-position");
         var res = new StringBuilder();
         renderer.openTag("tr", htmlAttributes(mapOf("class", getAttribute("css-class"))), res);
+
+        if(iconPosition.equals("left")) {
+            res.append(renderIcon(renderer, hasLink));
+            res.append(renderContent(renderer, hasLink));
+        } else {
+            res.append(renderContent(renderer, hasLink));
+            res.append(renderIcon(renderer, hasLink));
+        }
+        renderer.closeTag("tr", res);
+
+        return res;
+    }
+
+    private StringBuilder renderIcon(HtmlRenderer renderer, boolean hasLink) {
+        StringBuilder res = new StringBuilder();
+
         renderer.openTag("td", htmlAttributes(mapOf("style", "td")), res);
         renderer.openTag("table", htmlAttributes(mapOf(
                 "border", "0",
@@ -194,17 +213,16 @@ class MjmlComponentSocialElement extends BaseComponent.BodyComponent {
                     "target", getAttribute("target")
             )), res);
         }
+
         renderer.openCloseTag("img", htmlAttributes(mapOf(
                 "alt", getAttribute("alt"),
                 "title", getAttribute("title"),
-                "height", Utils.parseIntNumberPart(!Utils.isNullOrWhiteSpace(socialAttributes.iconHeight) ? socialAttributes.iconHeight : socialAttributes.iconSize),
                 "src", socialAttributes.src,
                 "style", "img",
                 "width", Utils.parseIntNumberPart(getAttribute("icon-size")),
                 "sizes", getAttribute("sizes"),
                 "srcset", getAttribute("srcset")
         )), res);
-
         if (hasLink) {
             renderer.closeTag("a", res);
         }
@@ -213,17 +231,14 @@ class MjmlComponentSocialElement extends BaseComponent.BodyComponent {
         renderer.closeTag("tbody", res);
         renderer.closeTag("table", res);
         renderer.closeTag("td", res);
-
-        if (Utils.hasNonEmptyChildNodes(getElement())) {
-            res.append(renderContent(renderer, hasLink));
-        }
-        renderer.closeTag("tr", res);
-
         return res;
     }
 
     private StringBuilder renderContent(HtmlRenderer renderer, boolean hasLink) {
         var res = new StringBuilder();
+        if(!Utils.hasNonEmptyChildNodes(getElement())) {
+            return res;
+        }
         renderer.openTag("td", htmlAttributes(mapOf("style", "tdText")), res);
 
         if (hasLink) {

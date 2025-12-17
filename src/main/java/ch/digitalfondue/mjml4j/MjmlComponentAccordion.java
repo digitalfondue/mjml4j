@@ -14,6 +14,11 @@ class MjmlComponentAccordion extends BaseComponent.BodyComponent {
     }
 
     @Override
+    LocalContext getChildContext() {
+        return localContext.withAccordionFontFamily(getAttribute("font-family"));
+    }
+
+    @Override
     String headStyle() {
         return """
                   noinput.mj-accordion-checkbox { display:block!important; }

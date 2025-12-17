@@ -4,6 +4,7 @@ import ch.digitalfondue.mjml4j.AttributeValueType.AttributeType;
 import org.w3c.dom.Element;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static ch.digitalfondue.mjml4j.AttributeValueType.of;
 import static ch.digitalfondue.mjml4j.Utils.mapOf;
@@ -39,7 +40,7 @@ class MjmlComponentTable extends BaseComponent.BodyComponent {
 
     @Override
     void setupStyles(CssStyleLibraries cssStyleLibraries) {
-        cssStyleLibraries.add("table", mapOf(
+        LinkedHashMap<String, String> styles = mapOf(
                 "color", getAttribute("color"),
                 "font-family", getAttribute("font-family"),
                 "font-size", getAttribute("font-size"),
@@ -47,7 +48,11 @@ class MjmlComponentTable extends BaseComponent.BodyComponent {
                 "table-layout", getAttribute("table-layout"),
                 "width", getAttribute("width"),
                 "border", getAttribute("border")
-        ));
+        );
+        if(hasCellspacing()) {
+            styles.put("border-collapse", "separate");
+        }
+        cssStyleLibraries.add("table", styles);
     }
 
     @Override
@@ -58,7 +63,7 @@ class MjmlComponentTable extends BaseComponent.BodyComponent {
     @Override
     StringBuilder renderMjml(HtmlRenderer renderer) {
         var width = getAttribute("width");
-        var parsedWidth = CssUnitParser.parse(width);
+        var parsedWidth = width.equals("auto") ? null : CssUnitParser.parse(width);
         var res = new StringBuilder();
 
         var tableAttributes = mapOf(
@@ -69,13 +74,23 @@ class MjmlComponentTable extends BaseComponent.BodyComponent {
 
         renderer.openTag("table", htmlAttributes(
                 mergeLeft(tableAttributes, mapOf(
-                        "width", parsedWidth.isPercent() ? width : parsedWidth.toString(),
+                        "width", parsedWidth == null ? "auto" : (parsedWidth.isPercent() ? width : parsedWidth.toString()),
                         "border", "0",
                         "style", "table"
                 ))), res);
         DOMSerializer.serializeInner(getElement(), res);
         renderer.closeTag("table", res);
         return res;
+    }
+
+    boolean hasCellspacing() {
+        var cellspacing = getAttribute("cellspacing");
+        try {
+            var numericValue = Double.parseDouble(cellspacing.replaceAll("[^\\d.]", ""));
+            return numericValue > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     @Override

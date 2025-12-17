@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 import static ch.digitalfondue.mjml4j.AttributeValueType.of;
 import static ch.digitalfondue.mjml4j.Utils.*;
@@ -19,6 +20,11 @@ class MjmlComponentCarousel extends BaseComponent.BodyComponent {
     MjmlComponentCarousel(Element element, BaseComponent parent, GlobalContext context) {
         super(element, parent, context);
         carouselId = genRandomHexString();
+    }
+
+    @Override
+    LocalContext getChildContext() {
+        return localContext.withThumbnails(getAttribute("thumbnails"));
     }
 
     private static final LinkedHashMap<String, AttributeValueType> ALLOWED_DEFAULT_ATTRIBUTES = mapOf(
@@ -57,7 +63,6 @@ class MjmlComponentCarousel extends BaseComponent.BodyComponent {
         carouselImagesCount = carouselImages.size();
         for (var i = 0; i < carouselImagesCount; i++) {
             var cImg = carouselImages.get(i);
-            cImg.index = i;
             cImg.carouselId = carouselId;
         }
         super.setupPostConstruction();
@@ -160,6 +165,18 @@ class MjmlComponentCarousel extends BaseComponent.BodyComponent {
         }
         res.append(" {");
         res.append("  border-color: ").append(getAttribute("tb-selected-border-color")).append(" !important;\n");
+        res.append("}");
+
+        for(int i = 0; i < carouselImagesCount; i++) {
+            res.append(".mj-carousel-").append(carouselId).append("-radio-").append(i + 1).append(":checked ");
+            res.append("+ * ".repeat(carouselImagesCount - i - 1));
+            res.append("+ .mj-carousel-content .mj-carousel-").append(carouselId).append("-thumbnail");
+            if (i + 1 < carouselImagesCount) {
+                res.append(",\n");
+            }
+        }
+        res.append(" {");
+        res.append("  display: inline-block !important;\n");
         res.append("}");
 
         res.append("""
@@ -283,7 +300,7 @@ class MjmlComponentCarousel extends BaseComponent.BodyComponent {
 
     private StringBuilder generateThumbnails(HtmlRenderer renderer) {
         var res = new StringBuilder();
-        if (!"visible".equals(getAttribute("thumbnails"))) {
+        if (!Set.of("visible", "supported").contains(getAttribute("thumbnails"))) {
             return res;
         }
         for (var c : carouselImages) {

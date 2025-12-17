@@ -43,12 +43,17 @@ class MjmlComponentBody extends BaseComponent.BodyComponent {
     @Override
     StringBuilder renderMjml(HtmlRenderer renderer) {
         var res = new StringBuilder();
-        renderer.openTag("div", htmlAttributes(mapOf(
-                "class", getAttribute("class"),
-                "style", "div",
-                "lang", context.language,
-                "dir", context.dir
-        )), res);
+        var divAttrs = new LinkedHashMap<String, String>();
+        if(!context.title.isEmpty()) {
+            divAttrs.put("aria-label", context.title);
+        }
+        divAttrs.put("aria-roledescription", "email");
+        divAttrs.put("class", getAttribute("class"));
+        divAttrs.put("style", "div");
+        divAttrs.put("role", "article");
+        divAttrs.put("lang", context.language);
+        divAttrs.put("dir", context.dir);
+        renderer.openTag("div", htmlAttributes(divAttrs), res);
         res.append(renderChildren(renderer));
         renderer.closeTag("div", res);
         return res;
