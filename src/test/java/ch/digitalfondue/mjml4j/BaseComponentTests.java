@@ -76,8 +76,23 @@ class BaseComponentTests {
     }
 
     @Test
+    void testNavbarIcoPadding() {
+        testTemplate("navbar-ico-padding");
+    }
+
+    @Test
     void testSocial() {
         testTemplate("social");
+    }
+
+    @Test
+    void testSocialAlign() {
+        testTemplate("social-align");
+    }
+
+    @Test
+    void testSocialIconHeight() {
+        testTemplate("social-icon-height");
     }
 
     @Test
@@ -116,6 +131,16 @@ class BaseComponentTests {
     }
 
     @Test
+    void testWrapperBorderRadius() {
+        testTemplate("wrapper-border-radius");
+    }
+
+    @Test
+    void testWrapperGap() {
+        testTemplate("wrapper-gap");
+    }
+
+    @Test
     void testAttributes() {
         testTemplate("attributes");
     }
@@ -128,6 +153,16 @@ class BaseComponentTests {
     @Test
     void testTable() {
         testTemplate("table");
+    }
+
+    @Test
+    void testTableCellSpacing() {
+        testTemplate("table-cellspacing");
+    }
+
+    @Test
+    void testTableWidth() {
+        testTemplate("tableWidth");
     }
 
     @Test
@@ -146,6 +181,21 @@ class BaseComponentTests {
     }
 
     @Test
+    void testAccordionFontFamily() {
+        testTemplate("accordion-font-family");
+    }
+
+    @Test
+    void testAccordionPadding() {
+        testTemplate("accordion-padding");
+    }
+
+    @Test
+    void testAccordionTitleFontWeight() {
+        testTemplate("accordionTitle-fontWeight");
+    }
+
+    @Test
     void colorText() {
         testTemplate("color-text");
     }
@@ -161,6 +211,11 @@ class BaseComponentTests {
     }
 
     @Test
+    void testCarouselHoverSupported() {
+        testTemplate("carousel-hoverSupported");
+    }
+
+    @Test
     void testRawSpecial() {
         testTemplate("raw-special");
     }
@@ -168,6 +223,11 @@ class BaseComponentTests {
     @Test
     void testColumnGutter() {
         testTemplate("column-gutter");
+    }
+
+    @Test
+    void testColumnBorderRadius() {
+        testTemplate("column-border-radius");
     }
 
     @Test

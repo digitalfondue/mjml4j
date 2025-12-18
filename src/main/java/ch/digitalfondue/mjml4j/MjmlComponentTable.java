@@ -7,8 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static ch.digitalfondue.mjml4j.AttributeValueType.of;
-import static ch.digitalfondue.mjml4j.Utils.mapOf;
-import static ch.digitalfondue.mjml4j.Utils.mergeLeft;
+import static ch.digitalfondue.mjml4j.Utils.*;
 import static java.util.Map.entry;
 
 class MjmlComponentTable extends BaseComponent.BodyComponent {
@@ -74,7 +73,7 @@ class MjmlComponentTable extends BaseComponent.BodyComponent {
 
         renderer.openTag("table", htmlAttributes(
                 mergeLeft(tableAttributes, mapOf(
-                        "width", parsedWidth == null ? "auto" : (parsedWidth.isPercent() ? width : parsedWidth.toString()),
+                        "width", parsedWidth == null ? "auto" : (parsedWidth.isPercent() ? width : doubleToString(parsedWidth.value())),
                         "border", "0",
                         "style", "table"
                 ))), res);

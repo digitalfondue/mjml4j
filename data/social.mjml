@@ -15,7 +15,6 @@
                         Google
                     </mj-social-element>
                     <mj-social-element name="twitter" href="https://mjml.io/"/>
-                    <mj-social-element name="youtube" icon-size="50px" icon-height="40px"/>
                 </mj-social>
             </mj-column>
         </mj-section>

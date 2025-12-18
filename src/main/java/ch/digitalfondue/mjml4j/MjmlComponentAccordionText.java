@@ -49,11 +49,11 @@ class MjmlComponentAccordionText extends BaseComponent.BodyComponent {
                 "letter-spacing", getAttribute("letter-spacing"),
                 "line-height", getAttribute("line-height"),
                 "color", getAttribute("color"),
+                "padding", getAttribute("padding"),
                 "padding-bottom", getAttribute("padding-bottom"),
                 "padding-left", getAttribute("padding-left"),
                 "padding-right", getAttribute("padding-right"),
-                "padding-top", getAttribute("padding-top"),
-                "padding", getAttribute("padding")
+                "padding-top", getAttribute("padding-top")
         ));
 
         cssStyleLibraries.add("table", mapOf(

@@ -276,7 +276,7 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
                 "width", "100%"
         );
         if(hasBorderRadius()) {
-            tableAttrs.put("style", "border-collapse:separate");
+            tableAttrs.put("style", "border-collapse:separate;");
         }
 
         var res = new StringBuilder();

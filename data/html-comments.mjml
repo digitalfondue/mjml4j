@@ -1,0 +1,16 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text>
+        <p>View source to see comments below</p>
+        <!-- comment with standard spaces -->
+        <br>
+        <!--comment without spaces-->
+        <br>
+        <!--     comment with 5 spaces     -->
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
