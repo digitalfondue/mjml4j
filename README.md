@@ -96,6 +96,9 @@ mjml4j offer 2 implementations:
  - [FileSystemResolver](https://javadoc.io/doc/ch.digitalfondue.mjml4j/mjml4j/latest/ch.digitalfondue.mjml4j/ch/digitalfondue/mjml4j/Mjml4j.FileSystemResolver.html) if your resources are present on the filesystem
  - [SimpleResourceResolver](https://javadoc.io/doc/ch.digitalfondue.mjml4j/mjml4j/latest/ch.digitalfondue.mjml4j/ch/digitalfondue/mjml4j/Mjml4j.SimpleResourceResolver.html) a resolver that need a [ResourceLoader](https://javadoc.io/doc/ch.digitalfondue.mjml4j/mjml4j/latest/ch.digitalfondue.mjml4j/ch/digitalfondue/mjml4j/Mjml4j.ResourceLoader.html) to be implemented
 
+# Development notes:
+ - the project has a java 17 baseline
+ - the code is formatted using the maven spotless plugin. Use `mvn spotless:apply` to format it
 
 # TODO:
  - validation api:
