@@ -1,7 +1,5 @@
 <mjml>
     <mj-body>
-        <mj-include path="include/styling.mjml" />
-        <mj-include path="include/header.mjml" />
 
         <mj-section css-class="bg-white">
             <mj-column>
@@ -11,7 +9,6 @@
             </mj-column>
         </mj-section>
 
-        <mj-include path="include/footer.mjml" />
-        <mj-include path="not-found.mjml" />
+        <mj-include path="/circular-1.mjml" />
     </mj-body>
 </mjml>
