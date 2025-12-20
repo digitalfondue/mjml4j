@@ -8,7 +8,7 @@ Javadoc: https://javadoc.io/doc/ch.digitalfondue.mjml4j/mjml4j
 
 # Why
 
-As far as I know, there is no pure java porting of mjml. This library is quite compact (~150Kb) with a single dependency - the [html5 parser (jfiveparse)](https://github.com/digitalfondue/jfiveparse) (~149kb).
+As far as I know, there is no pure java version of mjml. This library is quite compact with a single dependency - the [html5 parser (jfiveparse)](https://github.com/digitalfondue/jfiveparse).
 
 # License
 
@@ -38,14 +38,14 @@ maven:
 <dependency>
    <groupId>ch.digitalfondue.mjml4j</groupId>
    <artifactId>mjml4j</artifactId>
-   <version>1.1.3</version>
+   <version>1.1.4</version>
 </dependency>
 ```
 
 gradle:
 
 ```
-implementation 'ch.digitalfondue.mjml4j:mjml4j:1.1.3'
+implementation 'ch.digitalfondue.mjml4j:mjml4j:1.1.4'
 ```
 
 # Use
@@ -98,13 +98,12 @@ mjml4j offer 2 implementations:
 
 
 # TODO:
- - ~~mj-include~~ implemented in 1.1.1
- - check https://github.com/mjmlio/mjml/compare/v4.14.1...v4.15.3 , printing especially
  - validation api:
    - add "parent element" check
    - attribute unit type check
  - improve the renderer
  - cleanup/rewrite the box model, kinda hacky
  - more robust handling of invalid input (check mjml behaviour)
+ - check differences/import tests
  
  
