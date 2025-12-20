@@ -1,7 +1,7 @@
 <mjml>
   <mj-body>
     <mj-section>
-      <mj-column background-color="${backgroundColor}" padding="18px">
+      <mj-column>
         <mj-social inner-padding="9px">
             <mj-social-element name="facebook"></mj-social-element>
         </mj-social>
