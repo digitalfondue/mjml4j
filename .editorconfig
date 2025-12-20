@@ -1,0 +1,7 @@
+[*.java]
+end_of_line = lf
+charset = utf-8
+indent_style = space
+indent_size = 2
+max_line_length = 100
+tab_width = 2
