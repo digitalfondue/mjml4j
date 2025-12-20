@@ -2,10 +2,19 @@ package ch.digitalfondue.mjml4j;
 
 import org.w3c.dom.Element;
 
+import java.util.LinkedHashMap;
+
 class MjmlComponentWrapper extends MjmlComponentSection {
 
     MjmlComponentWrapper(Element element, BaseComponent parent, GlobalContext context) {
         super(element, parent, context);
+    }
+
+    @Override
+    LinkedHashMap<String, AttributeValueType> allowedAttributes() {
+        LinkedHashMap<String, AttributeValueType> attrs = new LinkedHashMap<>(super.allowedAttributes());
+        attrs.put("gap", AttributeValueType.of(null));
+        return attrs;
     }
 
     @Override

@@ -15,6 +15,11 @@ class MjmlComponentAccordionElement extends BaseComponent.BodyComponent {
         super(element, parent, context);
     }
 
+    @Override
+    LocalContext getChildContext() {
+        return localContext.withElementFontFamily(getAttribute("font-family"));
+    }
+
     private static final LinkedHashMap<String, AttributeValueType> ALLOWED_DEFAULT_ATTRIBUTES = mapOf(
             entry("background-color", of(null, AttributeType.COLOR)),
             entry("border", of(null)),

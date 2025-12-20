@@ -3,6 +3,7 @@ package ch.digitalfondue.mjml4j;
 import ch.digitalfondue.mjml4j.AttributeValueType.AttributeType;
 import org.w3c.dom.Element;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import static ch.digitalfondue.mjml4j.AttributeValueType.of;
@@ -17,6 +18,14 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
 
     MjmlComponentColumn(Element element, BaseComponent parent, GlobalContext context) {
         super(element, parent, context);
+    }
+
+    private boolean hasBorderRadius() {
+        return hasAttribute("border-radius");
+    }
+
+    private boolean hasInnerBorderRadius() {
+        return hasAttribute("inner-border-radius");
     }
 
     private boolean hasGutter() {
@@ -161,35 +170,7 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
                 "width", getMobileWidth()
         ));
 
-        if (bHasGutter) {
-            cssStyleLibraries.add("table", mapOf(
-                    "background-color", getAttribute("inner-background-color"),
-                    "border", getAttribute("inner-border"),
-                    "border-bottom", getAttribute("inner-border-bottom"),
-                    "border-left", getAttribute("inner-border-left"),
-                    "border-radius", getAttribute("inner-border-radius"),
-                    "border-right", getAttribute("inner-border-right"),
-                    "border-top", getAttribute("inner-border-top")
-            ));
-        } else {
-            cssStyleLibraries.add("table", mapOf(
-                    "background-color", getAttribute("background-color"),
-                    "border", getAttribute("border"),
-                    "border-bottom", getAttribute("border-bottom"),
-                    "border-left", getAttribute("border-left"),
-                    "border-radius", getAttribute("border-radius"),
-                    "border-right", getAttribute("border-right"),
-                    "border-top", getAttribute("border-top"),
-                    "vertical-align", getAttribute("vertical-align")
-            ));
-        }
-
-        cssStyleLibraries.add("tdOutlook", mapOf(
-                "vertical-align", getAttribute("vertical-align"),
-                "width", getWidthAsPixel()
-        ));
-
-        cssStyleLibraries.add("gutter", mapOf(
+        var tableStyle = mapOf(
                 "background-color", getAttribute("background-color"),
                 "border", getAttribute("border"),
                 "border-bottom", getAttribute("border-bottom"),
@@ -197,13 +178,38 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
                 "border-radius", getAttribute("border-radius"),
                 "border-right", getAttribute("border-right"),
                 "border-top", getAttribute("border-top"),
+                "vertical-align", getAttribute("vertical-align")
+        );
+        if(hasBorderRadius()) {
+            tableStyle.put("border-collapse", "separate");
+        }
+
+        var realTableStyle = bHasGutter ? mapOf(
+                "background-color", getAttribute("inner-background-color"),
+                "border", getAttribute("inner-border"),
+                "border-bottom", getAttribute("inner-border-bottom"),
+                "border-left", getAttribute("inner-border-left"),
+                "border-radius", getAttribute("inner-border-radius"),
+                "border-right", getAttribute("inner-border-right"),
+                "border-top", getAttribute("inner-border-top")
+        ) : new LinkedHashMap<>(tableStyle);
+        if(hasInnerBorderRadius()) {
+            realTableStyle.put("border-collapse", "separate");
+        }
+        cssStyleLibraries.add("table", realTableStyle);
+
+        cssStyleLibraries.add("tdOutlook", mapOf(
                 "vertical-align", getAttribute("vertical-align"),
-                "padding", getAttribute("padding"),
-                "padding-top", getAttribute("padding-top"),
-                "padding-right", getAttribute("padding-right"),
-                "padding-bottom", getAttribute("padding-bottom"),
-                "padding-left", getAttribute("padding-left")
+                "width", getWidthAsPixel()
         ));
+
+        var gutterStyle = new LinkedHashMap<>(tableStyle);
+        gutterStyle.put("padding", getAttribute("padding"));
+        gutterStyle.put("padding-top", getAttribute("padding-top"));
+        gutterStyle.put("padding-right", getAttribute("padding-right"));
+        gutterStyle.put("padding-bottom", getAttribute("padding-bottom"));
+        gutterStyle.put("padding-left", getAttribute("padding-left"));
+        cssStyleLibraries.add("gutter", gutterStyle);
     }
 
     @Override
@@ -262,14 +268,19 @@ class MjmlComponentColumn extends BaseComponent.BodyComponent {
     }
 
     private StringBuilder renderGutter(HtmlRenderer renderer) {
-        var res = new StringBuilder();
-        res.append("<table ").append(htmlAttributes(mapOf(
+        var tableAttrs = mapOf(
                 "border", "0",
                 "cellpadding", "0",
                 "cellspacing", "0",
                 "role", "presentation",
                 "width", "100%"
-        ))).append(">\n");
+        );
+        if(hasBorderRadius()) {
+            tableAttrs.put("style", "border-collapse:separate;");
+        }
+
+        var res = new StringBuilder();
+        res.append("<table ").append(htmlAttributes(tableAttrs)).append(">\n");
         res.append("<tbody>\n");
         res.append("<tr>\n");
         res.append("<td ").append(htmlAttributes(mapOf("style", "gutter"))).append(">\n");

@@ -16,12 +16,25 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
         super(element, parent, context);
     }
 
+    @Override
+    LocalContext getChildContext() {
+        return localContext.withGap(getAttribute("gap"));
+    }
+
     private boolean hasBackground() {
         return hasAttribute("background-url");
     }
 
     private boolean isFullWidth() {
         return hasAttribute("full-width") && getAttribute("full-width").equalsIgnoreCase("full-width");
+    }
+
+    private boolean hasBorderRadius() {
+        return hasAttribute("border-radius");
+    }
+
+    private boolean hasGap() {
+        return !Utils.isNullOrEmpty(localContext.gap());
     }
 
     private record CssCoordinate(String x, String y) {
@@ -76,6 +89,11 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
 
     private StringBuilder renderBefore(HtmlRenderer renderer) {
         var bgcolorAttr = getAttribute("background-color");
+        var isFirstSection = index == 0;
+        var tableStyle = mapOf("width", doubleToString(getContainerOuterWidth()) + "px");
+        if(!isFirstSection) {
+            tableStyle.put("padding-top", localContext.gap());
+        }
         var tableAttr = mapOf(
                 "align", "center",
                 "border", "0",
@@ -83,10 +101,10 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
                 "cellspacing", "0",
                 "class", suffixCssClasses(getAttribute("css-class"), "outlook"),
                 "role", "presentation",
-                "style", inlineCss(mapOf("width", doubleToString(getContainerOuterWidth()) + "px")),
+                "style", inlineCss(tableStyle),
                 "width", doubleToString(getContainerOuterWidth())
         );
-        if (!isNullOrWhiteSpace(bgcolorAttr)) {
+        if (!hasGap() && !isNullOrWhiteSpace(bgcolorAttr)) {
             tableAttr.put("bgcolor", bgcolorAttr);
         }
 
@@ -400,6 +418,7 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
     @Override
     void setupStyles(CssStyleLibraries cssStyleLibraries) {
         var isFullWidth = isFullWidth();
+        var isFirstSection = index == 0;
 
         var background = hasBackground() ? mapOf(
                 "background", getBackground(),
@@ -414,24 +433,19 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
 
         cssStyleLibraries.add("tableFullwidth",
                 isFullWidth ? mergeLeft(background, mapOf(
-                        "width", "100%",
-                        "border-radius", getAttribute("border-radius")
+                        "width", "100%"
                 )) :
-                        mapOf("width", "100%",
-                                "border-radius", getAttribute("border-radius")
-                        )
+                        mapOf("width", "100%")
         );
 
+        var tableBaseMap = mapOf(
+                "width", "100%"
+        );
+        if(hasBorderRadius()) {
+            tableBaseMap.put("border-collapse", "separate");
+        }
         cssStyleLibraries.add("table",
-                !isFullWidth ? mergeLeft(background,
-                        mapOf(
-                                "width", "100%",
-                                "border-radius", getAttribute("border-radius")
-                        )) :
-                        mapOf(
-                                "width", "100%",
-                                "border-radius", getAttribute("border-radius")
-                        )
+                !isFullWidth ? mergeLeft(background, tableBaseMap) : tableBaseMap
         );
 
         cssStyleLibraries.add("td", mapOf(
@@ -440,6 +454,7 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
                 "border-left", getAttribute("border-left"),
                 "border-right", getAttribute("border-right"),
                 "border-top", getAttribute("border-top"),
+                "border-radius", getAttribute("border-radius"),
                 "direction", getAttribute("direction"),
                 "font-size", "0px",
                 "padding", getAttribute("padding"),
@@ -450,17 +465,20 @@ class MjmlComponentSection extends BaseComponent.BodyComponent {
                 "text-align", getAttribute("text-align")
         ));
 
-        cssStyleLibraries.add("div",
-                isFullWidth ? mapOf(
-                        "margin", "0px auto",
-                        "border-radius", getAttribute("border-radius"),
-                        "max-width", doubleToString(getContainerOuterWidth()) + "px"
+        var baseDivStyles = mapOf(
+                "margin", "0px auto",
+                "max-width", doubleToString(getContainerOuterWidth()) + "px",
+                "border-radius", getAttribute("border-radius")
+        );
+        if(hasBorderRadius()) {
+            baseDivStyles.put("overflow", "hidden");
+        }
+        if(!isFirstSection) {
+            baseDivStyles.put("margin-top", localContext.gap());
+        }
 
-                ) : mergeLeft(background, mapOf(
-                        "margin", "0px auto",
-                        "border-radius", getAttribute("border-radius"),
-                        "max-width", doubleToString(getContainerOuterWidth()) + "px")
-                ));
+        cssStyleLibraries.add("div",
+                isFullWidth ? baseDivStyles : mergeLeft(background, baseDivStyles));
 
         cssStyleLibraries.add("innerDiv", mapOf(
                 "line-height", "0",

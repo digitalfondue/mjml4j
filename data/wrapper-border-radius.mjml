@@ -1,0 +1,11 @@
+<mjml>
+  <mj-body>
+    <mj-wrapper border="1px solid red" border-radius="10px">
+      <mj-section>
+        <mj-column>
+          <mj-text font-size="20px" color="#F45E43" font-family="helvetica">Hello World</mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+  </mj-body>
+</mjml>

@@ -1,0 +1,13 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column css-class="my-social-element">
+        <mj-social icon-height="40px">
+          <mj-social-element name="facebook" href="https://mjml.io/" css-class="my-social-element">
+            Facebook
+          </mj-social-element>
+        </mj-social>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

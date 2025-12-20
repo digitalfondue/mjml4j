@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "mjml": "4.15.2"
+    "mjml": "4.18.0"
   },
   "scripts": {
     "build": "mjml data/*.mjml --config.beautify false -o data/"

@@ -16,8 +16,10 @@ abstract class BaseComponent {
     private final Element element;
     private final List<BaseComponent> children = new ArrayList<>();
     private BaseComponent parent;
+    int index;
 
     final GlobalContext context;
+    final LocalContext localContext;
 
     private LinkedHashMap<String, String> attributes;
 
@@ -25,6 +27,11 @@ abstract class BaseComponent {
         this.element = element;
         this.parent = parent;
         this.context = context;
+        if(parent != null) {
+            this.localContext = parent.getChildContext();
+        } else {
+            this.localContext = new LocalContext();
+        }
         setupComponentAttributes();
     }
 
@@ -40,6 +47,17 @@ abstract class BaseComponent {
     }
 
     void setupPostConstruction() {
+        var children = getChildren().stream()
+                .filter(x -> !(x instanceof HtmlComponent.HtmlTextComponent))
+                .toList();
+        for (var i = 0; i < children.size(); i++) {
+            var c = children.get(i);
+            c.index = i;
+        }
+    }
+
+    LocalContext getChildContext() {
+        return localContext;
     }
 
     LinkedHashMap<String, AttributeValueType> allowedAttributes() {
@@ -109,7 +127,7 @@ abstract class BaseComponent {
 
     final String getAttribute(String attributeName) {
         var defaultAndType = allowedAttributes().get(attributeName);
-        var value = getAttributeInternal(attributeName);
+        var value = getAttributeInternal(attributeName, false);
         // apply post-processing on fetched attribute (at the moment, only color has a custom processing logic)
         if (defaultAndType != null) {
             return defaultAndType.process(value);
@@ -125,13 +143,13 @@ abstract class BaseComponent {
     //  3. by inheriting from parent
     //  4. by mj-all
     //  5. by default
-    final String getAttributeInternal(String attributeName) {
+    final String getAttributeInternal(String attributeName, boolean raw) {
         // the dom element has the attribute present
         if (!Utils.isNullOrWhiteSpace(element.getAttribute(attributeName))) {
             return element.getAttribute(attributeName);
         }
         //
-        if (!context.attributesByClass.isEmpty()) {
+        if (!context.attributesByClass.isEmpty() && !raw) {
             var currentClasses = Utils.EMPTY_ARRAY_STR;
             if (attributes.containsKey("mj-class") && attributes.get("mj-class") != null) {
                 currentClasses = Utils.splitBySpace(attributes.get("mj-class").trim());
@@ -149,7 +167,7 @@ abstract class BaseComponent {
         }
 
         //
-        if (context.attributesByName.containsKey(attributeName)) {
+        if (context.attributesByName.containsKey(attributeName) && !raw) {
             var byType = context.attributesByName.get(attributeName);
             var tagName = getTagName();
             if (byType.containsKey(tagName)) {
@@ -167,17 +185,20 @@ abstract class BaseComponent {
 
         //
 
-        if (context.attributesByName.containsKey(attributeName)) {
+        if (context.attributesByName.containsKey(attributeName) && !raw) {
             var byType = context.attributesByName.get(attributeName);
             if (byType.containsKey("mj-all")) {
                 return byType.get("mj-all");
             }
         }
 
-
-        // https://github.com/SebastianStehle/mjml-net/blob/d087dfade21495076840bc2b44c6eb858e6ea97e/Mjml.Net/Internal/Binder.cs#L41
-        // default value (if present)
-        return attributes.get(attributeName);
+        if(raw) {
+            return null;
+        } else {
+            // https://github.com/SebastianStehle/mjml-net/blob/d087dfade21495076840bc2b44c6eb858e6ea97e/Mjml.Net/Internal/Binder.cs#L41
+            // default value (if present)
+            return attributes.get(attributeName);
+        }
     }
 
     String getInheritingAttribute(String attributeName) {
@@ -186,11 +207,20 @@ abstract class BaseComponent {
 
     final boolean hasAttribute(String attributeName) {
         if (attributes.containsKey(attributeName)) {
-            var attrVal = getAttributeInternal(attributeName);
+            var attrVal = getAttributeInternal(attributeName, false);
             return attrVal != null && !attrVal.isEmpty();
         }
         return false;
     }
+
+    final boolean hasRawAttribute(String attributeName) {
+        if (attributes.containsKey(attributeName)) {
+            var attrVal = getAttributeInternal(attributeName, true);
+            return attrVal != null && !attrVal.isEmpty();
+        }
+        return false;
+    }
+
 
     final String getContent() {
         var nodeValue = element.getNodeValue();
@@ -230,6 +260,7 @@ abstract class BaseComponent {
         }
 
         void setupPostConstruction() {
+            super.setupPostConstruction();
             cssBoxModel = getBoxModel();
             var tagName = getTagName();
             context.addHeadStyle(tagName, headStyle());

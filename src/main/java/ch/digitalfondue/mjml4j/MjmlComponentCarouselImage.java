@@ -13,7 +13,6 @@ class MjmlComponentCarouselImage extends BaseComponent.BodyComponent {
         super(element, parent, context);
     }
 
-    int index;
     String carouselId;
 
     private static final LinkedHashMap<String, AttributeValueType> ALLOWED_DEFAULT_ATTRIBUTES = mapOf(
@@ -53,7 +52,7 @@ class MjmlComponentCarouselImage extends BaseComponent.BodyComponent {
         cssStyleLibraries.add("thumbnails_a", mapOf(
                 "border", getAttribute("tb-border"),
                 "border-radius", getAttribute("tb-border-radius"),
-                "display", "inline-block",
+                "display", hasThumbnailsSupported() ? "none" : "inline-block",
                 "overflow", "hidden",
                 "width", CssUnitParser.parse(getAttribute("tb-width")).toString()
         ));
@@ -63,6 +62,11 @@ class MjmlComponentCarouselImage extends BaseComponent.BodyComponent {
                 "width", "100%",
                 "height", "auto"
         ));
+    }
+
+    boolean hasThumbnailsSupported() {
+        var thumbnails = hasAttribute("thumbnails") ? getAttribute("thumbnails") : localContext.thumbnails();
+        return "supported".equalsIgnoreCase(thumbnails);
     }
 
     @Override

@@ -44,16 +44,16 @@ class MjmlComponentAccordionText extends BaseComponent.BodyComponent {
         cssStyleLibraries.add("td", mapOf(
                 "background", getAttribute("background-color"),
                 "font-size", getAttribute("font-size"),
-                "font-family", getAttribute("font-family"),
+                "font-family", resolveFontFamily(),
                 "font-weight", getAttribute("font-weight"),
                 "letter-spacing", getAttribute("letter-spacing"),
                 "line-height", getAttribute("line-height"),
                 "color", getAttribute("color"),
+                "padding", getAttribute("padding"),
                 "padding-bottom", getAttribute("padding-bottom"),
                 "padding-left", getAttribute("padding-left"),
                 "padding-right", getAttribute("padding-right"),
-                "padding-top", getAttribute("padding-top"),
-                "padding", getAttribute("padding")
+                "padding-top", getAttribute("padding-top")
         ));
 
         cssStyleLibraries.add("table", mapOf(
@@ -62,6 +62,18 @@ class MjmlComponentAccordionText extends BaseComponent.BodyComponent {
         ));
     }
 
+    private String resolveFontFamily() {
+        if(hasRawAttribute("font-family")) {
+            return getAttribute("font-family");
+        }
+        if(localContext.elementFontFamily() != null) {
+            return localContext.elementFontFamily();
+        } else if(localContext.accordionFontFamily() != null) {
+            return localContext.accordionFontFamily();
+        } else {
+            return getAttribute("font-family");
+        }
+    }
 
     @Override
     StringBuilder renderMjml(HtmlRenderer renderer) {

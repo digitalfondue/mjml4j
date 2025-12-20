@@ -1,0 +1,9 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column border-radius="50px" inner-border-radius="40px" padding="50px" border="5px solid #000" inner-border="5px solid #666">
+        <mj-text>Hello World</mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
