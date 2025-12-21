@@ -5,8 +5,7 @@
 .idea/
 .gradle/
 build/
-data/*.html
-data/alfio/*.html
+data/compiled/*.html
 *.iml
 *.ipr
 *.iws

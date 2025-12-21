@@ -6,7 +6,6 @@ import static java.util.Map.entry;
 
 import ch.digitalfondue.mjml4j.AttributeValueType.AttributeType;
 import java.util.LinkedHashMap;
-import java.util.Set;
 import org.w3c.dom.Element;
 
 class MjmlComponentSocial extends BaseComponent.BodyComponent {
@@ -58,9 +57,11 @@ class MjmlComponentSocial extends BaseComponent.BodyComponent {
         : renderVertical(renderer);
   }
 
-  private static final Set<String> INHERITING_ATTRIBUTES =
-      Set.of(
-          "border-radius",
+  @Override
+  String getInheritingAttribute(String attributeName) {
+    return switch (attributeName) {
+      case "padding" -> getAttribute("inner-padding");
+      case "border-radius",
           "color",
           "font-family",
           "font-size",
@@ -69,17 +70,12 @@ class MjmlComponentSocial extends BaseComponent.BodyComponent {
           "icon-height",
           "icon-padding",
           "icon-size",
-          "padding",
           "line-height",
           "text-padding",
-          "text-decoration");
-
-  @Override
-  String getInheritingAttribute(String attributeName) {
-    if ("padding".equals(attributeName)) {
-      attributeName = "inner-padding";
-    }
-    return INHERITING_ATTRIBUTES.contains(attributeName) ? getAttribute(attributeName) : null;
+          "text-decoration" ->
+          getAttribute(attributeName);
+      default -> null;
+    };
   }
 
   private StringBuilder renderVertical(HtmlRenderer renderer) {

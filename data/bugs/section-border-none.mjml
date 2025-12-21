@@ -1,0 +1,23 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-section border-left="1px solid" border-right="1px solid" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body>
+    <mj-section border-left="none" border-right="none">
+      <mj-column>
+        <mj-text>
+          This section should have no border.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column>
+        <mj-text>
+          This section should have left and right borders.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

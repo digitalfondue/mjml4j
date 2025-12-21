@@ -303,20 +303,17 @@ abstract class BaseComponent {
     double getShorthandBorderValue(String attributeName, String direction) {
       var mjAttributeDirection = getAttribute(attributeName + "-" + direction);
       var mjAttribute = getAttribute(attributeName);
-
       if (!Utils.isNullOrWhiteSpace(mjAttributeDirection)) {
-        return CssUnitParser.parse(mjAttributeDirection).value();
-      }
-
-      if (Utils.isNullOrWhiteSpace(mjAttribute)) {
+        return borderParser(mjAttributeDirection);
+      } else if (!Utils.isNullOrWhiteSpace(mjAttribute)) {
+        return borderParser(mjAttribute);
+      } else {
         return 0;
       }
+    }
 
-      // MERGED borderParser:
-      // https://github.com/mjmlio/mjml/blob/d4c6ea0744e05c928044108c3117c16a9c4110fe/packages/mjml-core/src/helpers/shorthandParser.js#L3
-      // return CssUnitParser.Parse(mjAttribute).Value;
-
-      var match = PATTERN_SHORTHAND_BORDER_VALUE.matcher(mjAttribute);
+    double borderParser(String borderValue) {
+      var match = PATTERN_SHORTHAND_BORDER_VALUE.matcher(borderValue);
 
       if (!match.find()) return 0;
 

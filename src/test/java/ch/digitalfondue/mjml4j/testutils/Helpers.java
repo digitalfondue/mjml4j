@@ -1,5 +1,6 @@
-package ch.digitalfondue.mjml4j;
+package ch.digitalfondue.mjml4j.testutils;
 
+import ch.digitalfondue.mjml4j.Mjml4j;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -13,9 +14,8 @@ import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.io.IOAccess;
 import org.junit.jupiter.api.Assertions;
 
-class Helpers {
-
-  static String beautifyHtml(String html) throws IOException {
+public class Helpers {
+  private static String beautifyHtml(String html) throws IOException {
     System.getProperties().setProperty("polyglot.engine.WarnInterpreterOnly", "false");
 
     var options = new HashMap<String, String>();
@@ -51,14 +51,14 @@ class Helpers {
     }
   }
 
-  static String simplifyBrTags(String input) {
+  private static String simplifyBrTags(String input) {
     return input.replaceAll("<br\s*/>", "<br>");
   }
 
   // align all values defined in ids -> mjml use random strings, for coherence reason we find all
   // id="...." and replace them with
   // a sequence. this allows to align id=".." and for=".."
-  static String alignIdFor(String input) {
+  private static String alignIdFor(String input) {
     var findIds =
         Pattern.compile(
             "id=\"[^\"]*([0-9a-f]{16})[^\"]*\"", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
@@ -76,18 +76,15 @@ class Helpers {
     return res;
   }
 
-  static void testTemplate(String name) {
-    testTemplate(name, new Mjml4j.FileSystemResolver(Path.of("data")));
-  }
-
-  static void testTemplate(String name, Mjml4j.IncludeResolver resolver) {
+  public static void testTemplate(String directory, String name) {
+    var resolver = new Mjml4j.FileSystemResolver(Path.of("data", directory));
     try {
       var template =
-          Files.readString(new File("data/" + name + ".mjml").toPath(), StandardCharsets.UTF_8);
+          Files.readString(Path.of("data", directory, name + ".mjml"), StandardCharsets.UTF_8);
       var conf = new Mjml4j.Configuration("und", Mjml4j.TextDirection.AUTO, resolver);
       var res = Mjml4j.render(template, conf);
       var comparison =
-          Files.readString(new File("data/" + name + ".html").toPath(), StandardCharsets.UTF_8);
+          Files.readString(Path.of("data", "compiled", name + ".html"), StandardCharsets.UTF_8);
       Assertions.assertEquals(
           simplifyBrTags(alignIdFor(beautifyHtml(comparison))), alignIdFor(beautifyHtml(res)));
     } catch (IOException e) {

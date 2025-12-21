@@ -1,5 +1,8 @@
+<!-- imported from issue https://github.com/SebastianStehle/mjml-net/issues/177 -->
 <mjml>
     <mj-body>
+        <mj-include path="include/styling.mjml" />
+        <mj-include path="include/header.mjml" />
 
         <mj-section css-class="bg-white">
             <mj-column>
@@ -9,6 +12,7 @@
             </mj-column>
         </mj-section>
 
-        <mj-include path="/circular/circular-1.mjml" />
+        <mj-include path="include/footer.mjml" />
+        <mj-include path="not-found.mjml" />
     </mj-body>
 </mjml>
