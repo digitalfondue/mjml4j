@@ -55,6 +55,10 @@ public class Helpers {
     return input.replaceAll("<br\s*/>", "<br>");
   }
 
+  private static String alignDoctype(String input) {
+    return input.replace("<!DOCTYPE html>", "<!doctype html>");
+  }
+
   // align all values defined in ids -> mjml use random strings, for coherence reason we find all
   // id="...." and replace them with
   // a sequence. this allows to align id=".." and for=".."
@@ -86,7 +90,8 @@ public class Helpers {
       var comparison =
           Files.readString(Path.of("data", "compiled", name + ".html"), StandardCharsets.UTF_8);
       Assertions.assertEquals(
-          simplifyBrTags(alignIdFor(beautifyHtml(comparison))), alignIdFor(beautifyHtml(res)));
+          simplifyBrTags(alignIdFor(beautifyHtml(comparison))),
+          alignIdFor(beautifyHtml(alignDoctype(res))));
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
