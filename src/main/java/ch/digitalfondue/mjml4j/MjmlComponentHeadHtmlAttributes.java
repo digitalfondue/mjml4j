@@ -15,7 +15,9 @@ class MjmlComponentHeadHtmlAttributes extends BaseComponent.HeadComponent {
   }
 
   @Override
-  void handler() {}
+  void handler() {
+    // context.addFont();
+  }
 
   @Override
   StringBuilder renderMjml(HtmlRenderer renderer) {

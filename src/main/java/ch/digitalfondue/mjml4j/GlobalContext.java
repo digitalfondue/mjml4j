@@ -38,6 +38,7 @@ class GlobalContext {
       new LinkedHashMap<>();
   final LinkedHashMap<String, LinkedHashMap<String, String>> attributesByClass =
       new LinkedHashMap<>();
+  final LinkedHashMap<String, LinkedHashMap<String, String>> htmlAttributes = new LinkedHashMap<>();
 
   final List<String> styles = new ArrayList<>();
   final List<String> inlineStyles = new ArrayList<>();
