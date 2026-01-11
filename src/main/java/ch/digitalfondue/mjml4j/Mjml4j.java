@@ -232,7 +232,7 @@ public final class Mjml4j {
   private static StringBuilder renderHead(
       MjmlComponent.MjmlRootComponent rootComponent, HtmlRenderer renderer) {
     var head = findFirstComponent(rootComponent, "mj-head");
-    return head != null ? head.renderMjml(renderer) : new StringBuilder();
+    return head != null ? head.renderMjml(renderer) : new StringBuilder(0);
   }
 
   private static String renderBody(
@@ -558,6 +558,7 @@ public final class Mjml4j {
       case "mj-accordion-element" -> new MjmlComponentAccordionElement(element, parent, context);
       case "mj-carousel" -> new MjmlComponentCarousel(element, parent, context);
       case "mj-carousel-image" -> new MjmlComponentCarouselImage(element, parent, context);
+      case "mj-html-attributes" -> new MjmlComponentHeadHtmlAttributes(element, parent, context);
       case "html-text" -> new HtmlComponent.HtmlTextComponent(element, parent, context);
       case "html-comment" -> new HtmlComponent.HtmlCommentComponent(element, parent, context);
       default -> new HtmlComponent.HtmlRawComponent(element, parent, context);
