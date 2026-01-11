@@ -2,10 +2,7 @@ package ch.digitalfondue.mjml4j;
 
 import static ch.digitalfondue.mjml4j.Utils.isNullOrWhiteSpace;
 
-import ch.digitalfondue.jfiveparse.Document;
-import ch.digitalfondue.jfiveparse.JFiveParse;
-import ch.digitalfondue.jfiveparse.Option;
-import ch.digitalfondue.jfiveparse.W3CDom;
+import ch.digitalfondue.jfiveparse.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -348,7 +345,25 @@ public final class Mjml4j {
     res.append("</html>\n  ");
 
     //
-    return Utils.mergeOutlookConditionals(res);
+    String rendered = Utils.mergeOutlookConditionals(res);
+    if (!context.htmlAttributes.isEmpty()) {
+      var parsedRenderedDoc = JFiveParse.parse(rendered, Set.of(Option.DONT_TRANSFORM_ENTITIES));
+      for (var selectorsAndAttrs : context.htmlAttributes.entrySet()) {
+        var matcher = Selector.parseSelector(selectorsAndAttrs.getKey());
+        parsedRenderedDoc
+            .getAllNodesMatchingAsStream(matcher)
+            .forEach(
+                n -> {
+                  if (n instanceof ch.digitalfondue.jfiveparse.Element elem) {
+                    for (var attrsAndValues : selectorsAndAttrs.getValue().entrySet()) {
+                      elem.setAttribute(attrsAndValues.getKey(), attrsAndValues.getValue());
+                    }
+                  }
+                });
+      }
+      rendered = JFiveParse.serialize(parsedRenderedDoc, Set.of(Option.DONT_TRANSFORM_ENTITIES));
+    }
+    return rendered;
   }
 
   private static void buildPreview(GlobalContext context, StringBuilder res) {
