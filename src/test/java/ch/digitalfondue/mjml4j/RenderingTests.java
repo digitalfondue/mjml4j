@@ -4,6 +4,7 @@ import static ch.digitalfondue.mjml4j.testutils.Helpers.testTemplate;
 
 import ch.digitalfondue.mjml4j.testutils.MjmlDirectory;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 
@@ -37,6 +38,13 @@ class RenderingTests {
   @MjmlDirectory("bugs")
   void testBugsTemplates(String name) {
     testTemplate("bugs", name);
+  }
+
+  @Disabled
+  @ParameterizedTest
+  @MjmlDirectory("work")
+  void testWork(String name) {
+    testTemplate("work", name);
   }
 
   @Test
