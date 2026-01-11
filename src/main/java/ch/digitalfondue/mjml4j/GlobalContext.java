@@ -122,4 +122,11 @@ class GlobalContext {
     }
     attributesByName.get(name).put(type, value);
   }
+
+  void addHtmlAttributes(String selectorPath, String attributeName, String value) {
+    if (!htmlAttributes.containsKey(selectorPath)) {
+      htmlAttributes.put(selectorPath, new LinkedHashMap<>());
+    }
+    htmlAttributes.get(selectorPath).put(attributeName, value);
+  }
 }
