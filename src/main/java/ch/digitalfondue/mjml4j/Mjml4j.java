@@ -157,14 +157,14 @@ public final class Mjml4j {
   }
 
   private static final Configuration DEFAULT_CONFIG = new Configuration("und", TextDirection.AUTO);
+  private static final Set<Option> PARSE_AND_SERIALIZATION_OPTS =
+      EnumSet.of(
+          Option.DISABLE_IGNORE_TOKEN_IN_BODY_START_TAG,
+          Option.INTERPRET_SELF_CLOSING_ANYTHING_ELSE,
+          Option.DONT_TRANSFORM_ENTITIES);
 
   private static List<ch.digitalfondue.jfiveparse.Node> parseHtmlFragment(String template) {
-    return JFiveParse.parseFragment(
-        template,
-        EnumSet.of(
-            Option.DISABLE_IGNORE_TOKEN_IN_BODY_START_TAG,
-            Option.INTERPRET_SELF_CLOSING_ANYTHING_ELSE,
-            Option.DONT_TRANSFORM_ENTITIES));
+    return JFiveParse.parseFragment(template, PARSE_AND_SERIALIZATION_OPTS);
   }
 
   private static Element parseMjmlFragment(String template, GlobalContext context) {
@@ -347,7 +347,7 @@ public final class Mjml4j {
     //
     String rendered = Utils.mergeOutlookConditionals(res);
     if (!context.htmlAttributes.isEmpty()) {
-      var parsedRenderedDoc = JFiveParse.parse(rendered, Set.of(Option.DONT_TRANSFORM_ENTITIES));
+      var parsedRenderedDoc = JFiveParse.parse(rendered, PARSE_AND_SERIALIZATION_OPTS);
       for (var selectorsAndAttrs : context.htmlAttributes.entrySet()) {
         var matcher = Selector.parseSelector(selectorsAndAttrs.getKey());
         parsedRenderedDoc
@@ -361,7 +361,7 @@ public final class Mjml4j {
                   }
                 });
       }
-      rendered = JFiveParse.serialize(parsedRenderedDoc, Set.of(Option.DONT_TRANSFORM_ENTITIES));
+      rendered = JFiveParse.serialize(parsedRenderedDoc, PARSE_AND_SERIALIZATION_OPTS);
     }
     return rendered;
   }

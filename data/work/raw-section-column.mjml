@@ -1,0 +1,19 @@
+<mjml>
+  <mj-body>
+    <mj-raw>{ if item < 5 }</mj-raw>
+    <mj-section css-class="section">
+      <mj-column>
+        <mj-raw>{ if item > 10 }</mj-raw>
+        <mj-text css-class="text">
+          Hello World! { item }
+        </mj-text>
+        <mj-raw>{ end if }</mj-raw>
+        <mj-text css-class="text">
+          Hello World! { item + 1 }
+        </mj-text>
+        <mj-image css-class="image" src="https://via.placeholder.com/150x30"/>
+      </mj-column>
+    </mj-section>
+    <mj-raw>{ end if }</mj-raw>
+  </mj-body>
+</mjml>
