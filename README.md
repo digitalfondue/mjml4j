@@ -101,6 +101,8 @@ mjml4j offer 2 implementations:
  - the code is formatted using the maven spotless plugin. Use `mvn spotless:apply` to format it
 
 # TODO:
+ - when increasing min java version to 21, use https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SequencedMap.html
+   as a interface instead of directly using LinkedHashMap...
  - validation api:
    - add "parent element" check
    - attribute unit type check

@@ -2,10 +2,7 @@ package ch.digitalfondue.mjml4j;
 
 import static ch.digitalfondue.mjml4j.Utils.isNullOrWhiteSpace;
 
-import ch.digitalfondue.jfiveparse.Document;
-import ch.digitalfondue.jfiveparse.JFiveParse;
-import ch.digitalfondue.jfiveparse.Option;
-import ch.digitalfondue.jfiveparse.W3CDom;
+import ch.digitalfondue.jfiveparse.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -160,14 +157,14 @@ public final class Mjml4j {
   }
 
   private static final Configuration DEFAULT_CONFIG = new Configuration("und", TextDirection.AUTO);
+  private static final Set<Option> PARSE_AND_SERIALIZATION_OPTS =
+      EnumSet.of(
+          Option.DISABLE_IGNORE_TOKEN_IN_BODY_START_TAG,
+          Option.INTERPRET_SELF_CLOSING_ANYTHING_ELSE,
+          Option.DONT_TRANSFORM_ENTITIES);
 
   private static List<ch.digitalfondue.jfiveparse.Node> parseHtmlFragment(String template) {
-    return JFiveParse.parseFragment(
-        template,
-        EnumSet.of(
-            Option.DISABLE_IGNORE_TOKEN_IN_BODY_START_TAG,
-            Option.INTERPRET_SELF_CLOSING_ANYTHING_ELSE,
-            Option.DONT_TRANSFORM_ENTITIES));
+    return JFiveParse.parseFragment(template, PARSE_AND_SERIALIZATION_OPTS);
   }
 
   private static Element parseMjmlFragment(String template, GlobalContext context) {
@@ -232,7 +229,7 @@ public final class Mjml4j {
   private static StringBuilder renderHead(
       MjmlComponent.MjmlRootComponent rootComponent, HtmlRenderer renderer) {
     var head = findFirstComponent(rootComponent, "mj-head");
-    return head != null ? head.renderMjml(renderer) : new StringBuilder();
+    return head != null ? head.renderMjml(renderer) : new StringBuilder(0);
   }
 
   private static String renderBody(
@@ -348,7 +345,25 @@ public final class Mjml4j {
     res.append("</html>\n  ");
 
     //
-    return Utils.mergeOutlookConditionals(res);
+    String rendered = Utils.mergeOutlookConditionals(res);
+    if (!context.htmlAttributes.isEmpty()) {
+      var parsedRenderedDoc = JFiveParse.parse(rendered, PARSE_AND_SERIALIZATION_OPTS);
+      for (var selectorsAndAttrs : context.htmlAttributes.entrySet()) {
+        var matcher = Selector.parseSelector(selectorsAndAttrs.getKey());
+        parsedRenderedDoc
+            .getAllNodesMatchingAsStream(matcher)
+            .forEach(
+                n -> {
+                  if (n instanceof ch.digitalfondue.jfiveparse.Element elem) {
+                    for (var attrsAndValues : selectorsAndAttrs.getValue().entrySet()) {
+                      elem.setAttribute(attrsAndValues.getKey(), attrsAndValues.getValue());
+                    }
+                  }
+                });
+      }
+      rendered = JFiveParse.serialize(parsedRenderedDoc, PARSE_AND_SERIALIZATION_OPTS);
+    }
+    return rendered;
   }
 
   private static void buildPreview(GlobalContext context, StringBuilder res) {
@@ -558,6 +573,7 @@ public final class Mjml4j {
       case "mj-accordion-element" -> new MjmlComponentAccordionElement(element, parent, context);
       case "mj-carousel" -> new MjmlComponentCarousel(element, parent, context);
       case "mj-carousel-image" -> new MjmlComponentCarouselImage(element, parent, context);
+      case "mj-html-attributes" -> new MjmlComponentHeadHtmlAttributes(element, parent, context);
       case "html-text" -> new HtmlComponent.HtmlTextComponent(element, parent, context);
       case "html-comment" -> new HtmlComponent.HtmlCommentComponent(element, parent, context);
       default -> new HtmlComponent.HtmlRawComponent(element, parent, context);
