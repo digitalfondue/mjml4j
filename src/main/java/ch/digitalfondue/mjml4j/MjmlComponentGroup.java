@@ -136,7 +136,7 @@ class MjmlComponentGroup extends BaseComponent.BodyComponent {
     var parsedWidth = CssUnitParser.parse(width);
 
     return parsedWidth.isPercent()
-        ? doubleToString(100 * parsedWidth.value() / getContainerInnerWidth()) + "px"
+        ? doubleToString(getContainerInnerWidth() * parsedWidth.value() / 100) + "px"
         : parsedWidth.toString();
   }
 
