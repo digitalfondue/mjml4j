@@ -161,7 +161,8 @@ public final class Mjml4j {
       EnumSet.of(
           Option.DISABLE_IGNORE_TOKEN_IN_BODY_START_TAG,
           Option.INTERPRET_SELF_CLOSING_ANYTHING_ELSE,
-          Option.DONT_TRANSFORM_ENTITIES);
+          Option.DONT_TRANSFORM_ENTITIES,
+          Option.DISABLE_IN_TABLE_TEXT_FOSTER_PARENTING);
 
   private static List<ch.digitalfondue.jfiveparse.Node> parseHtmlFragment(String template) {
     return JFiveParse.parseFragment(template, PARSE_AND_SERIALIZATION_OPTS);

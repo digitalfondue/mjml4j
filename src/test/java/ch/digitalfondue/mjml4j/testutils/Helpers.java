@@ -1,54 +1,27 @@
 package ch.digitalfondue.mjml4j.testutils;
 
 import ch.digitalfondue.mjml4j.Mjml4j;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.regex.Pattern;
-import org.graalvm.polyglot.Context;
-import org.graalvm.polyglot.Source;
-import org.graalvm.polyglot.io.IOAccess;
+
+import com.helger.css.reader.CSSReader;
+import com.helger.css.writer.CSSWriter;
+import org.jsoup.Jsoup;
 import org.junit.jupiter.api.Assertions;
 
 public class Helpers {
   private static String beautifyHtml(String html) throws IOException {
-    System.getProperties().setProperty("polyglot.engine.WarnInterpreterOnly", "false");
+    var parsed = Jsoup.parse(html);
+    var writer = new CSSWriter();
+    parsed.select("style").forEach(e -> {
+      e.text(writer.getCSSAsString(CSSReader.readFromString(e.text())));
+    });
 
-    var options = new HashMap<String, String>();
-    // Enable CommonJS experimental support.
-    options.put("js.commonjs-require", "true");
-    options.put("js.commonjs-require-cwd", "node_modules/");
-
-    try (Context context =
-        Context.newBuilder("js")
-            .allowExperimentalOptions(true)
-            .allowIO(IOAccess.ALL)
-            .options(options)
-            .build()) {
-      context.eval(
-          Source.newBuilder("js", new File("node_modules/js-beautify/js/index.js")).build());
-      context.getBindings("js").putMember("input", html);
-      var res =
-          context.eval(
-              Source.newBuilder(
-                      "js",
-                      """
-                        require('js-beautify').html(input, {
-                            indent_size: 2,
-                            wrap_attributes_indent_size: 2,
-                            max_preserve_newline: 0,
-                            preserve_newlines: false,
-                            end_with_newline: true,
-                        });
-                    """,
-                      "test.mjs")
-                  .build());
-      return res.asString();
-    }
+    return parsed.html();
   }
 
   private static String simplifyBrTags(String input) {

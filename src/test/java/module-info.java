@@ -4,10 +4,12 @@ module ch.digitalfondue.mjml4j {
 
   exports ch.digitalfondue.mjml4j;
 
+  requires ph.css;
+  requires org.jsoup;
+
   // Test extensions
   requires org.junit.jupiter.api;
   requires org.junit.jupiter.params;
-  requires org.graalvm.polyglot;
 
   opens ch.digitalfondue.mjml4j to
       org.junit.platform.commons;
