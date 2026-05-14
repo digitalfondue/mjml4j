@@ -2,34 +2,69 @@ package ch.digitalfondue.mjml4j.testutils;
 
 import ch.digitalfondue.mjml4j.Mjml4j;
 import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
-
-import com.helger.css.reader.CSSReader;
-import com.helger.css.writer.CSSWriter;
-import org.jsoup.Jsoup;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+import nu.validator.htmlparser.dom.HtmlDocumentBuilder;
+import org.htmlunit.cssparser.dom.CSSStyleSheetImpl;
+import org.htmlunit.cssparser.parser.CSSOMParser;
 import org.junit.jupiter.api.Assertions;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 public class Helpers {
-  private static String beautifyHtml(String html) throws IOException {
-    var parsed = Jsoup.parse(html);
-    var writer = new CSSWriter();
-    parsed.select("style").forEach(e -> {
-      e.text(writer.getCSSAsString(CSSReader.readFromString(e.text())));
-    });
 
-    return parsed.html();
-  }
+  private static String normalizeHtml(String html) {
+    try {
+      var builder = new HtmlDocumentBuilder();
+      builder.setIgnoringComments(false);
+      var doc = builder.parse(new InputSource(new StringReader(html)));
+      CSSOMParser cssParser = new CSSOMParser();
 
-  private static String simplifyBrTags(String input) {
-    return input.replaceAll("<br\s*/>", "<br>");
-  }
+      // normalize css
+      var allStyle = doc.getElementsByTagName("style");
+      for (int i = 0; i < allStyle.getLength(); i++) {
+        var style = allStyle.item(i);
+        var content = style.getTextContent();
+        var source = new org.htmlunit.cssparser.parser.InputSource(new StringReader(content));
 
-  private static String alignDoctype(String input) {
-    return input.replace("<!DOCTYPE html>", "<!doctype html>");
+        CSSStyleSheetImpl sheet = cssParser.parseStyleSheet(source, null);
+        style.setTextContent(sheet.toString());
+      }
+
+      // normalize html document (remove useless spaces)
+      // doc.normalizeDocument();
+      var xPath = XPathFactory.newInstance().newXPath();
+      var textNodes = (NodeList) xPath.evaluate("//text()", doc, XPathConstants.NODESET);
+      for (int i = 0; i < textNodes.getLength(); i++) {
+        var node = textNodes.item(i);
+        var cleanText = (String) xPath.evaluate("normalize-space(.)", node, XPathConstants.STRING);
+        node.setNodeValue(cleanText);
+      }
+      //
+      var tf = TransformerFactory.newInstance();
+      var transformer = tf.newTransformer();
+      transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+      transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+      transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+      var source = new DOMSource(doc);
+      var sw = new StringWriter();
+      var result = new StreamResult(sw);
+      transformer.transform(source, result);
+      return sw.toString();
+    } catch (Exception e) {
+      throw new IllegalStateException(e);
+    }
   }
 
   // align all values defined in ids -> mjml use random strings, for coherence reason we find all
@@ -63,8 +98,7 @@ public class Helpers {
       var comparison =
           Files.readString(Path.of("data", "compiled", name + ".html"), StandardCharsets.UTF_8);
       Assertions.assertEquals(
-          simplifyBrTags(alignIdFor(beautifyHtml(comparison))),
-          alignIdFor(beautifyHtml(alignDoctype(res))));
+          alignIdFor(normalizeHtml(comparison)), alignIdFor(normalizeHtml(res)));
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }

@@ -62,15 +62,15 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.21.2</version>
+            <groupId>nu.validator</groupId>
+            <artifactId>validator</artifactId>
+            <version>26.5.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.helger</groupId>
-            <artifactId>ph-css</artifactId>
-            <version>8.2.0</version>
+            <groupId>org.htmlunit</groupId>
+            <artifactId>htmlunit-cssparser</artifactId>
+            <version>4.21.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
