@@ -125,7 +125,7 @@
                 <plugin>
                     <groupId>com.github.eirslett</groupId>
                     <artifactId>frontend-maven-plugin</artifactId>
-                    <version>1.15.0</version>
+                    <version>2.0.0</version>
                 </plugin>
                 <!--
                 <plugin>
@@ -140,7 +140,7 @@
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.5.0</version>
                 <configuration>
                     <java>
                         <googleJavaFormat />
@@ -179,29 +179,29 @@
                 <artifactId>frontend-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>install node and npm</id>
+                        <id>install node and pnpm</id>
                         <goals>
-                            <goal>install-node-and-npm</goal>
+                            <goal>install-node-and-pnpm</goal>
                         </goals>
                         <configuration>
                             <!-- See https://nodejs.org/en/download/ for latest node and npm (lts) versions -->
                             <nodeVersion>v24.12.0</nodeVersion>
-                            <npmVersion>11.6.2</npmVersion>
+                            <pnpmVersion>11.1.2</pnpmVersion>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>npm ci</id>
+                        <id>pnpm ci</id>
                         <goals>
-                            <goal>npm</goal>
+                            <goal>pnpm</goal>
                         </goals>
                         <configuration>
                             <arguments>ci</arguments>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>npm build</id>
+                        <id>pnpm build</id>
                         <goals>
-                            <goal>npm</goal>
+                            <goal>pnpm</goal>
                         </goals>
                         <configuration>
                             <arguments>run build</arguments>
