@@ -45,9 +45,18 @@ class GlobalContext {
 
   GlobalContext(Document document, Mjml4j.Configuration configuration) {
     this.document = document;
-    this.dir = configuration.dir().value();
-    this.language = configuration.language();
-
+    String dir = configuration.dir().value();
+    String language = configuration.language();
+    //
+    var rootElem = document.getDocumentElement();
+    if (!Utils.isNullOrWhiteSpace(rootElem.getAttribute("dir"))) {
+      dir = rootElem.getAttribute("dir");
+    }
+    if (!Utils.isNullOrWhiteSpace(rootElem.getAttribute("lang"))) {
+      language = rootElem.getAttribute("lang");
+    }
+    this.dir = dir;
+    this.language = language;
     //
     this.includeResolver = configuration.includeResolver();
     //
