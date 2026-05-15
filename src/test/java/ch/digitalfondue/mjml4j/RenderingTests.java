@@ -1,8 +1,7 @@
 package ch.digitalfondue.mjml4j;
 
-import static ch.digitalfondue.mjml4j.testutils.Helpers.testTemplate;
+import static ch.digitalfondue.mjml4j.Helpers.testTemplate;
 
-import ch.digitalfondue.mjml4j.testutils.MjmlDirectory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

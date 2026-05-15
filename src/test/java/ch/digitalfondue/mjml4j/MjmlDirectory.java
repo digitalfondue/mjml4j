@@ -1,4 +1,4 @@
-package ch.digitalfondue.mjml4j.testutils;
+package ch.digitalfondue.mjml4j;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @ArgumentsSource(MjmlListArgumentsProvider.class)
-public @interface MjmlDirectory {
+@interface MjmlDirectory {
   /** The directory to scan for MJML test files. */
   String value();
 }

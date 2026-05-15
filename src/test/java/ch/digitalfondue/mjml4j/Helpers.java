@@ -1,6 +1,5 @@
-package ch.digitalfondue.mjml4j.testutils;
+package ch.digitalfondue.mjml4j;
 
-import ch.digitalfondue.mjml4j.Mjml4j;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -21,7 +20,7 @@ import org.junit.jupiter.api.Assertions;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-public class Helpers {
+class Helpers {
 
   private static String normalizeHtml(String html) {
     try {

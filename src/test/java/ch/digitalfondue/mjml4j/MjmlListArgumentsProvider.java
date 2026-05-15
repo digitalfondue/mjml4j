@@ -1,4 +1,4 @@
-package ch.digitalfondue.mjml4j.testutils;
+package ch.digitalfondue.mjml4j;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.AnnotationBasedArgumentsProvider;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.support.ParameterDeclarations;
 
-public class MjmlListArgumentsProvider extends AnnotationBasedArgumentsProvider<MjmlDirectory> {
+class MjmlListArgumentsProvider extends AnnotationBasedArgumentsProvider<MjmlDirectory> {
   @Override
   protected Stream<? extends Arguments> provideArguments(
       ParameterDeclarations parameters, ExtensionContext context, MjmlDirectory annotation) {
