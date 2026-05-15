@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-// ensure we generate a stable HTML
+// ensure stability in output for the tests...
 class KnownOutputTest {
 
   // this test has various tricky issues,
@@ -23,5 +23,17 @@ class KnownOutputTest {
         Files.readString(
             Path.of("data/html-output/raw-section-column.html"), StandardCharsets.UTF_8),
         result);
+  }
+
+  // check we at least keep html comments & co
+  @Test
+  void checkNormalizeHtml() throws IOException {
+    var in =
+        Files.readString(
+            Path.of("data/html-output/raw-section-column.html"), StandardCharsets.UTF_8);
+    Assertions.assertEquals(
+        Files.readString(
+            Path.of("data/html-output/raw-section-column-normalized.html"), StandardCharsets.UTF_8),
+        Helpers.normalizeHtml(in));
   }
 }

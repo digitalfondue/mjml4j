@@ -13,20 +13,21 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
-import nu.validator.htmlparser.dom.HtmlDocumentBuilder;
 import org.htmlunit.cssparser.dom.CSSStyleSheetImpl;
 import org.htmlunit.cssparser.parser.CSSOMParser;
+import org.htmlunit.cyberneko.html.dom.HTMLDocumentImpl;
+import org.htmlunit.cyberneko.parsers.DOMParser;
 import org.junit.jupiter.api.Assertions;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 class Helpers {
 
-  private static String normalizeHtml(String html) {
+  static String normalizeHtml(String html) {
     try {
-      var builder = new HtmlDocumentBuilder();
-      builder.setIgnoringComments(false);
-      var doc = builder.parse(new InputSource(new StringReader(html)));
+      var parser = new DOMParser(HTMLDocumentImpl.class);
+      parser.parse(new InputSource(new StringReader(html)));
+      var doc = parser.getDocument();
       CSSOMParser cssParser = new CSSOMParser();
 
       // normalize css

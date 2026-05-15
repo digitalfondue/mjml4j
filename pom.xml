@@ -62,9 +62,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>nu.validator</groupId>
-            <artifactId>validator</artifactId>
-            <version>26.5.12</version>
+            <groupId>org.htmlunit</groupId>
+            <artifactId>neko-htmlunit</artifactId>
+            <version>4.21.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
