@@ -38,6 +38,7 @@ class GlobalContext {
       new LinkedHashMap<>();
   final LinkedHashMap<String, LinkedHashMap<String, String>> attributesByClass =
       new LinkedHashMap<>();
+  final LinkedHashMap<String, LinkedHashMap<String, String>> htmlAttributes = new LinkedHashMap<>();
 
   final List<String> styles = new ArrayList<>();
   final List<String> inlineStyles = new ArrayList<>();
@@ -120,5 +121,12 @@ class GlobalContext {
       attributesByName.put(name, new LinkedHashMap<>());
     }
     attributesByName.get(name).put(type, value);
+  }
+
+  void addHtmlAttributes(String selectorPath, String attributeName, String value) {
+    if (!htmlAttributes.containsKey(selectorPath)) {
+      htmlAttributes.put(selectorPath, new LinkedHashMap<>());
+    }
+    htmlAttributes.get(selectorPath).put(attributeName, value);
   }
 }
