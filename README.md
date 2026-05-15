@@ -25,8 +25,8 @@ The code is based on the following projects:
 Most of the mj-* tags are supported. It's currently missing:
 
  - ~~mj-include: will be implemented~~ implemented in 1.1.1
+ - ~~mj-html-attributes: will be supported when the work on css selector support is done.~~ implemented in 1.2.0
  - mj-style: the inline attribute will be ignored: will be supported when the work on css selector support is done. WIP
- - mj-html-attributes: will be supported when the work on css selector support is done. WIP
 
 Additionally, no pretty print/minimization of the output is provided.
 
@@ -38,14 +38,14 @@ maven:
 <dependency>
    <groupId>ch.digitalfondue.mjml4j</groupId>
    <artifactId>mjml4j</artifactId>
-   <version>1.1.6</version>
+   <version>1.2.0</version>
 </dependency>
 ```
 
 gradle:
 
 ```
-implementation 'ch.digitalfondue.mjml4j:mjml4j:1.1.6'
+implementation 'ch.digitalfondue.mjml4j:mjml4j:1.2.0'
 ```
 
 # Use
@@ -102,7 +102,7 @@ mjml4j offer 2 implementations:
 
 # TODO:
  - when increasing min java version to 21, use https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SequencedMap.html
-   as a interface instead of directly using LinkedHashMap...
+   as an interface instead of directly using LinkedHashMap...
  - validation api:
    - add "parent element" check
    - attribute unit type check
@@ -110,5 +110,6 @@ mjml4j offer 2 implementations:
  - cleanup/rewrite the box model, kinda hacky
  - more robust handling of invalid input (check mjml behaviour)
  - check differences/import tests
+ - allow custom components
  
  
