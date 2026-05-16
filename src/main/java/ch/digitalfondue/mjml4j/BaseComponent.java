@@ -139,15 +139,17 @@ abstract class BaseComponent {
   //  0. own attribute
   //  1. mj-class attribute
   //  2. mj-attribute by own tag name
+  //  2.5 mj-attribute by parent class
   //  3. by inheriting from parent
   //  4. by mj-all
   //  5. by default
   final String getAttributeInternal(String attributeName, boolean raw) {
     // the dom element has the attribute present
+    // 0.
     if (!Utils.isNullOrWhiteSpace(element.getAttribute(attributeName))) {
       return element.getAttribute(attributeName);
     }
-    //
+    // 1.
     if (!context.attributesByClass.isEmpty() && !raw) {
       var currentClasses = Utils.EMPTY_ARRAY_STR;
       if (attributes.containsKey("mj-class") && attributes.get("mj-class") != null) {
@@ -166,7 +168,7 @@ abstract class BaseComponent {
       }
     }
 
-    //
+    // 2.
     if (context.attributesByName.containsKey(attributeName) && !raw) {
       var byType = context.attributesByName.get(attributeName);
       var tagName = getTagName();
@@ -174,8 +176,12 @@ abstract class BaseComponent {
         return byType.get(tagName);
       }
     }
+    // 2.5
+    // FIXME
+
     //
 
+    // 3.
     if (parent != null) {
       var attribute = parent.getInheritingAttribute(attributeName);
       if (attribute != null) {
@@ -183,8 +189,7 @@ abstract class BaseComponent {
       }
     }
 
-    //
-
+    // 4.
     if (context.attributesByName.containsKey(attributeName) && !raw) {
       var byType = context.attributesByName.get(attributeName);
       if (byType.containsKey("mj-all")) {
@@ -192,6 +197,7 @@ abstract class BaseComponent {
       }
     }
 
+    // 5.
     if (raw) {
       return null;
     } else {
