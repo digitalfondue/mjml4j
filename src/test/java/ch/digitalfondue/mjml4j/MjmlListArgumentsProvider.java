@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.AnnotationBasedArgumentsProvider;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.support.ParameterDeclarations;
 
-class MjmlListArgumentsProvider extends AnnotationBasedArgumentsProvider<MjmlDirectory> {
+public class MjmlListArgumentsProvider extends AnnotationBasedArgumentsProvider<MjmlDirectory> {
   @Override
   protected Stream<? extends Arguments> provideArguments(
       ParameterDeclarations parameters, ExtensionContext context, MjmlDirectory annotation) {

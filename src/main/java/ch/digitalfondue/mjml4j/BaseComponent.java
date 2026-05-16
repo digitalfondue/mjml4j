@@ -138,16 +138,18 @@ abstract class BaseComponent {
   // priority as derived from code and tests:
   //  0. own attribute
   //  1. mj-class attribute
+  //  1.5 mj-class attribute by parent class
   //  2. mj-attribute by own tag name
   //  3. by inheriting from parent
   //  4. by mj-all
   //  5. by default
   final String getAttributeInternal(String attributeName, boolean raw) {
     // the dom element has the attribute present
+    // 0.
     if (!Utils.isNullOrWhiteSpace(element.getAttribute(attributeName))) {
       return element.getAttribute(attributeName);
     }
-    //
+    // 1.
     if (!context.attributesByClass.isEmpty() && !raw) {
       var currentClasses = Utils.EMPTY_ARRAY_STR;
       if (attributes.containsKey("mj-class") && attributes.get("mj-class") != null) {
@@ -155,9 +157,10 @@ abstract class BaseComponent {
       }
       String classAttribute = null;
       for (var className : currentClasses) {
-        if (context.attributesByClass.containsKey(className)
-            && context.attributesByClass.get(className).containsKey(attributeName)) {
-          classAttribute = context.attributesByClass.get(className).get(attributeName);
+        var classNameAttributeKey =
+            new GlobalContext.ClassNameAttributeName(className, attributeName);
+        if (context.attributesByClass.containsKey(classNameAttributeKey)) {
+          classAttribute = context.attributesByClass.get(classNameAttributeKey);
         }
       }
 
@@ -166,16 +169,20 @@ abstract class BaseComponent {
       }
     }
 
-    //
-    if (context.attributesByName.containsKey(attributeName) && !raw) {
-      var byType = context.attributesByName.get(attributeName);
-      var tagName = getTagName();
-      if (byType.containsKey(tagName)) {
-        return byType.get(tagName);
-      }
+    // 1.5
+    if (!context.attributesByParentClass.isEmpty() && parent != null && !raw) {
+      var currentClasses = Utils.EMPTY_ARRAY_STR;
+      // FIXME
+    }
+
+    // 2.
+    var attrNameTagName = new GlobalContext.AttributeNameTagName(attributeName, getTagName());
+    if (context.attributesByTagName.containsKey(attrNameTagName) && !raw) {
+      return context.attributesByTagName.get(attrNameTagName);
     }
     //
 
+    // 3.
     if (parent != null) {
       var attribute = parent.getInheritingAttribute(attributeName);
       if (attribute != null) {
@@ -183,15 +190,13 @@ abstract class BaseComponent {
       }
     }
 
-    //
-
-    if (context.attributesByName.containsKey(attributeName) && !raw) {
-      var byType = context.attributesByName.get(attributeName);
-      if (byType.containsKey("mj-all")) {
-        return byType.get("mj-all");
-      }
+    // 4.
+    var attrNameMjAll = new GlobalContext.AttributeNameTagName(attributeName, "mj-all");
+    if (context.attributesByTagName.containsKey(attrNameMjAll) && !raw) {
+      return context.attributesByTagName.get(attrNameMjAll);
     }
 
+    // 5.
     if (raw) {
       return null;
     } else {

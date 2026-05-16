@@ -34,9 +34,16 @@ class GlobalContext {
 
   final LinkedHashMap<String, String> mediaQueries = new LinkedHashMap<>();
 
-  final LinkedHashMap<String, LinkedHashMap<String, String>> attributesByName =
-      new LinkedHashMap<>();
-  final LinkedHashMap<String, LinkedHashMap<String, String>> attributesByClass =
+  record AttributeNameTagName(String attributeName, String tagName) {}
+
+  record ClassNameAttributeName(String className, String attributeName) {}
+
+  record ParentElementClassNameAttributeName(
+      String parentElement, String className, String attributeName) {}
+
+  final LinkedHashMap<AttributeNameTagName, String> attributesByTagName = new LinkedHashMap<>();
+  final LinkedHashMap<ClassNameAttributeName, String> attributesByClass = new LinkedHashMap<>();
+  final LinkedHashMap<ParentElementClassNameAttributeName, String> attributesByParentClass =
       new LinkedHashMap<>();
   final LinkedHashMap<String, LinkedHashMap<String, String>> htmlAttributes = new LinkedHashMap<>();
 
@@ -45,9 +52,18 @@ class GlobalContext {
 
   GlobalContext(Document document, Mjml4j.Configuration configuration) {
     this.document = document;
-    this.dir = configuration.dir().value();
-    this.language = configuration.language();
-
+    String dir = configuration.dir().value();
+    String language = configuration.language();
+    //
+    var rootElem = document.getDocumentElement();
+    if (!Utils.isNullOrWhiteSpace(rootElem.getAttribute("dir"))) {
+      dir = rootElem.getAttribute("dir");
+    }
+    if (!Utils.isNullOrWhiteSpace(rootElem.getAttribute("lang"))) {
+      language = rootElem.getAttribute("lang");
+    }
+    this.dir = dir;
+    this.language = language;
     //
     this.includeResolver = configuration.includeResolver();
     //
@@ -109,18 +125,19 @@ class GlobalContext {
     mediaQueries.put(className, mediaQuery);
   }
 
-  void setClassAttribute(String name, String className, String value) {
-    if (!attributesByClass.containsKey(className)) {
-      attributesByClass.put(className, new LinkedHashMap<>());
-    }
-    attributesByClass.get(className).put(name, value);
+  void setClassAttribute(String attributeName, String className, String value) {
+    attributesByClass.put(new ClassNameAttributeName(className, attributeName), value);
   }
 
-  void setTypeAttribute(String name, String type, String value) {
-    if (!attributesByName.containsKey(name)) {
-      attributesByName.put(name, new LinkedHashMap<>());
-    }
-    attributesByName.get(name).put(type, value);
+  void setParentClassAttribute(
+      String attributeName, String parentClassName, String childTagName, String attributeValue) {
+    attributesByParentClass.put(
+        new ParentElementClassNameAttributeName(parentClassName, childTagName, attributeName),
+        attributeValue);
+  }
+
+  void setTypeAttribute(String attributeName, String tagName, String value) {
+    attributesByTagName.put(new AttributeNameTagName(attributeName, tagName), value);
   }
 
   void addHtmlAttributes(String selectorPath, String attributeName, String value) {
