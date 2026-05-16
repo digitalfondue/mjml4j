@@ -169,6 +169,12 @@ abstract class BaseComponent {
       }
     }
 
+    // 1.5
+    if (!context.attributesByParentClass.isEmpty() && parent != null && !raw) {
+      var currentClasses = Utils.EMPTY_ARRAY_STR;
+      // FIXME
+    }
+
     // 2.
     var attrNameTagName = new GlobalContext.AttributeNameTagName(attributeName, getTagName());
     if (context.attributesByTagName.containsKey(attrNameTagName) && !raw) {
