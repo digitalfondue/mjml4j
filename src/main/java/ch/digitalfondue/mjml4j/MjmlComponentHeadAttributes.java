@@ -69,7 +69,8 @@ class MjmlComponentHeadAttributes extends BaseComponent.HeadComponent {
               var childAttribute = (Attr) childAttributes.item(j);
               var attributeName = childAttribute.getName();
               var attributeValue = childAttribute.getValue();
-              System.err.println(childTagName + " " + attributeName + " " + attributeValue);
+              context.setParentClassAttribute(
+                  attributeName, className, childTagName, attributeValue);
             }
           }
         }

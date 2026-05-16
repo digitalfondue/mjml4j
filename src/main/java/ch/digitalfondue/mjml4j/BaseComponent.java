@@ -138,8 +138,8 @@ abstract class BaseComponent {
   // priority as derived from code and tests:
   //  0. own attribute
   //  1. mj-class attribute
+  //  1.5 mj-class attribute by parent class
   //  2. mj-attribute by own tag name
-  //  2.5 mj-attribute by parent class
   //  3. by inheriting from parent
   //  4. by mj-all
   //  5. by default
@@ -157,9 +157,10 @@ abstract class BaseComponent {
       }
       String classAttribute = null;
       for (var className : currentClasses) {
-        if (context.attributesByClass.containsKey(className)
-            && context.attributesByClass.get(className).containsKey(attributeName)) {
-          classAttribute = context.attributesByClass.get(className).get(attributeName);
+        var classNameAttributeKey =
+            new GlobalContext.ClassNameAttributeName(className, attributeName);
+        if (context.attributesByClass.containsKey(classNameAttributeKey)) {
+          classAttribute = context.attributesByClass.get(classNameAttributeKey);
         }
       }
 
@@ -169,16 +170,10 @@ abstract class BaseComponent {
     }
 
     // 2.
-    if (context.attributesByName.containsKey(attributeName) && !raw) {
-      var byType = context.attributesByName.get(attributeName);
-      var tagName = getTagName();
-      if (byType.containsKey(tagName)) {
-        return byType.get(tagName);
-      }
+    var attrNameTagName = new GlobalContext.AttributeNameTagName(attributeName, getTagName());
+    if (context.attributesByTagName.containsKey(attrNameTagName) && !raw) {
+      return context.attributesByTagName.get(attrNameTagName);
     }
-    // 2.5
-    // FIXME
-
     //
 
     // 3.
@@ -190,11 +185,9 @@ abstract class BaseComponent {
     }
 
     // 4.
-    if (context.attributesByName.containsKey(attributeName) && !raw) {
-      var byType = context.attributesByName.get(attributeName);
-      if (byType.containsKey("mj-all")) {
-        return byType.get("mj-all");
-      }
+    var attrNameMjAll = new GlobalContext.AttributeNameTagName(attributeName, "mj-all");
+    if (context.attributesByTagName.containsKey(attrNameMjAll) && !raw) {
+      return context.attributesByTagName.get(attrNameMjAll);
     }
 
     // 5.
