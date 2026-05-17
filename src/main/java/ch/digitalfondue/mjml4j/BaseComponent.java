@@ -172,7 +172,21 @@ abstract class BaseComponent {
     // 1.5
     if (!context.attributesByParentClass.isEmpty() && parent != null && !raw) {
       var currentClasses = Utils.EMPTY_ARRAY_STR;
-      // FIXME
+      if (parent.attributes.containsKey("mj-class") && parent.attributes.get("mj-class") != null) {
+        currentClasses = Utils.splitBySpace(parent.attributes.get("mj-class").trim());
+      }
+      String classAttribute = null;
+      for (var className : currentClasses) {
+        var parentElementClassNameAttributeName =
+            new GlobalContext.ParentElementClassNameAttributeName(
+                className, getTagName(), attributeName);
+        if (context.attributesByParentClass.containsKey(parentElementClassNameAttributeName)) {
+          classAttribute = context.attributesByParentClass.get(parentElementClassNameAttributeName);
+        }
+      }
+      if (classAttribute != null) {
+        return classAttribute;
+      }
     }
 
     // 2.

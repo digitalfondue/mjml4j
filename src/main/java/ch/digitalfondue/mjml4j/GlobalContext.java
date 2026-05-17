@@ -39,7 +39,7 @@ class GlobalContext {
   record ClassNameAttributeName(String className, String attributeName) {}
 
   record ParentElementClassNameAttributeName(
-      String parentElement, String className, String attributeName) {}
+      String parentClassName, String childTagName, String attributeName) {}
 
   final LinkedHashMap<AttributeNameTagName, String> attributesByTagName = new LinkedHashMap<>();
   final LinkedHashMap<ClassNameAttributeName, String> attributesByClass = new LinkedHashMap<>();
