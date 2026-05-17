@@ -5,6 +5,8 @@ import static ch.digitalfondue.mjml4j.Utils.isNullOrWhiteSpace;
 import ch.digitalfondue.jfiveparse.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -112,14 +114,20 @@ public final class Mjml4j {
   public static class FileSystemResolver implements IncludeResolver {
 
     private final Path basePath;
+    private final FileSystem fileSystem;
 
     public FileSystemResolver(Path basePath) {
+      this(basePath, FileSystems.getDefault());
+    }
+
+    public FileSystemResolver(Path basePath, FileSystem fileSystem) {
       this.basePath = Objects.requireNonNull(basePath).toAbsolutePath();
+      this.fileSystem = fileSystem;
     }
 
     @Override
     public String readResource(String resolvedResourcePath) throws IOException {
-      return Files.readString(Path.of(resolvedResourcePath), StandardCharsets.UTF_8);
+      return Files.readString(fileSystem.getPath(resolvedResourcePath), StandardCharsets.UTF_8);
     }
 
     public void checkAccess(Path basePath, Path resolvedPath) {
@@ -130,7 +138,7 @@ public final class Mjml4j {
 
     @Override
     public String resolvePath(String name, String parent) {
-      var providedPath = Path.of(name);
+      var providedPath = fileSystem.getPath(name);
       if (providedPath.isAbsolute()) { // resolve the absolute path over the basePath
         providedPath = basePath.resolve(providedPath.getRoot().relativize(providedPath));
       }
@@ -138,7 +146,7 @@ public final class Mjml4j {
       var resolvedPath =
           (parent == null
                   ? basePath.resolve(providedPath)
-                  : Path.of(parent).getParent().resolve(providedPath))
+                  : fileSystem.getPath(parent).getParent().resolve(providedPath))
               .normalize()
               .toAbsolutePath();
       checkAccess(basePath, resolvedPath);
