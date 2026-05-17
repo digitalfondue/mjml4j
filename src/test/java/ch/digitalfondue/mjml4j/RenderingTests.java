@@ -8,41 +8,41 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 
 /** Unit test for base cases. */
-class RenderingTests {
+public class RenderingTests {
   @ParameterizedTest
   @MjmlDirectory("base")
-  void testBaseTemplates(String name) {
+  public void testBaseTemplates(String name) {
     testTemplate("base", name);
   }
 
   @ParameterizedTest
   @MjmlDirectory("components")
-  void testComponentTemplates(String name) {
+  public void testComponentTemplates(String name) {
     testTemplate("components", name);
   }
 
   @ParameterizedTest
   @MjmlDirectory("complex")
-  void testComplexTemplates(String name) {
+  public void testComplexTemplates(String name) {
     testTemplate("complex", name);
   }
 
   @ParameterizedTest
   @MjmlDirectory("upstream")
-  void testUpstreamTemplates(String name) {
+  public void testUpstreamTemplates(String name) {
     testTemplate("upstream", name);
   }
 
   @ParameterizedTest
   @MjmlDirectory("bugs")
-  void testBugsTemplates(String name) {
+  public void testBugsTemplates(String name) {
     testTemplate("bugs", name);
   }
 
   @Disabled
   @ParameterizedTest
   @MjmlDirectory("work")
-  void testWork(String name) {
+  public void testWork(String name) {
     testTemplate("work", name);
   }
 
