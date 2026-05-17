@@ -4,7 +4,7 @@ A java based [mjml](https://mjml.io/) implementation.
 
 Require at least java 17.
 
-Javadoc: https://javadoc.io/doc/ch.digitalfondue.mjml4j/mjml4j
+Javadoc: https://javadoc.io/doc/ch.digitalfondue.mjml4j/mjml4j/latest/ch.digitalfondue.mjml4j/ch/digitalfondue/mjml4j/Mjml4j.html
 
 # Why
 
@@ -38,14 +38,14 @@ maven:
 <dependency>
    <groupId>ch.digitalfondue.mjml4j</groupId>
    <artifactId>mjml4j</artifactId>
-   <version>1.2.0</version>
+   <version>1.2.1</version>
 </dependency>
 ```
 
 gradle:
 
 ```
-implementation 'ch.digitalfondue.mjml4j:mjml4j:1.2.0'
+implementation 'ch.digitalfondue.mjml4j:mjml4j:1.2.1'
 ```
 
 # Use
