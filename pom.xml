@@ -47,7 +47,7 @@
         <dependency>
             <groupId>ch.digitalfondue.jfiveparse</groupId>
             <artifactId>jfiveparse</artifactId>
-            <version>3.0.0-M0</version>
+            <version>3.0.0-M1</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
